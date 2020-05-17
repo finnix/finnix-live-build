@@ -57,13 +57,29 @@ systemctl disable systemd-timesyncd.service || true
 
 mkdir -p /lib/systemd/diverted-generators
 dpkg-divert --add --rename --divert /lib/systemd/diverted-generators/live-config-getty-generator /lib/systemd/system-generators/live-config-getty-generator
-cp /lib/systemd/diverted-generators/live-config-getty-generator /lib/systemd/system-generators/live-config-getty-generator
-perl -pi -e 's/--autologin \$\{LIVE_USERNAME\}/--autologin root/g' /lib/systemd/system-generators/live-config-getty-generator
+cat <<"EOM" >/lib/systemd/system-generators/live-config-getty-generator
+#!/bin/sh
+
+# See /etc/systemd/system/getty@.service.d/finnix.conf
+exit 0
+EOM
+chmod 0755 /lib/systemd/system-generators/live-config-getty-generator
 
 mkdir -p /etc/systemd/system/getty@.service.d
 cat <<"EOM" >/etc/systemd/system/getty@.service.d/finnix.conf
 [Service]
+Type=idle
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear %I $TERM
 TTYVTDisallocate=no
+EOM
+
+mkdir -p /etc/systemd/system/serial-getty@.service.d
+cat <<"EOM" >/etc/systemd/system/serial-getty@.service.d/finnix.conf
+[Service]
+Type=idle
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud 115200,38400,9600 %I $TERM
 EOM
 
 cat <<"EOM" >/etc/profile.d/finnix.sh
