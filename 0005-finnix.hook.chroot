@@ -1,0 +1,94 @@
+#!/bin/sh
+
+set -e
+
+cat <<"EOM" >/etc/live/config.conf.d/finnix.conf
+LIVE_HOSTNAME="finnix"
+LIVE_USERNAME="finnix"
+LIVE_USER_FULLNAME="Finnix user"
+LIVE_CONFIG_NOCOMPONENTS="openssh-server"
+EOM
+
+mkdir -p /etc/systemd/system/ssh.service.d
+cat <<"EOM" >/etc/systemd/system/ssh.service.d/finnix.conf
+[Service]
+ExecStartPre=-/bin/sh -c /lib/live/config/????-openssh-server
+EOM
+
+dpkg-divert --add --rename --divert /usr/lib/os-release.debian /usr/lib/os-release
+cat <<"EOM" >/usr/lib/os-release
+PRETTY_NAME="Finnix 120"
+NAME="Finnix"
+VERSION="120"
+VERSION_ID="120"
+VERSION_CODENAME=oneida
+ID=finnix
+ID_LIKE=debian
+ANSI_COLOR="1;34"
+HOME_URL="https://www.finnix.org/"
+SUPPORT_URL="https://www.finnix.org/"
+BUG_REPORT_URL="https://www.finnix.org/"
+EOM
+
+dpkg-divert --add --rename --divert /etc/issue.debian /etc/issue
+cat <<"EOM" >/etc/issue
+Finnix 120 (\l)
+
+EOM
+
+dpkg-divert --add --rename --divert /etc/issue.net.debian /etc/issue.net
+cat <<"EOM" >/etc/issue.net
+Finnix 120
+EOM
+
+echo -n >/etc/motd
+
+for i in $(cd /etc/systemd/system/multi-user.target.wants; ls -1 | grep -v live-tools.service); do
+    systemctl disable ${i} || true
+done
+for i in $(cd /etc/systemd/system/timers.target.wants; ls -1); do
+    systemctl disable ${i} || true
+done
+for i in $(cd /etc/rc2.d; ls -1 S01* | grep -v S01gpm | sed 's/^S01//g'); do
+    systemctl disable ${i}.service || true
+done
+
+systemctl disable systemd-timesyncd.service || true
+
+mkdir -p /lib/systemd/diverted-generators
+dpkg-divert --add --rename --divert /lib/systemd/diverted-generators/live-config-getty-generator /lib/systemd/system-generators/live-config-getty-generator
+cp /lib/systemd/diverted-generators/live-config-getty-generator /lib/systemd/system-generators/live-config-getty-generator
+perl -pi -e 's/--autologin \$\{LIVE_USERNAME\}/--autologin root/g' /lib/systemd/system-generators/live-config-getty-generator
+
+mkdir -p /etc/systemd/system/getty@.service.d
+cat <<"EOM" >/etc/systemd/system/getty@.service.d/finnix.conf
+[Service]
+TTYVTDisallocate=no
+EOM
+
+cat <<"EOM" >/etc/profile.d/finnix.sh
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
+
+if [ "$BASH" ]; then
+  if [ "$TERM" != "dumb" ]; then
+    PS1='\[\033[1;37m\]\u\[\033[0;39m\]@\[\033[1;37m\]\l\[\033[0;39m\]:\[\033[1;37m\]\w\[\033[1;34m\]\$\[\033[0;39m\] '
+  else
+    PS1='\u@\h:\w\$ '
+  fi
+else
+  if [ "`id -u`" -eq 0 ]; then
+    PS1='# '
+  else
+    PS1='$ '
+  fi
+fi
+
+alias ls='ls --color=auto'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+
+alias httpd='python3 -m http.server'
+EOM
+
+apt-get -y --purge remove rsyslog || true
