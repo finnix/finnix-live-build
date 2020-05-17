@@ -25,7 +25,7 @@ lb config noauto \
   --iso-application Finnix \
   --iso-preparer Finnix \
   --iso-publisher Finnix \
-  --iso-volume "Finnix 120" \
+  --iso-volume "Finnix dev" \
   --linux-packages linux-image-5.4.0-0.bpo.4 \
   --memtest memtest86+ \
   --mode debian
