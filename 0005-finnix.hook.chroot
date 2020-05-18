@@ -64,7 +64,7 @@ EOM
 systemctl set-default finnix.target
 
 systemctl add-wants finnix.target getty.target
-for i in live-tools udisks2 gpm; do
+for i in live-tools gpm; do
     if [ -e /etc/systemd/system/${i}.service ]; then
         systemctl add-wants finnix.target /etc/systemd/system/${i}.service
     elif [ -e /lib/systemd/system/${i}.service ]; then
