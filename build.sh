@@ -6,7 +6,7 @@ set -e
 # FYI, "nobackup" is so my backup program will automatically skip over it.
 
 BASE_DIR="$(dirname "$(readlink -f "$0")")"
-LB_DIR="${LB_DIR}/nobackup/lb"
+LB_DIR="${BASE_DIR}/nobackup/lb"
 
 cd /
 rm -rf "${LB_DIR}"
