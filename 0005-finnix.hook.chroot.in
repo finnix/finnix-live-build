@@ -19,10 +19,10 @@ EOM
 
 dpkg-divert --add --rename --divert /usr/lib/os-release.debian /usr/lib/os-release
 cat <<"EOM" >/usr/lib/os-release
-PRETTY_NAME="Finnix dev"
+PRETTY_NAME="Finnix @VERSION@"
 NAME="Finnix"
-VERSION="dev"
-VERSION_ID="dev"
+VERSION="@VERSION@"
+VERSION_ID="@VERSION@"
 VERSION_CODENAME=racine
 ID=finnix
 ID_LIKE=debian
@@ -34,13 +34,13 @@ EOM
 
 dpkg-divert --add --rename --divert /etc/issue.debian /etc/issue
 cat <<"EOM" >/etc/issue
-Finnix dev (\l)
+Finnix @VERSION@ (\l)
 
 EOM
 
 dpkg-divert --add --rename --divert /etc/issue.net.debian /etc/issue.net
 cat <<"EOM" >/etc/issue.net
-Finnix dev
+Finnix @VERSION@
 EOM
 
 echo -n >/etc/motd

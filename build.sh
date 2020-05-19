@@ -5,6 +5,8 @@ set -e
 # This is currently quite specific to my build environment.
 # FYI, "nobackup" is so my backup program will automatically skip over it.
 
+VERSION="dev"
+
 BASE_DIR="$(dirname "$(readlink -f "$0")")"
 LB_DIR="${BASE_DIR}/nobackup/lb"
 
@@ -26,14 +28,20 @@ lb config noauto \
   --iso-application Finnix \
   --iso-preparer Finnix \
   --iso-publisher Finnix \
-  --iso-volume "Finnix dev" \
+  --iso-volume "Finnix ${VERSION}" \
   --memtest memtest86+ \
   --security false \
   --updates false \
   --mode debian
-cp -a "${BASE_DIR}"/*.hook.chroot "${LB_DIR}/config/hooks/normal/"
+
+for i in "${BASE_DIR}"/*.hook.chroot.in; do
+    sed -e "s|@VERSION@|${VERSION}|g" \
+    "${i}" > "${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
+done
+
 mkdir -p "${LB_DIR}/config/bootloaders/syslinux_common"
 cp -a "${BASE_DIR}/splash.svg" "${LB_DIR}/config/bootloaders/syslinux_common/"
+
 cp "${BASE_DIR}/finnix.list.chroot" "${LB_DIR}/config/package-lists/"
 
 lb build
