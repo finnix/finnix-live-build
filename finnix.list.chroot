@@ -9,7 +9,6 @@ attr
 bash-completion
 bc
 bcache-tools
-bittornado
 bonnie++
 bridge-utils
 btrfs-progs
@@ -190,7 +189,6 @@ wipe
 wireless-tools
 wodim
 wpasupplicant
-xfsdump
 xfsprogs
 xxhash
 xz-utils

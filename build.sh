@@ -18,20 +18,22 @@ lb config noauto \
   --apt-recommends false \
   --architectures amd64 \
   --archive-areas "main contrib non-free" \
-  --backports true \
+  --backports false \
   --binary-images iso-hybrid \
   --bootappend-live "boot=live quiet systemd.show_status=yes" \
+  --distribution testing \
   --hdd-label FINNIX \
   --iso-application Finnix \
   --iso-preparer Finnix \
   --iso-publisher Finnix \
   --iso-volume "Finnix dev" \
-  --linux-packages linux-image-5.4.0-0.bpo.4 \
   --memtest memtest86+ \
+  --security false \
+  --updates false \
   --mode debian
 cp -a "${BASE_DIR}"/*.hook.chroot "${LB_DIR}/config/hooks/normal/"
-mkdir -p "${LB_DIR}/config/bootloaders/isolinux"
-cp -a "${BASE_DIR}/isolinux"/* "${LB_DIR}/config/bootloaders/isolinux/"
+mkdir -p "${LB_DIR}/config/bootloaders/syslinux_common"
+cp -a "${BASE_DIR}/splash.svg" "${LB_DIR}/config/bootloaders/syslinux_common/"
 cp "${BASE_DIR}/finnix.list.chroot" "${LB_DIR}/config/package-lists/"
 
 lb build
