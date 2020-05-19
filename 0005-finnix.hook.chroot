@@ -12,7 +12,9 @@ EOM
 mkdir -p /etc/systemd/system/ssh.service.d
 cat <<"EOM" >/etc/systemd/system/ssh.service.d/finnix.conf
 [Service]
-ExecStartPre=-/bin/sh -c /lib/live/config/????-openssh-server
+ExecStartPre=
+ExecStartPre=/bin/sh -c /lib/live/config/????-openssh-server
+ExecStartPre=/usr/sbin/sshd -t
 EOM
 
 dpkg-divert --add --rename --divert /usr/lib/os-release.debian /usr/lib/os-release
