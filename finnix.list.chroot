@@ -148,7 +148,6 @@ rsync
 screen
 setserial
 sharutils
-sl
 smartmontools
 smbclient
 snmp
