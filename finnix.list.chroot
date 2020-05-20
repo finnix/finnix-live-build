@@ -138,6 +138,7 @@ psmisc
 pv
 quota
 quotatool
+ranger
 rdate
 rdiff-backup
 reiser4progs
