@@ -152,3 +152,20 @@ alias httpd='python3 -m http.server'
 EOM
 
 apt-get -y --purge remove rsyslog || true
+
+cat <<"EOM" >/usr/local/sbin/0
+#!/bin/sh
+
+# Reconfigure keyboard access in a fairly universal way,
+# requiring the following keys on the misconfigured keyboard:
+# - 0
+# - Enter
+# - Arrow keys
+
+set -e
+
+dpkg-reconfigure keyboard-configuration
+setupcon -k
+udevadm trigger --subsystem-match=input --action=change
+EOM
+chmod 0755 /usr/local/sbin/0
