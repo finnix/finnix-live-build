@@ -5,12 +5,14 @@ set -e
 VERSION="dev"
 CODENAME="racine"
 
+DATE="$(date -u +"%F %T")"
+YEAR="$(date -u +"%Y")"
 ARCHITECTURE="$(dpkg --print-architecture)"
 if [ "${ARCHITECTURE}" = "arm64" ]; then
     BOOTLOADERS="grub-efi"
     MEMTEST=""
 else
-    BOOTLOADERS="grub-efi,syslinux"
+    BOOTLOADERS="grub-efi,grub-pc"
     MEMTEST="memtest86+"
 fi
 
@@ -53,8 +55,15 @@ for i in "${BASE_DIR}"/*.hook.chroot.in; do
     "${i}" > "${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
 done
 
-mkdir -p "${LB_DIR}/config/bootloaders/syslinux_common"
-cp -a "${BASE_DIR}/splash.svg" "${LB_DIR}/config/bootloaders/syslinux_common/"
+mkdir -p "${LB_DIR}/config/bootloaders/grub-pc"
+sed -e "s|@CODENAME@|${CODENAME}|g" \
+    -e "s|@VERSION@|${VERSION}|g" \
+    -e "s|@DATE@|${DATE}|g" \
+    -e "s|@YEAR@|${YEAR}|g" \
+    -e "s|@ARCHITECTURE@|${ARCHITECTURE}|g" \
+"${BASE_DIR}/splash.svg" | rsvg-convert --format png --width 640 --height 480 > "${LB_DIR}/config/bootloaders/grub-pc/splash.png"
+mkdir -p "${LB_DIR}/config/bootloaders/grub-pc/live-theme"
+cp "${BASE_DIR}/theme.txt" "${LB_DIR}/config/bootloaders/grub-pc/live-theme/"
 
 cp "${BASE_DIR}/finnix.list.chroot" "${LB_DIR}/config/package-lists/"
 cp "${BASE_DIR}/finnix-${ARCHITECTURE}.list.chroot" "${LB_DIR}/config/package-lists/"

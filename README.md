@@ -7,6 +7,7 @@ Requirements (as of 2020-05-21):
 
 * Debian sid build environment
 * live-build, built from [live-build git HEAD](https://salsa.debian.org/live-team/live-build)
+* librsvg2-bin, fonts-ubuntu
 * If building for arm64, [this merge request](https://salsa.debian.org/live-team/live-build/-/merge_requests/202) if it hasn't been accepted yet
 
 The default build directory will be ```nobackup/lb/``` from the script directory ("nobackup" is so my home network backup program will skip over it).
