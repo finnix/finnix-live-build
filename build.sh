@@ -2,9 +2,6 @@
 
 set -e
 
-# This is currently quite specific to my build environment.
-# FYI, "nobackup" is so my backup program will automatically skip over it.
-
 VERSION="dev"
 
 ARCHITECTURE="$(dpkg --print-architecture)"
@@ -16,6 +13,10 @@ else
     MEMTEST="memtest86+"
 fi
 
+if [ "$(dnsdomainname)" = "snowman.lan" ]; then
+    APT_HTTP_PROXY="http://deb-proxy.snowman.lan:8000"
+fi
+
 BASE_DIR="$(dirname "$(readlink -f "$0")")"
 LB_DIR="${BASE_DIR}/nobackup/lb"
 
@@ -25,7 +26,7 @@ mkdir -p "${LB_DIR}"
 cd "${LB_DIR}"
 
 lb config noauto \
-  --apt-http-proxy http://deb-proxy.snowman.lan:8000 \
+  --apt-http-proxy "${APT_HTTP_PROXY}" \
   --apt-recommends false \
   --architectures "${ARCHITECTURE}" \
   --archive-areas "main contrib non-free" \
