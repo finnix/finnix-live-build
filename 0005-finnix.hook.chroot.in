@@ -43,11 +43,11 @@ cat <<"EOM" >/etc/issue.net
 Finnix @VERSION@
 EOM
 
-echo -n >/etc/motd
+: >/etc/motd
 
 systemctl disable systemd-timesyncd.service || true  # finnix.target -> basic.target -> sysinit.target
 for i in $(cd /etc/systemd/system/timers.target.wants; ls -1); do
-    systemctl disable ${i} || true
+    systemctl disable "${i}" || true
 done
 if [ -e /lib/systemd/system/timers.target.wants/systemd-tmpfiles-clean.timer ]; then
     mkdir -p /lib/systemd/diverted-system/timers.target.wants
