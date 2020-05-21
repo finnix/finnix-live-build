@@ -49,7 +49,7 @@ lb config noauto \
 
 for i in "${BASE_DIR}"/*.hook.chroot.in; do
     sed -e "s|@CODENAME@|${CODENAME}|g" \
-    sed -e "s|@VERSION@|${VERSION}|g" \
+        -e "s|@VERSION@|${VERSION}|g" \
     "${i}" > "${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
 done
 
