@@ -56,14 +56,15 @@ for i in "${BASE_DIR}"/*.hook.chroot.in; do
 done
 
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc"
+cp "${BASE_DIR}/grub/memtest.cfg" "${LB_DIR}/config/bootloaders/grub-pc/"
 sed -e "s|@CODENAME@|${CODENAME}|g" \
     -e "s|@VERSION@|${VERSION}|g" \
     -e "s|@DATE@|${DATE}|g" \
     -e "s|@YEAR@|${YEAR}|g" \
     -e "s|@ARCHITECTURE@|${ARCHITECTURE}|g" \
-"${BASE_DIR}/splash.svg" | rsvg-convert --format png --width 640 --height 480 > "${LB_DIR}/config/bootloaders/grub-pc/splash.png"
+"${BASE_DIR}/grub/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/grub-pc/splash.png"
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc/live-theme"
-cp "${BASE_DIR}/theme.txt" "${LB_DIR}/config/bootloaders/grub-pc/live-theme/"
+cp "${BASE_DIR}/grub/theme.txt" "${LB_DIR}/config/bootloaders/grub-pc/live-theme/"
 
 cp "${BASE_DIR}/finnix.list.chroot" "${LB_DIR}/config/package-lists/"
 cp "${BASE_DIR}/finnix-${ARCHITECTURE}.list.chroot" "${LB_DIR}/config/package-lists/"
