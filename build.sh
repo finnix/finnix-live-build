@@ -25,6 +25,7 @@ lb config noauto \
   --bootappend-live "boot=live quiet systemd.show_status=yes" \
   --distribution testing \
   --hdd-label FINNIX \
+  --image-name finnix \
   --iso-application Finnix \
   --iso-preparer Finnix \
   --iso-publisher Finnix \
