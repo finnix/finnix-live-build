@@ -3,6 +3,7 @@
 set -e
 
 VERSION="dev"
+CODENAME="racine"
 
 ARCHITECTURE="$(dpkg --print-architecture)"
 if [ "${ARCHITECTURE}" = "arm64" ]; then
@@ -47,6 +48,7 @@ lb config noauto \
   --mode debian
 
 for i in "${BASE_DIR}"/*.hook.chroot.in; do
+    sed -e "s|@CODENAME@|${CODENAME}|g" \
     sed -e "s|@VERSION@|${VERSION}|g" \
     "${i}" > "${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
 done
