@@ -1,5 +1,4 @@
 2ping
-acpi
 apt-utils
 arj
 arping
@@ -20,11 +19,9 @@ cdbackup
 cdpr
 chntpw
 cifs-utils
-cmospwd
 console-data
 console-setup
 cpio
-cpuid
 cron
 cryptsetup-bin
 curl
@@ -47,20 +44,17 @@ ethtool
 exfat-fuse
 exfat-utils
 f2fs-tools
-fdutils
 fetchmail
 file
 finger
 fonts-ubuntu
 fsarchiver
-fuseext2
 fxload
 gawk
 gddrescue
 gdisk
 genromfs
 git
-gpart
 gpm
 grepcidr
 hdparm
@@ -85,7 +79,6 @@ less
 lftp
 libblockdev-crypto2
 libblockdev-mdraid2
-lilo
 live-tools
 lm-sensors
 locales
@@ -95,7 +88,6 @@ lrzsz
 lsb-release
 lshw
 lsof
-ltrace
 lvm2
 makedev
 man-db
