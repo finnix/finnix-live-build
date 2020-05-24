@@ -1,4 +1,4 @@
 [submodule "live-build"]
 	path = live-build
 	url = https://salsa.debian.org/rfinnie/live-build
-	branch = arm64
+	branch = master
