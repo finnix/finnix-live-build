@@ -22,6 +22,7 @@ fi
 
 BASE_DIR="$(dirname "$(readlink -f "$0")")"
 LB_DIR="${BASE_DIR}/nobackup/lb"
+LB_CACHE_DIR="${BASE_DIR}/nobackup/cache/lb"
 
 cd /
 rm -rf "${LB_DIR}"
@@ -48,6 +49,18 @@ lb config noauto \
   --security false \
   --updates false \
   --mode debian
+
+if [ -d "${LB_CACHE_DIR}" ]; then
+    if [ -e "${LB_CACHE_DIR}/bootstrap/etc/hostname" ]; then
+        if [ -n "$(find "${LB_CACHE_DIR}/bootstrap/etc/hostname" -mmin +1080)" ]; then
+            rm -rf "${LB_CACHE_DIR}/bootstrap"
+        fi
+    else
+        rm -rf "${LB_CACHE_DIR}/bootstrap"
+    fi
+    rm -rf "${LB_DIR}/cache"
+    ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
+fi
 
 for i in "${BASE_DIR}"/*.hook.chroot.in; do
     sed -e "s|@CODENAME@|${CODENAME}|g" \
