@@ -83,3 +83,6 @@ cp "${BASE_DIR}/finnix.list.chroot" "${LB_DIR}/config/package-lists/"
 cp "${BASE_DIR}/finnix-${ARCHITECTURE}.list.chroot" "${LB_DIR}/config/package-lists/"
 
 lb build
+
+ls -lsa "${LB_DIR}/finnix-${ARCHITECTURE}.hybrid.iso"
+file "${LB_DIR}/finnix-${ARCHITECTURE}.hybrid.iso"

@@ -1,0 +1,27 @@
+# live-build is not supported inside LXD containers, which is what Travis
+# uses for non-amd64 platforms.  But they've stated they will eventually
+# switch amd64 from VM to LXD, so this also will eventually break.
+language: shell
+arch:
+- amd64
+os: linux
+dist: bionic
+addons:
+  apt:
+    packages:
+    # backport needed to build live-build
+    - debhelper/bionic-backports
+    - git-buildpackage
+    - po4a
+    - gettext
+    - man-db
+    - debian-archive-keyring
+    - librsvg2-bin
+    - fonts-ubuntu
+install:
+# Hack to avoid false positive on older (bionic) devscripts
+- sudo rm -f /usr/bin/checkbashisms
+- cd $TRAVIS_BUILD_DIR/live-build && gbp buildpackage --git-ignore-branch && cd $TRAVIS_BUILD_DIR
+- sudo apt -y install $TRAVIS_BUILD_DIR/*.deb
+script:
+- sudo $TRAVIS_BUILD_DIR/build.sh
