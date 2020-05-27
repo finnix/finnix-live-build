@@ -5,6 +5,17 @@ set -e
 VERSION="dev"
 CODENAME="racine"
 
+lock() {
+    local file=$1
+    exec 100>"$file"
+    if ! flock -x -w 1 100; then
+        echo "$file lock failed" >&2
+        exit 1
+    fi
+}
+
+lock /run/shm/finnix-live-build.lock
+
 DATE="$(date -u +"%F %T")"
 YEAR="$(date -u +"%Y")"
 ARCHITECTURE="$(dpkg --print-architecture)"
