@@ -24,4 +24,4 @@ install:
 - cd $TRAVIS_BUILD_DIR/live-build && gbp buildpackage --git-ignore-branch && cd $TRAVIS_BUILD_DIR
 - sudo apt -y install $TRAVIS_BUILD_DIR/*.deb
 script:
-- sudo $TRAVIS_BUILD_DIR/build.sh
+- sudo $TRAVIS_BUILD_DIR/finnix-live-build
