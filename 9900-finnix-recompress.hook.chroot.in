@@ -1,12 +1,7 @@
-#!/bin/sh
-
-set -e
+#!/usr/bin/env python3
 
 # Re-"compress" all .gz files at gzip level 0 so mksquashfs can compress
 # it more efficiently
-
-cat <<"EOM" >/tmp/recomp.py
-#!/usr/bin/env python3
 
 import glob
 import gzip
@@ -102,7 +97,3 @@ if __name__ == "__main__":
                 file_output += "{}  {}\n".format(new_md5, dpkg_filename)
         with open(fn, "w", encoding="utf-8") as f:
             f.write(file_output)
-EOM
-
-python3 /tmp/recomp.py
-rm -f /tmp/recomp.py
