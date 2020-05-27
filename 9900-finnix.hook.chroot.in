@@ -1,0 +1,108 @@
+#!/bin/sh
+
+set -e
+
+# Re-"compress" all .gz files at gzip level 0 so mksquashfs can compress
+# it more efficiently
+
+cat <<"EOM" >/tmp/recomp.py
+#!/usr/bin/env python3
+
+import glob
+import gzip
+import hashlib
+import itertools
+import os
+import shutil
+
+
+DIVERSIONS = {}
+
+
+def readiter(fh, size=1024):
+    return itertools.takewhile(
+        lambda x: x, map(lambda x: fh.read(size), itertools.count(0))
+    )
+
+
+def parse_diversions(base_dir="/"):
+    with open(
+        os.path.join(base_dir, "/var/lib/dpkg/diversions"), "r", encoding="utf-8"
+    ) as f:
+        while True:
+            orig = f.readline()
+            if orig == "":
+                break
+            orig = orig.rstrip()
+            diverted_to = f.readline().rstrip()
+            _ = f.readline().rstrip()
+            DIVERSIONS[orig] = diverted_to
+
+
+def recompress(filename):
+    with gzip.open(filename, "rb") as fsrc:
+        with open(filename + "~recomp", "wb") as fdst:
+            # Explicitly do not set filename and mtime in resulting .gz
+            with gzip.GzipFile(
+                filename="", mode="wb", compresslevel=0, mtime=0, fileobj=fdst
+            ) as fdstgz:
+                shutil.copyfileobj(fsrc, fdstgz)
+    shutil.copystat(filename, filename + "~recomp")
+    shutil.move(filename + "~recomp", filename)
+
+    with open(filename, "rb") as f:
+        m = hashlib.md5()
+        for buf in readiter(f):
+            m.update(buf)
+    return m.hexdigest()
+
+
+def process_dpkg_file(dpkg_filename, orig_md5, base_dir="/"):
+    if not dpkg_filename.endswith(".gz"):
+        return orig_md5
+
+    filename = os.path.join("/", dpkg_filename)
+    if filename in DIVERSIONS:
+        print("~~~ {} was diverted to {}".format(filename, DIVERSIONS[filename]))
+        filename = DIVERSIONS[filename]
+
+    filename = os.path.join(base_dir, filename)
+    if os.path.islink(filename):
+        print("!!! IS SYMLINK: {}".format(filename))
+        return orig_md5
+    fstat = os.stat(filename)
+    if fstat.st_nlink > 1:
+        print("!!! HARD LINKS {} > 1: {}".format(fstat.st_nlink, filename))
+        return orig_md5
+    with open(filename, "rb") as f:
+        m = hashlib.md5()
+        for buf in readiter(f):
+            m.update(buf)
+    found_md5 = m.hexdigest()
+    if orig_md5 != found_md5:
+        print(
+            "!!! MD5 MISMATCH: {} (expected {}, got {})".format(
+                filename, orig_md5, found_md5
+            )
+        )
+        return orig_md5
+
+    return recompress(filename)
+
+
+if __name__ == "__main__":
+    base_dir = "/"
+    parse_diversions(base_dir=base_dir)
+    for fn in glob.glob(os.path.join(base_dir, "/var/lib/dpkg/info/*.md5sums")):
+        file_output = ""
+        with open(fn, "r", encoding="utf-8") as f:
+            for line in f.readlines():
+                orig_md5, _, dpkg_filename = line.rstrip().split(" ")
+                new_md5 = process_dpkg_file(dpkg_filename, orig_md5, base_dir=base_dir)
+                file_output += "{}  {}\n".format(new_md5, dpkg_filename)
+        with open(fn, "w", encoding="utf-8") as f:
+            f.write(file_output)
+EOM
+
+python3 /tmp/recomp.py
+rm -f /tmp/recomp.py
