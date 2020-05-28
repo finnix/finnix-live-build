@@ -47,7 +47,7 @@ lb config noauto \
   --archive-areas "main contrib non-free" \
   --backports false \
   --binary-images iso-hybrid \
-  --bootappend-live "boot=live quiet systemd.show_status=yes" \
+  --bootappend-live "boot=live quiet" \
   --bootloaders "${BOOTLOADERS}" \
   --distribution testing \
   --hdd-label FINNIX \

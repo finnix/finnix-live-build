@@ -169,3 +169,5 @@ setupcon -k
 udevadm trigger --subsystem-match=input --action=change
 EOM
 chmod 0755 /usr/local/sbin/0
+
+sed -i -e 's/^\#ShowStatus=.*/ShowStatus=yes/g' /etc/systemd/system.conf
