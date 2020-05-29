@@ -73,7 +73,7 @@ if [ -d "${LB_CACHE_DIR}" ]; then
     ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
 fi
 
-for i in "${BASE_DIR}"/*.hook.chroot.in; do
+for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
     sed -e "s|@CODENAME@|${CODENAME}|g" \
         -e "s|@VERSION@|${VERSION}|g" \
     "${i}" > "${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
@@ -90,8 +90,10 @@ sed -e "s|@CODENAME@|${CODENAME}|g" \
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc/live-theme"
 cp "${BASE_DIR}/grub/theme.txt" "${LB_DIR}/config/bootloaders/grub-pc/live-theme/"
 
-cp "${BASE_DIR}/finnix.list.chroot" "${LB_DIR}/config/package-lists/"
-cp "${BASE_DIR}/finnix-${ARCHITECTURE}.list.chroot" "${LB_DIR}/config/package-lists/"
+cp "${BASE_DIR}/lists/finnix.list.chroot" "${LB_DIR}/config/package-lists/"
+if [ -e "${BASE_DIR}/lists/finnix-${ARCHITECTURE}.list.chroot" ]; then
+    cp "${BASE_DIR}/lists/finnix-${ARCHITECTURE}.list.chroot" "${LB_DIR}/config/package-lists/"
+fi
 
 lb build
 
