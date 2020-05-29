@@ -11,3 +11,8 @@ Requirements (as of 2020-05-21):
 * If building for arm64, [this merge request](https://salsa.debian.org/live-team/live-build/-/merge_requests/202) if it hasn't been accepted yet
 
 The default build directory will be ```nobackup/lb/``` from the script directory ("nobackup" is so my home network backup program will skip over it).
+
+## Issues and pull requests
+
+To open a Finnix issue, please use the main [Finnix issue tracker](https://github.com/finnix/finnix/issues), not this repository's.
+Pull requests will be considered here, but you probably also want to open an issue to track it.
