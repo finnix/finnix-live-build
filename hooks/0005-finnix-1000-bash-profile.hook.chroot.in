@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -e
+
+cat <<"EOM" >/etc/profile.d/finnix.sh
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
+
+__sh_exitcode() { ret=$?; if [[ $ret != 0 ]]; then echo "$ret "; fi }
+
+if [ "$BASH" ]; then
+  if [ "$TERM" != "dumb" ]; then
+    PS1='\[\033[1;31m\]$(__sh_exitcode)\[\033[1;37m\]\u\[\033[0;39m\]@\[\033[1;37m\]\l\[\033[0;39m\]:\[\033[1;37m\]\w\[\033[1;34m\]\$\[\033[0;39m\] '
+  else
+    PS1='\u@\h:\w\$ '
+  fi
+else
+  if [ "`id -u`" -eq 0 ]; then
+    PS1='# '
+  else
+    PS1='$ '
+  fi
+fi
+
+if [ -e ~/.ssh/ssh-agent.sh ]; then
+    . ~/.ssh/ssh-agent.sh
+fi
+
+alias ls='ls --color=auto'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+
+alias httpd='python3 -m http.server'
+EOM

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -e
+
+dpkg-divert --add --rename --divert /usr/lib/os-release.debian /usr/lib/os-release
+cat <<"EOM" >/usr/lib/os-release
+PRETTY_NAME="Finnix @VERSION@"
+NAME="Finnix"
+VERSION="@VERSION@"
+VERSION_ID="@VERSION@"
+VERSION_CODENAME="@CODENAME@"
+ID=finnix
+ID_LIKE=debian
+ANSI_COLOR="1;34"
+HOME_URL="https://www.finnix.org/"
+SUPPORT_URL="https://www.finnix.org/"
+BUG_REPORT_URL="https://www.finnix.org/"
+EOM
+
+dpkg-divert --add --rename --divert /etc/issue.debian /etc/issue
+cat <<"EOM" >/etc/issue
+Finnix @VERSION@ (\l)
+
+EOM
+
+dpkg-divert --add --rename --divert /etc/issue.net.debian /etc/issue.net
+cat <<"EOM" >/etc/issue.net
+Finnix @VERSION@
+EOM
+
+: >/etc/motd

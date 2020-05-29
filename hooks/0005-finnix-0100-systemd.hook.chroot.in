@@ -1,0 +1,29 @@
+#!/bin/sh
+
+set -e
+
+cat <<"EOM" >/etc/systemd/system/finnix.target
+[Unit]
+Description=Finnix System
+Requires=basic.target
+Conflicts=rescue.service rescue.target
+After=basic.target rescue.service rescue.target
+AllowIsolate=yes
+EOM
+
+systemctl set-default finnix.target
+
+systemctl disable systemd-timesyncd.service || true  # finnix.target -> basic.target -> sysinit.target
+for i in $(cd /etc/systemd/system/timers.target.wants; ls -1); do
+    systemctl disable "${i}" || true
+done
+if [ -e /lib/systemd/system/timers.target.wants/systemd-tmpfiles-clean.timer ]; then
+    mkdir -p /lib/systemd/diverted-system/timers.target.wants
+    dpkg-divert --add --rename --divert /lib/systemd/diverted-system/timers.target.wants/systemd-tmpfiles-clean.timer /lib/systemd/system/timers.target.wants/systemd-tmpfiles-clean.timer
+fi
+rm -f /etc/rc?.d/*
+
+systemctl add-wants finnix.target systemd-user-sessions.service
+systemctl add-wants finnix.target systemd-update-utmp-runlevel.service
+
+sed -i -e 's/^\#ShowStatus=.*/ShowStatus=yes/g' /etc/systemd/system.conf

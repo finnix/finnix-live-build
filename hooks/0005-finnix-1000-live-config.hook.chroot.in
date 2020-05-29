@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+cat <<"EOM" >/etc/live/config.conf.d/finnix.conf
+LIVE_HOSTNAME="finnix"
+LIVE_USERNAME="finnix"
+LIVE_USER_FULLNAME="Finnix user"
+LIVE_CONFIG_NOCOMPONENTS="openssh-server"
+EOM
+
+systemctl add-wants finnix.target live-tools.service

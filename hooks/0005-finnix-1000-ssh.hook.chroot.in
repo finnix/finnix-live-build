@@ -1,0 +1,41 @@
+#!/bin/sh
+
+set -e
+
+# Requires: LIVE_CONFIG_NOCOMPONENTS="openssh-server"
+mkdir -p /etc/systemd/system/ssh.service.d
+cat <<"EOM" >/etc/systemd/system/ssh.service.d/finnix.conf
+[Service]
+ExecStartPre=
+ExecStartPre=/bin/sh -c /lib/live/config/????-openssh-server
+ExecStartPre=/usr/sbin/sshd -t
+EOM
+
+cat <<"EOM" >/etc/ssh/sshd_config.d/finnix.conf
+# "Safe" for maintenance use since by default, the user needs to set a
+# root password and start ssh.service.
+PasswordAuthentication yes
+PermitRootLogin yes
+EOM
+
+mkdir -p /lib/finnix
+cat <<"EOM" >/lib/finnix/finnix-ssh-agent
+#!/bin/sh
+
+set -e
+
+mkdir -p /root/.ssh
+ssh-agent -s | grep ^SSH_ > /root/.ssh/ssh-agent.sh
+EOM
+chmod 0755 /lib/finnix/finnix-ssh-agent
+
+cat <<"EOM" >/etc/systemd/system/finnix-ssh-agent.service
+[Unit]
+Description=Shared SSH agent
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/lib/finnix/finnix-ssh-agent
+EOM
+systemctl add-wants finnix.target finnix-ssh-agent.service
