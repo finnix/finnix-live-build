@@ -51,6 +51,27 @@ EOM
 
 : >/etc/motd
 
+mkdir -p /lib/finnix
+cat <<"EOM" >/lib/finnix/finnix-ssh-agent
+#!/bin/sh
+
+set -e
+
+mkdir -p /root/.ssh
+ssh-agent -s | grep ^SSH_ > /root/.ssh/ssh-agent.sh
+EOM
+chmod 0755 /lib/finnix/finnix-ssh-agent
+
+cat <<"EOM" >/etc/systemd/system/finnix-ssh-agent.service
+[Unit]
+Description=Shared SSH agent
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/lib/finnix/finnix-ssh-agent
+EOM
+
 systemctl disable systemd-timesyncd.service || true  # finnix.target -> basic.target -> sysinit.target
 for i in $(cd /etc/systemd/system/timers.target.wants; ls -1); do
     systemctl disable "${i}" || true
@@ -72,7 +93,7 @@ EOM
 systemctl set-default finnix.target
 
 systemctl add-wants finnix.target getty.target
-for i in live-tools gpm systemd-user-sessions systemd-update-utmp-runlevel; do
+for i in live-tools gpm systemd-user-sessions systemd-update-utmp-runlevel finnix-ssh-agent; do
     if [ -e /etc/systemd/system/${i}.service ]; then
         systemctl add-wants finnix.target /etc/systemd/system/${i}.service
     elif [ -e /lib/systemd/system/${i}.service ]; then
@@ -147,6 +168,10 @@ else
   else
     PS1='$ '
   fi
+fi
+
+if [ -e ~/.ssh/ssh-agent.sh ]; then
+    . ~/.ssh/ssh-agent.sh
 fi
 
 alias ls='ls --color=auto'
