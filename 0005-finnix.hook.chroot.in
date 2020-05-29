@@ -16,6 +16,12 @@ ExecStartPre=
 ExecStartPre=/bin/sh -c /lib/live/config/????-openssh-server
 ExecStartPre=/usr/sbin/sshd -t
 EOM
+cat <<"EOM" >/etc/ssh/sshd_config.d/finnix.conf
+# "Safe" for maintenance use since by default, the user needs to set a
+# root password and start ssh.service.
+PasswordAuthentication yes
+PermitRootLogin yes
+EOM
 
 dpkg-divert --add --rename --divert /usr/lib/os-release.debian /usr/lib/os-release
 cat <<"EOM" >/usr/lib/os-release
@@ -66,7 +72,7 @@ EOM
 systemctl set-default finnix.target
 
 systemctl add-wants finnix.target getty.target
-for i in live-tools gpm; do
+for i in live-tools gpm systemd-user-sessions systemd-update-utmp-runlevel; do
     if [ -e /etc/systemd/system/${i}.service ]; then
         systemctl add-wants finnix.target /etc/systemd/system/${i}.service
     elif [ -e /lib/systemd/system/${i}.service ]; then
