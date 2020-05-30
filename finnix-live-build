@@ -19,12 +19,21 @@ lock /run/shm/finnix-live-build.lock
 DATE="$(date -u +"%F %T")"
 YEAR="$(date -u +"%Y")"
 ARCHITECTURE="$(dpkg --print-architecture)"
-if [ "${ARCHITECTURE}" = "arm64" ]; then
+if [ "${ARCHITECTURE}" = "amd64" ]; then
+    BINARY_IMAGES="iso-hybrid"
+    BOOTLOADERS="grub-efi,grub-pc"
+    ISO_FILENAME="finnix-${ARCHITECTURE}.hybrid.iso"
+    MEMTEST="memtest86+"
+elif [ "${ARCHITECTURE}" = "arm64" ]; then
+    BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi"
+    ISO_FILENAME="finnix-${ARCHITECTURE}.hybrid.iso"
     MEMTEST=""
 else
-    BOOTLOADERS="grub-efi,grub-pc"
-    MEMTEST="memtest86+"
+    BINARY_IMAGES="iso"
+    BOOTLOADERS=""
+    ISO_FILENAME="finnix-${ARCHITECTURE}.iso"
+    MEMTEST=""
 fi
 
 if [ "$(dnsdomainname)" = "snowman.lan" ]; then
@@ -46,7 +55,7 @@ lb config noauto \
   --architectures "${ARCHITECTURE}" \
   --archive-areas "main contrib non-free" \
   --backports false \
-  --binary-images iso-hybrid \
+  --binary-images "${BINARY_IMAGES}" \
   --bootappend-live "boot=live quiet" \
   --bootloaders "${BOOTLOADERS}" \
   --distribution testing \
@@ -97,5 +106,5 @@ fi
 
 lb build
 
-ls -lsa "${LB_DIR}/finnix-${ARCHITECTURE}.hybrid.iso"
-file "${LB_DIR}/finnix-${ARCHITECTURE}.hybrid.iso"
+ls -lsa "${LB_DIR}/${ISO_FILENAME}"
+file "${LB_DIR}/${ISO_FILENAME}"

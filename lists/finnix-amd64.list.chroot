@@ -1,6 +1,10 @@
 acpi
 cmospwd
 cpuid
+dmidecode
+efibootmgr
+efitools
+efivar
 fdutils
 fuseext2
 gpart

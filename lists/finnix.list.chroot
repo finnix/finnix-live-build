@@ -27,7 +27,6 @@ cryptsetup-bin
 curl
 dbus
 debootstrap
-dmidecode
 dnsutils
 dosfstools
 dselect
@@ -35,9 +34,6 @@ dump
 dvd+rw-tools
 ed
 edid-decode
-efibootmgr
-efitools
-efivar
 eject
 elinks
 etherwake
