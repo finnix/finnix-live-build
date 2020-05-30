@@ -4,23 +4,10 @@ set -e
 
 cat <<EOM >/etc/systemd/system/gpm.service
 [Unit]
-SourcePath=/etc/init.d/gpm
-Description=LSB: gpm sysv init script
-Before=multi-user.target
-Before=graphical.target
-Before=finnix.target
-After=remote-fs.target
+Description=Console mouse daemon
+ConditionPathExists=/dev/input/mice
 
 [Service]
-Type=forking
-Restart=no
-TimeoutSec=5min
-IgnoreSIGPIPE=no
-KillMode=process
-GuessMainPID=no
-RemainAfterExit=yes
-SuccessExitStatus=5 6
-ExecStart=/etc/init.d/gpm start
-ExecStop=/etc/init.d/gpm stop
+ExecStart=/usr/sbin/gpm -D -m /dev/input/mice -t exps2
 EOM
 systemctl add-wants finnix.target gpm.service
