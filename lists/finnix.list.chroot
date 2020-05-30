@@ -1,4 +1,7 @@
 2ping
+#if ARCHITECTURES amd64
+acpi
+#endif
 apt-utils
 arj
 arping
@@ -19,14 +22,23 @@ cdbackup
 cdpr
 chntpw
 cifs-utils
+#if ARCHITECTURES amd64
+cmospwd
+#endif
 console-data
 console-setup
 cpio
+#if ARCHITECTURES amd64
+cpuid
+#endif
 cron
 cryptsetup-bin
 curl
 dbus
 debootstrap
+#if ARCHITECTURES amd64 arm64
+dmidecode
+#endif
 dnsutils
 dosfstools
 dselect
@@ -34,6 +46,11 @@ dump
 dvd+rw-tools
 ed
 edid-decode
+#if ARCHITECTURES amd64 arm64
+efibootmgr
+efitools
+efivar
+#endif
 eject
 elinks
 etherwake
@@ -41,16 +58,25 @@ ethtool
 exfat-fuse
 exfat-utils
 f2fs-tools
+#if ARCHITECTURES amd64
+fdutils
+#endif
 fetchmail
 file
 finger
 fsarchiver
+#if ARCHITECTURES amd64
+fuseext2
+#endif
 fxload
 gawk
 gddrescue
 gdisk
 genromfs
 git
+#if ARCHITECTURES amd64
+gpart
+#endif
 gpm
 grepcidr
 hdparm
@@ -75,6 +101,9 @@ less
 lftp
 libblockdev-crypto2
 libblockdev-mdraid2
+#if ARCHITECTURES amd64
+lilo
+#endif
 live-tools
 lm-sensors
 locales
@@ -84,6 +113,9 @@ lrzsz
 lsb-release
 lshw
 lsof
+#if ARCHITECTURES amd64
+ltrace
+#endif
 lvm2
 makedev
 man-db
@@ -145,6 +177,9 @@ sshfs
 strace
 stress
 stunnel4
+#if ARCHITECTURES arm64
+sunxi-tools
+#endif
 sudo
 tcpdump
 telnet
