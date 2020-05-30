@@ -14,13 +14,12 @@ EOM
 systemctl set-default finnix.target
 
 systemctl disable systemd-timesyncd.service || true  # finnix.target -> basic.target -> sysinit.target
-for i in $(cd /etc/systemd/system/timers.target.wants; ls -1); do
-    systemctl disable "${i}" || true
+rm -rf /etc/systemd/system/timers.target.wants
+mkdir -p /lib/systemd/diverted-system/timers.target.wants
+for i in /lib/systemd/system/timers.target.wants/*.timer; do
+    [ -e "${i}" ] || continue
+    dpkg-divert --add --rename --divert "/lib/systemd/diverted-system/timers.target.wants/$(basename "${i}")" "${i}"
 done
-if [ -e /lib/systemd/system/timers.target.wants/systemd-tmpfiles-clean.timer ]; then
-    mkdir -p /lib/systemd/diverted-system/timers.target.wants
-    dpkg-divert --add --rename --divert /lib/systemd/diverted-system/timers.target.wants/systemd-tmpfiles-clean.timer /lib/systemd/system/timers.target.wants/systemd-tmpfiles-clean.timer
-fi
 rm -f /etc/rc?.d/*
 
 systemctl add-wants finnix.target systemd-user-sessions.service
