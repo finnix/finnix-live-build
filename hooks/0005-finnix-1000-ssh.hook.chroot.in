@@ -26,6 +26,8 @@ set -e
 
 mkdir -p /root/.ssh
 ssh-agent -s | grep ^SSH_ > /root/.ssh/ssh-agent.sh
+. /root/.ssh/ssh-agent.sh
+echo "${SSH_AGENT_PID}" >/run/finnix-ssh-agent.pid
 EOM
 chmod 0755 /lib/finnix/finnix-ssh-agent
 
@@ -34,8 +36,8 @@ cat <<"EOM" >/etc/systemd/system/finnix-ssh-agent.service
 Description=Shared SSH agent
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=forking
 ExecStart=/lib/finnix/finnix-ssh-agent
+PIDFile=/run/finnix-ssh-agent.pid
 EOM
 systemctl add-wants finnix.target finnix-ssh-agent.service
