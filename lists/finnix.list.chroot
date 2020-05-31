@@ -1,5 +1,5 @@
 2ping
-#if ARCHITECTURES amd64
+#if ARCHITECTURES amd64 i386
 acpi
 #endif
 apt-utils
@@ -22,13 +22,13 @@ cdbackup
 cdpr
 chntpw
 cifs-utils
-#if ARCHITECTURES amd64
+#if ARCHITECTURES amd64 i386
 cmospwd
 #endif
 console-data
 console-setup
 cpio
-#if ARCHITECTURES amd64
+#if ARCHITECTURES amd64 i386
 cpuid
 #endif
 cron
@@ -36,7 +36,7 @@ cryptsetup-bin
 curl
 dbus
 debootstrap
-#if ARCHITECTURES amd64 arm64
+#if ARCHITECTURES amd64 i386 arm64
 dmidecode
 #endif
 dnsutils
@@ -46,7 +46,7 @@ dump
 dvd+rw-tools
 ed
 edid-decode
-#if ARCHITECTURES amd64 arm64
+#if ARCHITECTURES amd64 i386 arm64
 efibootmgr
 efitools
 efivar
@@ -58,14 +58,14 @@ ethtool
 exfat-fuse
 exfat-utils
 f2fs-tools
-#if ARCHITECTURES amd64
+#if ARCHITECTURES amd64 i386
 fdutils
 #endif
 fetchmail
 file
 finger
 fsarchiver
-#if ARCHITECTURES amd64
+#if ARCHITECTURES amd64 i386
 fuseext2
 #endif
 fxload
@@ -74,7 +74,7 @@ gddrescue
 gdisk
 genromfs
 git
-#if ARCHITECTURES amd64
+#if ARCHITECTURES amd64 i386
 gpart
 #endif
 gpm
@@ -101,7 +101,7 @@ less
 lftp
 libblockdev-crypto2
 libblockdev-mdraid2
-#if ARCHITECTURES amd64
+#if ARCHITECTURES amd64 i386
 lilo
 #endif
 live-tools
@@ -113,7 +113,7 @@ lrzsz
 lsb-release
 lshw
 lsof
-#if ARCHITECTURES amd64
+#if ARCHITECTURES amd64 i386
 ltrace
 #endif
 lvm2
