@@ -4,6 +4,7 @@ set -e
 
 VERSION="dev"
 CODENAME="racine"
+ARCH="${ARCH:-$(dpkg --print-architecture)}"
 
 lock() {
     local file=$1
@@ -14,11 +15,10 @@ lock() {
     fi
 }
 
-lock /run/shm/finnix-live-build.lock
+lock "/run/shm/finnix-live-build-${ARCH}.lock"
 
 DATE="$(date -u +"%F %T")"
 YEAR="$(date -u +"%Y")"
-ARCH="${ARCH:-$(dpkg --print-architecture)}"
 if [ "${ARCH}" = "amd64" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi,grub-pc"
