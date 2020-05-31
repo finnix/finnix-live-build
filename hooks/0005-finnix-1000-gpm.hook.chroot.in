@@ -8,6 +8,8 @@ Description=Console mouse daemon
 ConditionPathExists=/dev/input/mice
 
 [Service]
-ExecStart=/usr/sbin/gpm -D -m /dev/input/mice -t exps2
+Type=forking
+ExecStart=/usr/sbin/gpm -m /dev/input/mice -t exps2
+PIDFile=/var/run/gpm.pid
 EOM
 systemctl add-wants finnix.target gpm.service
