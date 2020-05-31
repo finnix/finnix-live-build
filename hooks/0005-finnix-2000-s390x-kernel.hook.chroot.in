@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# https://bugs.debian.org/961838
+# Temporary hack on s390x, adds a QEMU-usable kernel from Ubuntu.
+
+set -e
+
+if [ "$(dpkg --print-architecture)" = "s390x" ]; then
+    cd /tmp
+    wget \
+        https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6.15/linux-image-unsigned-5.6.15-050615-generic_5.6.15-050615.202005271638_s390x.deb \
+        https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6.15/linux-modules-5.6.15-050615-generic_5.6.15-050615.202005271638_s390x.deb
+    apt -y install ./linux-*.deb
+    rm -f linux-*.deb
+fi
