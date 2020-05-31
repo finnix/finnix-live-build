@@ -18,21 +18,26 @@ lock /run/shm/finnix-live-build.lock
 
 DATE="$(date -u +"%F %T")"
 YEAR="$(date -u +"%Y")"
-ARCHITECTURE="$(dpkg --print-architecture)"
-if [ "${ARCHITECTURE}" = "amd64" ]; then
+ARCH="${ARCH:-$(dpkg --print-architecture)}"
+if [ "${ARCH}" = "amd64" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi,grub-pc"
-    ISO_FILENAME="finnix-${ARCHITECTURE}.hybrid.iso"
+    ISO_FILENAME="finnix-${ARCH}.hybrid.iso"
     MEMTEST="memtest86+"
-elif [ "${ARCHITECTURE}" = "arm64" ]; then
+elif [ "${ARCH}" = "i386" ]; then
+    BINARY_IMAGES="iso"
+    BOOTLOADERS="grub-pc"
+    ISO_FILENAME="finnix-${ARCH}.iso"
+    MEMTEST="memtest86+"
+elif [ "${ARCH}" = "arm64" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi"
-    ISO_FILENAME="finnix-${ARCHITECTURE}.hybrid.iso"
+    ISO_FILENAME="finnix-${ARCH}.hybrid.iso"
     MEMTEST=""
 else
     BINARY_IMAGES="iso"
     BOOTLOADERS=""
-    ISO_FILENAME="finnix-${ARCHITECTURE}.iso"
+    ISO_FILENAME="finnix-${ARCH}.iso"
     MEMTEST=""
 fi
 
@@ -52,7 +57,7 @@ cd "${LB_DIR}"
 lb config noauto \
   --apt-http-proxy "${APT_HTTP_PROXY}" \
   --apt-recommends false \
-  --architectures "${ARCHITECTURE}" \
+  --architectures "${ARCH}" \
   --archive-areas "main contrib non-free" \
   --backports false \
   --binary-images "${BINARY_IMAGES}" \
@@ -94,15 +99,12 @@ sed -e "s|@CODENAME@|${CODENAME}|g" \
     -e "s|@VERSION@|${VERSION}|g" \
     -e "s|@DATE@|${DATE}|g" \
     -e "s|@YEAR@|${YEAR}|g" \
-    -e "s|@ARCHITECTURE@|${ARCHITECTURE}|g" \
+    -e "s|@ARCHITECTURE@|${ARCH}|g" \
 "${BASE_DIR}/grub/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/grub-pc/splash.png"
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc/live-theme"
 cp "${BASE_DIR}/grub/theme.txt" "${LB_DIR}/config/bootloaders/grub-pc/live-theme/"
 
-cp "${BASE_DIR}/lists/finnix.list.chroot" "${LB_DIR}/config/package-lists/"
-if [ -e "${BASE_DIR}/lists/finnix-${ARCHITECTURE}.list.chroot" ]; then
-    cp "${BASE_DIR}/lists/finnix-${ARCHITECTURE}.list.chroot" "${LB_DIR}/config/package-lists/"
-fi
+cp "${BASE_DIR}/lists"/*.list.chroot "${LB_DIR}/config/package-lists/"
 
 lb build
 
