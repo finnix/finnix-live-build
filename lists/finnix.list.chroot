@@ -28,6 +28,9 @@ cmospwd
 console-data
 console-setup
 cpio
+#if ARCHITECTURES amd64 arm64 armhf i386 ppc64el s390x
+cpu-checker
+#endif
 #if ARCHITECTURES amd64 i386
 cpuid
 #endif
