@@ -36,7 +36,7 @@ cryptsetup-bin
 curl
 dbus
 debootstrap
-#if ARCHITECTURES amd64 i386 arm64
+#if ARCHITECTURES amd64 i386 arm64 armhf
 dmidecode
 #endif
 dnsutils
@@ -46,10 +46,12 @@ dump
 dvd+rw-tools
 ed
 edid-decode
-#if ARCHITECTURES amd64 i386 arm64
+#if ARCHITECTURES amd64 i386 arm64 armhf armel
 efibootmgr
-efitools
 efivar
+#endif
+#if ARCHITECTURES amd64 i386 arm64 armhf
+efitools
 #endif
 eject
 elinks
@@ -177,7 +179,7 @@ sshfs
 strace
 stress
 stunnel4
-#if ARCHITECTURES arm64
+#if ARCHITECTURES arm64 armhf armel
 sunxi-tools
 #endif
 sudo
