@@ -195,7 +195,6 @@ udisks2
 udisks2-bcache
 udisks2-btrfs
 udisks2-lvm2
-udisks2-vdo
 udisks2-zram
 units
 unp
