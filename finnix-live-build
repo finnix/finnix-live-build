@@ -60,6 +60,7 @@ lb config noauto \
   --apt-http-proxy "${APT_HTTP_PROXY}" \
   --apt-indices false \
   --apt-recommends false \
+  --apt-source-archives false \
   --architectures "${ARCH}" \
   --archive-areas "main contrib non-free" \
   --backports false \
