@@ -18,26 +18,6 @@ PasswordAuthentication yes
 PermitRootLogin yes
 EOM
 
-mkdir -p /lib/finnix
-cat <<"EOM" >/lib/finnix/finnix-ssh-agent
-#!/bin/sh
-
-set -e
-
-mkdir -p /root/.ssh
-ssh-agent -s | grep ^SSH_ > /root/.ssh/ssh-agent.sh
-. /root/.ssh/ssh-agent.sh
-echo "${SSH_AGENT_PID}" >/run/finnix-ssh-agent.pid
-EOM
-chmod 0755 /lib/finnix/finnix-ssh-agent
-
-cat <<"EOM" >/etc/systemd/system/finnix-ssh-agent.service
-[Unit]
-Description=Shared SSH agent
-
-[Service]
-Type=forking
-ExecStart=/lib/finnix/finnix-ssh-agent
-PIDFile=/run/finnix-ssh-agent.pid
-EOM
-systemctl add-wants finnix.target finnix-ssh-agent.service
+test -e /usr/lib/systemd/user/gpg-agent-ssh.socket
+mkdir -p /root/.config/systemd/user/sockets.target.wants
+ln -sf /usr/lib/systemd/user/gpg-agent-ssh.socket /root/.config/systemd/user/sockets.target.wants/gpg-agent-ssh.socket

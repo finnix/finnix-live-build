@@ -82,6 +82,7 @@ git
 #if ARCHITECTURES amd64 i386
 gpart
 #endif
+gpg-agent
 gpm
 grepcidr
 hdparm
