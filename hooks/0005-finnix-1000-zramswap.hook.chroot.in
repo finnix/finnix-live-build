@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+# Light reading:
+# https://fedoraproject.org/wiki/Changes/SwapOnZRAM
+
+sed -i -e 's/^\#PERCENTAGE=.*/PERCENTAGE=50/g' /etc/default/zramswap
+systemctl add-wants finnix.target zramswap.service
