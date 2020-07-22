@@ -178,6 +178,7 @@ sharutils
 smartmontools
 smbclient
 snmp
+socat
 squashfs-tools
 sshfs
 strace
