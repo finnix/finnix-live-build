@@ -1,4 +1,5 @@
 desktop-image: "../splash.png"
+title-text: ""
 message-font: "Unifont Regular 16"
 terminal-font: "Unifont Regular 16"
 
@@ -22,7 +23,7 @@ terminal-font: "Unifont Regular 16"
         height = 48%-80
         item_color = "#a8a8a8"
 	item_font = "DejaVu Sans Bold 14"
-        selected_item_color= "#ffffff"
+        selected_item_color= "#d4d4ff"
 	selected_item_font = "DejaVu Sans Bold 14"
         item_height = 16
         item_padding = 0

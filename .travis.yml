@@ -17,7 +17,7 @@ addons:
     - man-db
     - debian-archive-keyring
     - librsvg2-bin
-    - fonts-ubuntu
+    - fonts-liberation2
 install:
 # Hack to avoid false positive on older (bionic) devscripts
 - sudo rm -f /usr/bin/checkbashisms
