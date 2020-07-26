@@ -222,6 +222,9 @@ xfsprogs
 xxhash
 xz-utils
 zerofree
+#if ARCHITECTURES armhf armel amd64 i386 ppc64el
+zfs-fuse
+#endif
 zile
 zip
 zram-tools
