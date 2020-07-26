@@ -3,6 +3,7 @@
 # Re-"compress" all .gz files at gzip level 0 so mksquashfs can compress
 # it more efficiently
 
+import datetime
 import glob
 import gzip
 import hashlib
@@ -12,6 +13,9 @@ import shutil
 
 
 DIVERSIONS = {}
+FILE_COUNT = 0
+PRE_SIZE = 0
+POST_SIZE = 0
 
 
 def readiter(fh, size=1024):
@@ -35,6 +39,10 @@ def parse_diversions(base_dir="/"):
 
 
 def recompress(filename):
+    global FILE_COUNT, PRE_SIZE, POST_SIZE
+
+    FILE_COUNT += 1
+    PRE_SIZE += os.stat(filename).st_size
     with gzip.open(filename, "rb") as fsrc:
         with open(filename + "~recomp", "wb") as fdst:
             # Explicitly do not set filename and mtime in resulting .gz
@@ -44,6 +52,7 @@ def recompress(filename):
                 shutil.copyfileobj(fsrc, fdstgz)
     shutil.copystat(filename, filename + "~recomp")
     shutil.move(filename + "~recomp", filename)
+    POST_SIZE += os.stat(filename).st_size
 
     with open(filename, "rb") as f:
         m = hashlib.md5()
@@ -86,6 +95,7 @@ def process_dpkg_file(dpkg_filename, orig_md5, base_dir="/"):
 
 
 if __name__ == "__main__":
+    time_start = datetime.datetime.now()
     base_dir = "/"
     parse_diversions(base_dir=base_dir)
     for fn in glob.glob(os.path.join(base_dir, "/var/lib/dpkg/info/*.md5sums")):
@@ -97,3 +107,10 @@ if __name__ == "__main__":
                 file_output += "{}  {}\n".format(new_md5, dpkg_filename)
         with open(fn, "w", encoding="utf-8") as f:
             f.write(file_output)
+    time_end = datetime.datetime.now()
+
+    print(
+        "{} files, {} -> {} bytes in {}.".format(
+            FILE_COUNT, PRE_SIZE, POST_SIZE, (time_end - time_start)
+        )
+    )
