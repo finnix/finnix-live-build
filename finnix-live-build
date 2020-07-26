@@ -78,6 +78,7 @@ lb config noauto \
   --memtest "${MEMTEST}" \
   --security false \
   --updates false \
+  --zsync false \
   --mode debian
 
 if [ -d "${LB_CACHE_DIR}" ]; then
