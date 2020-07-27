@@ -4,3 +4,4 @@ live-build_*.tar.xz
 live-build_*.deb
 live-build_*.build*
 live-build_*.changes
+squashfs.sort

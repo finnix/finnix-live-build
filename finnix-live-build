@@ -119,6 +119,11 @@ cp "${BASE_DIR}/grub/theme.txt" "${LB_DIR}/config/bootloaders/grub-pc/live-theme
 
 cp "${BASE_DIR}/lists"/*.list.chroot "${LB_DIR}/config/package-lists/"
 
+if [ -e "${BASE_DIR}/squashfs.sort" ]; then
+    mkdir -p "${LB_DIR}/config/rootfs"
+    cp "${BASE_DIR}/squashfs.sort" "${LB_DIR}/config/rootfs/squashfs.sort"
+fi
+
 lb build
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
