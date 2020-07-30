@@ -110,6 +110,7 @@ libblockdev-mdraid2
 lilo
 #endif
 live-tools
+lldpd
 lm-sensors
 locales
 lpr
