@@ -107,7 +107,7 @@ for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
 done
 
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc"
-cp "${BASE_DIR}/grub/memtest.cfg" "${LB_DIR}/config/bootloaders/grub-pc/"
+cp "${BASE_DIR}/grub"/*.cfg "${LB_DIR}/config/bootloaders/grub-pc/"
 sed -e "s|@CODENAME@|${CODENAME}|g" \
     -e "s|@VERSION@|${VERSION}|g" \
     -e "s|@DATE@|${DATE}|g" \
