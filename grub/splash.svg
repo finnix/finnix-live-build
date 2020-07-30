@@ -158,7 +158,7 @@
          x="39.713837"
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.33333302px;line-height:120.00000477%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:1px;writing-mode:lr-tb;text-anchor:start"
-         id="tspan881">Copyright © 2000-@YEAR@ Ryan Finnie</tspan><tspan
+         id="tspan881">Copyright © 2000-{{ YEAR }} Ryan Finnie</tspan><tspan
          y="717.14246"
          x="39.713837"
          sodipodi:role="line"
@@ -178,7 +178,7 @@
          x="39.713837"
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.66666698px;line-height:100%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#606080;fill-opacity:1"
-         id="tspan894">Build: @DATE@ (@ARCHITECTURE@)</tspan></text>
+         id="tspan894">Build: {{ DATETIME }} ({{ ARCH }})</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -202,7 +202,7 @@
          x="284.69626"
          sodipodi:role="line"
          style="font-style:normal;font-weight:bold;font-size:21.33333333px;line-height:1;-inkscape-font-specification:'Liberation Sans, Bold';font-family:'Liberation Sans';font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;letter-spacing:1px"
-         id="tspan3066-5">@VERSION@</tspan></text>
+         id="tspan3066-5">{{ VERSION }}{% if VERSION == 'dev' %} ({{ CODENAME }}){% endif %}</tspan></text>
     <g
        id="g868">
       <g

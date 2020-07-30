@@ -2,6 +2,8 @@
 
 set -e
 
+PRODUCT="${PRODUCT:-Finnix}"
+PRODUCT_ID="${PRODUCT_ID:-finnix}"
 VERSION="${VERSION:-dev}"
 CODENAME="${CODENAME:-racine}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
@@ -15,29 +17,45 @@ lock() {
     fi
 }
 
-lock "/run/shm/finnix-live-build-${ARCH}.lock"
+render() {
+    env \
+        "PRODUCT=${PRODUCT}" \
+        "PRODUCT_ID=${PRODUCT_ID}" \
+        "VERSION=${VERSION}" \
+        "CODENAME=${CODENAME}" \
+        "ARCH=${ARCH}" \
+        "DATETIME=${DATETIME}" \
+        "DATE=${DATE}" \
+        "YEAR=${YEAR}" \
+   "${BASE_DIR}/tools/jinja2-render"
+}
 
-DATE="$(date -u +"%F %T")"
+BASE_DIR="$(dirname "$(readlink -f "$0")")"
+LOCK_NAME="$(echo "${BASE_DIR}" | sed -e 's,/,-,g; s,^-,,g')"
+lock "/run/shm/${LOCK_NAME}-${ARCH}.lock"
+
+DATETIME="$(date -u +"%F %T")"
+DATE="$(date -u +"%F")"
 YEAR="$(date -u +"%Y")"
 if [ "${ARCH}" = "amd64" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi,grub-pc"
-    ISO_FILENAME="finnix-${ARCH}.hybrid.iso"
+    ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
     MEMTEST="memtest86+"
 elif [ "${ARCH}" = "i386" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi,grub-pc"
-    ISO_FILENAME="finnix-${ARCH}.hybrid.iso"
+    ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
     MEMTEST="memtest86+"
 elif [ "${ARCH}" = "arm64" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi"
-    ISO_FILENAME="finnix-${ARCH}.hybrid.iso"
+    ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
     MEMTEST=""
 else
     BINARY_IMAGES="iso"
     BOOTLOADERS=""
-    ISO_FILENAME="finnix-${ARCH}.iso"
+    ISO_FILENAME="${PRODUCT_ID}-${ARCH}.iso"
     MEMTEST=""
 fi
 
@@ -45,7 +63,6 @@ if [ "$(dnsdomainname)" = "snowman.lan" ]; then
     APT_HTTP_PROXY="http://deb-proxy.snowman.lan:8000"
 fi
 
-BASE_DIR="$(dirname "$(readlink -f "$0")")"
 DATA_DIR="${DATA_DIR:-${BASE_DIR}/nobackup}"
 CACHE_DIR="${CACHE_DIR:-${DATA_DIR}/cache}"
 LB_DIR="${DATA_DIR}/lb"
@@ -69,12 +86,12 @@ lb config noauto \
   --bootloaders "${BOOTLOADERS}" \
   --cache-indices true \
   --distribution testing \
-  --hdd-label FINNIX \
-  --image-name finnix \
-  --iso-application Finnix \
-  --iso-preparer Finnix \
-  --iso-publisher Finnix \
-  --iso-volume "Finnix ${VERSION}" \
+  --hdd-label "$(echo "${PRODUCT_ID}" | tr a-z A-Z)" \
+  --image-name "${PRODUCT_ID}" \
+  --iso-application "${PRODUCT}" \
+  --iso-preparer "${PRODUCT}" \
+  --iso-publisher "${PRODUCT}" \
+  --iso-volume "${PRODUCT} ${VERSION}" \
   --memtest "${MEMTEST}" \
   --security false \
   --updates false \
@@ -101,19 +118,12 @@ if [ -d "${LB_CACHE_DIR}" ]; then
 fi
 
 for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
-    sed -e "s|@CODENAME@|${CODENAME}|g" \
-        -e "s|@VERSION@|${VERSION}|g" \
-    "${i}" > "${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
+    render <"${i}" >"${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
 done
 
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc"
 cp "${BASE_DIR}/grub"/*.cfg "${LB_DIR}/config/bootloaders/grub-pc/"
-sed -e "s|@CODENAME@|${CODENAME}|g" \
-    -e "s|@VERSION@|${VERSION}|g" \
-    -e "s|@DATE@|${DATE}|g" \
-    -e "s|@YEAR@|${YEAR}|g" \
-    -e "s|@ARCHITECTURE@|${ARCH}|g" \
-"${BASE_DIR}/grub/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/grub-pc/splash.png"
+render <"${BASE_DIR}/grub/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/grub-pc/splash.png"
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc/live-theme"
 cp "${BASE_DIR}/grub/theme.txt" "${LB_DIR}/config/bootloaders/grub-pc/live-theme/"
 

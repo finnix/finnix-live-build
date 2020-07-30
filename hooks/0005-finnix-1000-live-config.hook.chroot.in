@@ -3,9 +3,9 @@
 set -e
 
 cat <<"EOM" >/etc/live/config.conf.d/finnix.conf
-LIVE_HOSTNAME="finnix"
-LIVE_USERNAME="finnix"
-LIVE_USER_FULLNAME="Finnix user"
+LIVE_HOSTNAME="{{ PRODUCT_ID }}"
+LIVE_USERNAME="{{ PRODUCT_ID }}"
+LIVE_USER_FULLNAME="{{ PRODUCT }} user"
 LIVE_CONFIG_NOCOMPONENTS="openssh-server"
 EOM
 

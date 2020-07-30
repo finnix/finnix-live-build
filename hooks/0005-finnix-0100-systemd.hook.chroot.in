@@ -4,7 +4,7 @@ set -e
 
 cat <<"EOM" >/etc/systemd/system/finnix.target
 [Unit]
-Description=Finnix System
+Description={{ PRODUCT }} System
 Requires=basic.target
 Conflicts=rescue.service rescue.target
 After=basic.target rescue.service rescue.target
