@@ -18,7 +18,6 @@ buffer
 bzip2
 cabextract
 ca-certificates
-cdbackup
 cdpr
 chntpw
 cifs-utils
@@ -46,7 +45,6 @@ dnsutils
 dosfstools
 dselect
 dump
-dvd+rw-tools
 ed
 edid-decode
 #if ARCHITECTURES amd64 i386 arm64 armhf armel
@@ -93,6 +91,7 @@ ifenslave
 iftop
 iotop
 ipcalc
+ipmitool
 iptables
 iptraf-ng
 iputils-ping
@@ -143,6 +142,7 @@ nmap
 ntfs-3g
 ntpdate
 nvme-cli
+oathtool
 openssh-client
 openssh-server
 openvpn
@@ -173,8 +173,10 @@ rlwrap
 robotfindskitten
 rsync
 screen
+sdparm
 setserial
 sharutils
+sipcalc
 smartmontools
 smbclient
 snmp
@@ -216,9 +218,9 @@ wget
 whois
 wipe
 wireless-tools
-wodim
 wpasupplicant
 xfsprogs
+xorriso
 xxhash
 xz-utils
 zerofree
