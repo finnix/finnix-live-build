@@ -1,0 +1,26 @@
+name: schedule
+on:
+  schedule:
+  - cron: '34 5 * * 1'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Dependency packages
+      run: sudo apt -y install build-essential debhelper/bionic-backports git-buildpackage po4a gettext man-db debian-archive-keyring librsvg2-bin fonts-liberation2 python3-jinja2
+    - name: Build / install live-build
+      run: |
+        sudo rm -f /usr/bin/checkbashisms
+        cd live-build
+        gbp buildpackage --git-ignore-branch
+        sudo apt -y install ../*.deb
+    - name: Build image
+      run: sudo ./finnix-live-build
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}
+        path: nobackup/lb/finnix-*
