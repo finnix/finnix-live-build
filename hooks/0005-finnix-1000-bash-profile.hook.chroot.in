@@ -4,34 +4,37 @@ set -e
 
 cat <<"EOM" >/etc/profile.d/finnix.sh
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
+EOM
 
+if ! grep -q "^# Finnix additions" /etc/skel/.bashrc >/dev/null 2>/dev/null; then
+    cat <<"EOM" >>/etc/skel/.bashrc
+
+# Finnix additions
 __sh_exitcode() { ret=$?; if [[ $ret != 0 ]]; then echo "$ret "; fi }
 
-if [ "$BASH" ]; then
-  if [ "$TERM" != "dumb" ]; then
-    PS1='\[\033[1;31m\]$(__sh_exitcode)\[\033[1;37m\]\u\[\033[0;39m\]@\[\033[1;37m\]\l\[\033[0;39m\]:\[\033[1;37m\]\w\[\033[1;34m\]\$\[\033[0;39m\] '
-  else
-    PS1='\u@\h:\w\$ '
-  fi
+if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;31m\]$(__sh_exitcode)\[\033[1;37m\]\u\[\033[0;39m\]@\[\033[1;37m\]\l\[\033[0;39m\]:\[\033[1;37m\]\w\[\033[1;34m\]\$\[\033[0;39m\] '
 else
-  if [ "`id -u`" -eq 0 ]; then
-    PS1='# '
-  else
-    PS1='$ '
-  fi
+    PS1='${debian_chroot:+($debian_chroot)}$(__sh_exitcode)\u@\h:\w\$ '
 fi
 
-mkdir -p "${HOME}/.gnupg"
+if [ ! -d "${HOME}/.gnupg" ]; then
+    mkdir -p "${HOME}/.gnupg"
+fi
 export GPG_TTY="$(tty)"
 if gpg-connect-agent updatestartuptty /bye >/dev/null 2>/dev/null; then
     export GPG_AGENT_INFO="$(gpgconf --list-dirs agent-socket)"
     export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 fi
 
-alias ls='ls --color=auto'
+#alias ls='ls --color=auto'  # Conditionally set above
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
 
 alias httpd='python3 -m http.server'
 EOM
+fi
+
+rsync -a /etc/skel/ /root/
+chmod 0700 /root
