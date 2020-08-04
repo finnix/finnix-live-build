@@ -10,6 +10,13 @@ if ! grep -q "^# Finnix additions" /etc/skel/.bashrc >/dev/null 2>/dev/null; the
     cat <<"EOM" >>/etc/skel/.bashrc
 
 # Finnix additions
+if [ -f ~/.bash_finnix ]; then
+    . ~/.bash_finnix
+fi
+EOM
+fi
+
+cat <<"EOM" >>/etc/skel/.bash_finnix
 __sh_exitcode() { ret=$?; if [[ $ret != 0 ]]; then echo "$ret "; fi }
 
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -34,7 +41,6 @@ alias ll='ls -alF'
 
 alias httpd='python3 -m http.server'
 EOM
-fi
 
 rsync -a /etc/skel/ /root/
 chmod 0700 /root
