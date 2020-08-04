@@ -2,7 +2,7 @@
 
 set -e
 
-cat <<"EOM" >/etc/systemd/system/finnix.target
+cat <<"EOM" >/etc/systemd/system/{{ PRODUCT_ID }}.target
 [Unit]
 Description={{ PRODUCT }} System
 Requires=basic.target
@@ -11,9 +11,9 @@ After=basic.target rescue.service rescue.target
 AllowIsolate=yes
 EOM
 
-systemctl set-default finnix.target
+systemctl set-default {{ PRODUCT_ID }}.target
 
-# Disable forced sysinit.target services (via finnix.target -> basic.target)
+# Disable forced sysinit.target services (via {{ PRODUCT_ID }}.target -> basic.target)
 for i in systemd-timesyncd.service zfs-fuse.service; do
     systemctl disable "${i}" || true
 done
@@ -32,7 +32,7 @@ for i in /lib/systemd/system/default.target.wants/*.timer; do
 done
 rm -f /etc/rc?.d/*
 
-systemctl add-wants finnix.target systemd-user-sessions.service
-systemctl add-wants finnix.target systemd-update-utmp-runlevel.service
+systemctl add-wants {{ PRODUCT_ID }}.target systemd-user-sessions.service
+systemctl add-wants {{ PRODUCT_ID }}.target systemd-update-utmp-runlevel.service
 
 sed -i -e 's/^\#ShowStatus=.*/ShowStatus=yes/g' /etc/systemd/system.conf

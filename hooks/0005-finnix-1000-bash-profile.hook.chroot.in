@@ -2,21 +2,21 @@
 
 set -e
 
-cat <<"EOM" >/etc/profile.d/finnix.sh
+cat <<"EOM" >/etc/profile.d/{{ PRODUCT_ID }}.sh
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
 EOM
 
-if ! grep -q "^# Finnix additions" /etc/skel/.bashrc >/dev/null 2>/dev/null; then
+if ! grep -q "^# {{ PRODUCT }} additions" /etc/skel/.bashrc >/dev/null 2>/dev/null; then
     cat <<"EOM" >>/etc/skel/.bashrc
 
-# Finnix additions
-if [ -f ~/.bash_finnix ]; then
-    . ~/.bash_finnix
+# {{ PRODUCT }} additions
+if [ -f ~/.bash_{{ PRODUCT_ID }} ]; then
+    . ~/.bash_{{ PRODUCT_ID }}
 fi
 EOM
 fi
 
-cat <<"EOM" >>/etc/skel/.bash_finnix
+cat <<"EOM" >>/etc/skel/.bash_{{ PRODUCT_ID }}
 __sh_exitcode() { ret=$?; if [[ $ret != 0 ]]; then echo "$ret "; fi }
 
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then

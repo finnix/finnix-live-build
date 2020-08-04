@@ -2,11 +2,11 @@
 
 set -e
 
-cat <<"EOM" >/etc/live/config.conf.d/finnix.conf
+cat <<"EOM" >/etc/live/config.conf.d/{{ PRODUCT_ID }}.conf
 LIVE_HOSTNAME="{{ PRODUCT_ID }}"
 LIVE_USERNAME="{{ PRODUCT_ID }}"
 LIVE_USER_FULLNAME="{{ PRODUCT }} user"
 LIVE_CONFIG_NOCOMPONENTS="openssh-server"
 EOM
 
-systemctl add-wants finnix.target live-tools.service
+systemctl add-wants {{ PRODUCT_ID }}.target live-tools.service

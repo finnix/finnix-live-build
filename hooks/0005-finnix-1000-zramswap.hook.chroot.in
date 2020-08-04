@@ -6,4 +6,4 @@ set -e
 # https://fedoraproject.org/wiki/Changes/SwapOnZRAM
 
 sed -i -e 's/^\#PERCENTAGE=.*/PERCENTAGE=50/g; s/^\#CORES=.*/CORES=1/g;' /etc/default/zramswap
-systemctl add-wants finnix.target zramswap.service
+systemctl add-wants {{ PRODUCT_ID }}.target zramswap.service

@@ -2,8 +2,8 @@
 
 set -e
 
-mkdir -p /lib/finnix
-cat >/lib/finnix/strace-init <<"EOM"
+mkdir -p /lib/{{ PRODUCT_ID }}
+cat >/lib/{{ PRODUCT_ID }}/strace-init <<"EOM"
 #!/bin/sh
 
 # finnix-strace-init
@@ -27,7 +27,7 @@ set -e
 
 PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 
-strace -v -qq -yy -s 65535 -p $$ -f -e open,openat,execve -o /var/log/finnix-strace-init.trace &
+strace -v -qq -yy -s 65535 -p $$ -f -e open,openat,execve -o /var/log/strace-init.trace &
 sleep 3
 if [ -n "$1" ]; then
   exec "$@"
@@ -35,4 +35,4 @@ else
   exec /sbin/init
 fi
 EOM
-chmod 0755 /lib/finnix/strace-init
+chmod 0755 /lib/{{ PRODUCT_ID }}/strace-init
