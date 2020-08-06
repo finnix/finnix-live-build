@@ -7,6 +7,7 @@ PRODUCT_ID="${PRODUCT_ID:-finnix}"
 VERSION="${VERSION:-dev}"
 CODENAME="${CODENAME:-racine}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
+SOURCE_ISO="${SOURCE_ISO:-false}"
 
 lock() {
     local file=$1
@@ -75,11 +76,13 @@ rm -rf "${LB_DIR}"
 mkdir -p "${LB_DIR}"
 cd "${LB_DIR}"
 
+# Note that --source true also requires --apt-source-archives true
+
 lb config noauto \
   --apt-http-proxy "${APT_HTTP_PROXY}" \
   --apt-indices false \
   --apt-recommends false \
-  --apt-source-archives false \
+  --apt-source-archives true \
   --architectures "${ARCH}" \
   --archive-areas "main contrib non-free" \
   --backports false \
@@ -96,6 +99,8 @@ lb config noauto \
   --iso-volume "${PRODUCT} ${VERSION}" \
   --memtest "${MEMTEST}" \
   --security false \
+  --source "${SOURCE_ISO}" \
+  --source-images iso \
   --updates false \
   --zsync false \
   --mode debian
@@ -117,6 +122,12 @@ if [ -d "${LB_CACHE_DIR}" ]; then
     fi
     rm -rf "${LB_DIR}/cache"
     ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
+else
+    echo "live-build cache is NOT being saved."
+    echo "If you want a persistent cache, after the run, move:"
+    echo "    ${LB_DIR}/cache"
+    echo "to"
+    echo "    ${LB_CACHE_DIR}"
 fi
 
 for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
