@@ -18,6 +18,32 @@ PasswordAuthentication yes
 PermitRootLogin yes
 EOM
 
-test -e /usr/lib/systemd/user/gpg-agent-ssh.socket
-mkdir -p /root/.config/systemd/user/sockets.target.wants
-ln -sf /usr/lib/systemd/user/gpg-agent-ssh.socket /root/.config/systemd/user/sockets.target.wants/gpg-agent-ssh.socket
+# Shared per-user SSH agent
+mkdir -p /lib/{{ PRODUCT_ID }}
+cat <<"EOM" >/lib/{{ PRODUCT_ID }}/ssh-agent
+#!/bin/sh
+
+[ -n "${HOME}" ] || exit 1
+
+if [ ! -e "${HOME}/.ssh/ssh-agent.sh" ]; then
+    mkdir -p "${HOME}/.ssh"
+    ssh-agent -s | grep ^SSH >"${HOME}/.ssh/ssh-agent.sh"
+    echo "${SSH_AGENT_PID}" >"${HOME}/.ssh/ssh-agent.pid"
+fi
+. "${HOME}/.ssh/ssh-agent.sh"
+EOM
+chmod 0755 /lib/{{ PRODUCT_ID }}/ssh-agent
+
+cat <<"EOM" >/etc/systemd/system/{{ PRODUCT_ID }}-ssh-agent.service
+[Unit]
+Description={{ PRODUCT }} SSH agent init
+Before=getty.target
+
+[Service]
+Type=forking
+ExecStart=/lib/{{ PRODUCT_ID }}/ssh-agent
+PIDFile=/root/.ssh/ssh-agent.pid
+Environment="USER=root"
+Environment="HOME=/root"
+EOM
+systemctl add-wants {{ PRODUCT_ID }}.target {{ PRODUCT_ID }}-ssh-agent.service
