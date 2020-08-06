@@ -106,9 +106,6 @@ less
 lftp
 libblockdev-crypto2
 libblockdev-mdraid2
-#if ARCHITECTURES amd64 i386
-lilo
-#endif
 live-tools
 lldpd
 lm-sensors
