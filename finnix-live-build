@@ -4,10 +4,10 @@ set -e
 
 PRODUCT="${PRODUCT:-Finnix}"
 PRODUCT_ID="${PRODUCT_ID:-finnix}"
-VERSION="${VERSION:-dev}"
+VERSION="${VERSION:-121}"
 CODENAME="${CODENAME:-racine}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
-SOURCE_ISO="${SOURCE_ISO:-false}"
+SOURCE_ISO="${SOURCE_ISO:-true}"
 
 lock() {
     local file=$1
