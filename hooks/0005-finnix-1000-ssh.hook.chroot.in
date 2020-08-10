@@ -28,6 +28,7 @@ cat <<"EOM" >/lib/{{ PRODUCT_ID }}/ssh-agent
 if [ ! -e "${HOME}/.ssh/ssh-agent.sh" ]; then
     mkdir -p "${HOME}/.ssh"
     ssh-agent -s | grep ^SSH >"${HOME}/.ssh/ssh-agent.sh"
+    . "${HOME}/.ssh/ssh-agent.sh"
     echo "${SSH_AGENT_PID}" >"${HOME}/.ssh/ssh-agent.pid"
 fi
 . "${HOME}/.ssh/ssh-agent.sh"
