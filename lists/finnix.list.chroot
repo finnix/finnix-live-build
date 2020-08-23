@@ -61,9 +61,6 @@ ethtool
 exfat-fuse
 exfat-utils
 f2fs-tools
-#if ARCHITECTURES amd64 i386
-fdutils
-#endif
 fetchmail
 file
 finger
