@@ -102,7 +102,7 @@ if __name__ == "__main__":
         file_output = ""
         with open(fn, "r", encoding="utf-8") as f:
             for line in f.readlines():
-                orig_md5, _, dpkg_filename = line.rstrip().split(" ")
+                orig_md5, _, dpkg_filename = line.rstrip().split(" ", 2)
                 new_md5 = process_dpkg_file(dpkg_filename, orig_md5, base_dir=base_dir)
                 file_output += "{}  {}\n".format(new_md5, dpkg_filename)
         with open(fn, "w", encoding="utf-8") as f:
