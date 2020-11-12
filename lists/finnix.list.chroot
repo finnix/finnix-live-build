@@ -154,6 +154,7 @@ pcmciautils
 picocom
 policykit-1
 powermgmt-base
+pppconfig
 pppoe
 pppoeconf
 pptp-linux
