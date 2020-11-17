@@ -136,6 +136,7 @@ else
 fi
 
 for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
+    # shellcheck disable=SC2094
     render <"${i}" >"${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
 done
 
