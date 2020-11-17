@@ -25,4 +25,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}
-        path: nobackup/lb/finnix-*
+        path: build/lb/finnix-*

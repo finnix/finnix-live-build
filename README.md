@@ -14,7 +14,7 @@ Requirements:
 
 This can be built on dedicated hardware, in a virtual machine, or in a systemd-nspawn container.  Building in a chroot within one of these environments is supported.  Docker and LXD containers are not supported, as they do not allow mounting proc/devpts (even the container-specific restricted versions), required by live-build/debootstrap.
 
-The default build directory will be ```nobackup/lb/``` from the script directory ("nobackup" is so my home network backup program will skip over it).
+The default build directory will be ```build/lb/``` from the script directory.
 
 ## Builds
 
