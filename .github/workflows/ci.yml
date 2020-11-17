@@ -10,7 +10,7 @@ jobs:
     - name: Dependency packages
       run: |
         sudo apt-get update
-        sudo apt -y install build-essential debhelper/bionic-backports git-buildpackage po4a gettext man-db debian-archive-keyring librsvg2-bin fonts-liberation2 python3-jinja2
+        sudo apt -y install build-essential debhelper/bionic-backports git-buildpackage po4a gettext man-db debian-archive-keyring librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck
     - name: Build / install live-build
       run: |
         sudo rm -f /usr/bin/checkbashisms
@@ -18,4 +18,4 @@ jobs:
         gbp buildpackage --git-ignore-branch
         sudo apt -y install ../*.deb
     - name: Build image
-      run: sudo ./finnix-live-build
+      run: sudo env LINT=true ./finnix-live-build

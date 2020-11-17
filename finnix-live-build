@@ -8,12 +8,13 @@ VERSION="${VERSION:-dev}"
 CODENAME="${CODENAME:-ashwaubenon}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
 SOURCE_ISO="${SOURCE_ISO:-false}"
+LINT="${LINT:-false}"
 
 lock() {
-    local file=$1
-    exec 9>"$file"
+    _file=$1
+    exec 9>"${_file}"
     if ! flock -x -w 1 9; then
-        echo "$file lock failed" >&2
+        echo "${_file} lock failed" >&2
         exit 1
     fi
 }
@@ -71,6 +72,10 @@ LB_CACHE_DIR="${LB_CACHE_DIR:-${CACHE_DIR}/lb}"
 mkdir -p "${LOCK_DIR}"
 lock "${LOCK_DIR}/${LOCK_NAME}.lock"
 
+if [ "${LINT}" = "true" ]; then
+    shellcheck "${BASE_DIR}/finnix-live-build"
+fi
+
 cd /
 rm -rf "${LB_DIR}"
 mkdir -p "${LB_DIR}"
@@ -91,7 +96,7 @@ lb config noauto \
   --bootloaders "${BOOTLOADERS}" \
   --cache-indices true \
   --distribution testing \
-  --hdd-label "$(echo "${PRODUCT_ID}" | tr a-z A-Z)" \
+  --hdd-label "$(echo "${PRODUCT_ID}" | tr '[:lower:]' '[:upper:]')" \
   --image-name "${PRODUCT_ID}" \
   --iso-application "${PRODUCT}" \
   --iso-preparer "${PRODUCT}" \
@@ -145,6 +150,10 @@ cp "${BASE_DIR}/lists"/*.list.chroot "${LB_DIR}/config/package-lists/"
 if [ -e "${BASE_DIR}/squashfs.sort" ]; then
     mkdir -p "${LB_DIR}/config/rootfs"
     cp "${BASE_DIR}/squashfs.sort" "${LB_DIR}/config/rootfs/squashfs.sort"
+fi
+
+if [ "${LINT}" = "true" ]; then
+    grep -l '^#!/bin/sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs shellcheck
 fi
 
 lb build
