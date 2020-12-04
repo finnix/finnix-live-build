@@ -2,7 +2,7 @@ name: ci
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
       with:
@@ -10,7 +10,7 @@ jobs:
     - name: Dependency packages
       run: |
         sudo apt-get update
-        sudo apt -y install build-essential debhelper/bionic-backports git-buildpackage po4a gettext man-db debian-archive-keyring librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck
+        sudo apt -y install build-essential debhelper git-buildpackage po4a gettext man-db debian-archive-keyring librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck
     - name: Build / install live-build
       run: |
         sudo rm -f /usr/bin/checkbashisms
