@@ -2,6 +2,7 @@ name: schedule
 on:
   schedule:
   - cron: '34 5 * * 1'
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-20.04
