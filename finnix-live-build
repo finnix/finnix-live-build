@@ -136,8 +136,11 @@ else
 fi
 
 for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
+    basefn="$(basename "$i" .in)"
+    rm -f "${LB_DIR}/config/hooks/normal/${basefn}"
+    # False positive in earlier shellcheck
     # shellcheck disable=SC2094
-    render <"${i}" >"${LB_DIR}/config/hooks/normal/$(basename "$i" .in)"
+    render <"${i}" >"${LB_DIR}/config/hooks/normal/${basefn}"
 done
 
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc"
