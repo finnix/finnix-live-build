@@ -13,12 +13,12 @@ jobs:
     - name: Dependency packages
       run: |
         sudo apt-get update
-        sudo apt -y install build-essential debhelper git-buildpackage po4a gettext man-db debian-archive-keyring librsvg2-bin fonts-liberation2 python3-jinja2
+        sudo apt -y install build-essential debhelper devscripts po4a gettext man-db debian-archive-keyring librsvg2-bin fonts-liberation2 python3-jinja2
     - name: Build / install live-build
       run: |
         sudo rm -f /usr/bin/checkbashisms
         cd live-build
-        gbp buildpackage --git-ignore-branch
+        debuild -us -uc
         sudo apt -y install ../*.deb
     - name: Build image
       run: sudo ./finnix-live-build
