@@ -48,12 +48,6 @@ While ISOs are not officially released, these are still considered important arc
 
 Not supported, and produced images are not directly bootable.  However, they can be booted by direct kernel/initrd boot in QEMU, and are tested occasionally.  Build failures are not a blocker.
 
-### Tier 4
-
-* armel
-
-Not supported, build errors are not a blocker, images are not tested.  finnix-live-build may or may not succeed at producing images, let alone usable images.  Only mentioned here since mentions of this architecture are contained within finnix-live-build.
-
 ## Issues and pull requests
 
 To open a Finnix issue, please use the main [Finnix issue tracker](https://github.com/finnix/finnix/issues), not this repository's.

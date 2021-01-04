@@ -27,9 +27,7 @@ cmospwd
 console-data
 console-setup
 cpio
-#if ARCHITECTURES amd64 arm64 armhf i386 ppc64el s390x
 cpu-checker
-#endif
 #if ARCHITECTURES amd64 i386
 cpuid
 #endif
@@ -38,7 +36,7 @@ cryptsetup-bin
 curl
 dbus
 debootstrap
-#if ARCHITECTURES amd64 i386 arm64 armhf
+#if ARCHITECTURES amd64 arm64 armhf i386
 dmidecode
 #endif
 dnsutils
@@ -47,11 +45,9 @@ dselect
 dump
 ed
 edid-decode
-#if ARCHITECTURES amd64 i386 arm64 armhf armel
+#if ARCHITECTURES amd64 arm64 armhf i386
 efibootmgr
 efivar
-#endif
-#if ARCHITECTURES amd64 i386 arm64 armhf
 efitools
 #endif
 eject
@@ -77,9 +73,7 @@ gddrescue
 gdisk
 genromfs
 git
-#if ARCHITECTURES amd64 i386
 gpart
-#endif
 gpg-agent
 gpm
 grepcidr
@@ -117,7 +111,7 @@ lrzsz
 lsb-release
 lshw
 lsof
-#if ARCHITECTURES amd64 i386
+#if ARCHITECTURES amd64 i386 s390x
 ltrace
 #endif
 lvm2
@@ -185,9 +179,7 @@ sshfs
 strace
 stress
 stunnel4
-#if ARCHITECTURES arm64 armhf armel
 sunxi-tools
-#endif
 sudo
 tcpdump
 telnet
@@ -223,7 +215,7 @@ xorriso
 xxhash
 xz-utils
 zerofree
-#if ARCHITECTURES armhf armel amd64 i386 ppc64el
+#if ARCHITECTURES amd64 armhf i386 ppc64el
 zfs-fuse
 #endif
 zile
