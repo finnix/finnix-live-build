@@ -19,6 +19,7 @@ jobs:
         TMPBIN="$(mktemp -d)"
         ln -sf /bin/true "${TMPBIN}/checkbashisms"
         cd live-build
+        dch --controlmaint --local "+git$(git show --pretty=format:"%cs.%h" --no-patch | sed 's/-//g')" ''
         debuild --prepend-path="${TMPBIN}" -b -us -uc
         sudo apt -y install --reinstall ../live-build_*.deb
     - name: Build image
