@@ -5,5 +5,5 @@ set -e
 # Light reading:
 # https://fedoraproject.org/wiki/Changes/SwapOnZRAM
 
-sed -i -e 's/^\#PERCENTAGE=.*/PERCENTAGE=50/g; s/^\#CORES=.*/CORES=1/g;' /etc/default/zramswap
+sed -i -e 's/^\#PERCENT=.*/PERCENT=50/g;' /etc/default/zramswap
 systemctl add-wants {{ PRODUCT_ID }}.target zramswap.service
