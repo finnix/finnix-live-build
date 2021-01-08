@@ -31,7 +31,7 @@ if [ -x "/lib/{{ PRODUCT_ID }}/ssh-agent" ]; then
     . "/lib/{{ PRODUCT_ID }}/ssh-agent"
 fi
 
-#alias ls='ls --color=auto'  # Conditionally set above
+#alias ls='ls --color=auto'  # Conditionally set by .bashrc if color supported
 alias l='ls -CF'
 alias la='ls -A'
 alias ll='ls -alF'
