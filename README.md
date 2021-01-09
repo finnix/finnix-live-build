@@ -5,12 +5,11 @@ If you want to build your own similar release, it's recommended to use this as a
 
 Requirements:
 
-* Ubuntu 18.04 bionic or later (however, see the note about `live-build`), or Debian testing/sid.
+* Debian testing/sid, or Ubuntu 18.04 bionic or later.
 * live-build, built from [live-build git HEAD](https://salsa.debian.org/rfinnie/live-build).
     * This is available as a git submodule in this repository.
-    * If building on Ubuntu bionic, you will need to install "debhelper/bionic-backports" to pull int a newer debhelper.
-    * If building on Ubuntu bionic/focal, you will need to remove `/usr/bin/checkbashisms` to work around a false positive which wasn't fixed until recently.
-* Additional required packages: python3-jinja2 librsvg2-bin fonts-liberation2
+    * While upstream HEAD is usually fine, the link above (and this repository's submodule) points to a Finnix-specific branch which is usually in sync with upstream, but sometimes includes fixes/changes which have not (yet) been accepted upstream.
+* Additional required packages: debuilt python3-jinja2 librsvg2-bin fonts-liberation2
 
 This can be built on dedicated hardware, in a virtual machine, or in a systemd-nspawn container.  Building in a chroot within one of these environments is supported.  Docker and LXD containers are not supported, as they do not allow mounting proc/devpts (even the container-specific restricted versions), required by live-build/debootstrap.
 

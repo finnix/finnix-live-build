@@ -68,6 +68,14 @@ LOCK_DIR="${LOCK_DIR:-${DATA_DIR}/lock}"
 LOCK_NAME="${LOCK_NAME:-$(basename "$(readlink -f "$0")")}"
 LB_DIR="${LB_DIR:-${DATA_DIR}/lb}"
 LB_CACHE_DIR="${LB_CACHE_DIR:-${CACHE_DIR}/lb}"
+LIVE_BUILD="${LIVE_BUILD:-${BASE_DIR}/live-build}"
+
+if [ "${LIVE_BUILD}" = "-" ]; then
+    export LIVE_BUILD=""
+else
+    export LIVE_BUILD
+    export PATH="${LIVE_BUILD}/frontend:${PATH}"
+fi
 
 mkdir -p "${LOCK_DIR}"
 lock "${LOCK_DIR}/${LOCK_NAME}.lock"

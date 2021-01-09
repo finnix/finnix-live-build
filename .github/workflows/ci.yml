@@ -10,14 +10,6 @@ jobs:
     - name: Dependency packages
       run: |
         sudo apt update
-        sudo apt -y install build-essential debhelper devscripts po4a gettext man-db debian-archive-keyring librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck
-    - name: Build / install live-build
-      run: |
-        TMPBIN="$(mktemp -d)"
-        ln -sf /bin/true "${TMPBIN}/checkbashisms"
-        cd live-build
-        dch --controlmaint --local "+git$(git show --pretty=format:"%cs.%h" --no-patch | sed 's/-//g')" ''
-        debuild --prepend-path="${TMPBIN}" -b -us -uc
-        sudo apt -y install --reinstall ../live-build_*.deb
+        sudo apt -y install debootstrap debian-archive-keyring apt-utils gzip bzip2 xz-utils cpio file coreutils rsync wget librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck
     - name: Build image
       run: sudo env LINT=true ./finnix-live-build
