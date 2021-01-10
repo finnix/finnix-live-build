@@ -31,3 +31,13 @@ systemctl add-wants {{ PRODUCT_ID }}.target systemd-update-utmp-runlevel.service
 
 # Show service startup/shutdown statuses
 sed -i -e 's/^\#ShowStatus=.*/ShowStatus=yes/g' /etc/systemd/system.conf
+
+# Protect against (harmless, but scary-looking) /run/live/medium
+# startup/shutdown errors
+mkdir -p /etc/systemd/system/run-live-medium.mount.d
+cat <<"EOM" >/etc/systemd/system/run-live-medium.mount.d/{{ PRODUCT_ID }}.conf
+[Mount]
+LazyUnmount=true
+StandardOutput=kmsg
+StandardError=kmsg
+EOM
