@@ -2,6 +2,7 @@
 
 set -e
 
+# Set up our custom target
 cat <<"EOM" >/etc/systemd/system/{{ PRODUCT_ID }}.target
 [Unit]
 Description={{ PRODUCT }} System
@@ -10,29 +11,23 @@ Conflicts=rescue.service rescue.target
 After=basic.target rescue.service rescue.target
 AllowIsolate=yes
 EOM
-
 systemctl set-default {{ PRODUCT_ID }}.target
 
-# Disable forced sysinit.target services (via {{ PRODUCT_ID }}.target -> basic.target)
-for i in systemd-timesyncd.service zfs-fuse.service; do
-    systemctl disable "${i}" || true
-done
-
-rm -rf /etc/systemd/system/timers.target.wants
-mkdir -p /lib/systemd/diverted-system/timers.target.wants
-for i in /lib/systemd/system/timers.target.wants/*.timer; do
-    [ -e "${i}" ] || continue
-    dpkg-divert --add --rename --divert "/lib/systemd/diverted-system/timers.target.wants/$(basename "${i}")" "${i}"
-done
-rm -rf /etc/systemd/system/default.target.wants
-mkdir -p /lib/systemd/diverted-system/default.target.wants
-for i in /lib/systemd/system/default.target.wants/*.timer; do
-    [ -e "${i}" ] || continue
-    dpkg-divert --add --rename --divert "/lib/systemd/diverted-system/default.target.wants/$(basename "${i}")" "${i}"
+# Clear unwanted targets below our custom target
+for target in basic.target sysinit.target timers.target default.target; do
+    rm -rf "/etc/systemd/system/${target}.wants"
+    mkdir -p "/lib/systemd/diverted-system/${target}.wants"
+    for i in "/lib/systemd/system/${target}.wants"/*.timer; do
+        [ -e "${i}" ] || continue
+        dpkg-divert --add --rename --divert "/lib/systemd/diverted-system/${target}.wants/$(basename "${i}")" "${i}"
+    done
 done
 rm -f /etc/rc?.d/*
 
+# Add needed services to our custom target
+systemctl add-wants {{ PRODUCT_ID }}.target live-config.service
 systemctl add-wants {{ PRODUCT_ID }}.target systemd-user-sessions.service
 systemctl add-wants {{ PRODUCT_ID }}.target systemd-update-utmp-runlevel.service
 
+# Show service startup/shutdown statuses
 sed -i -e 's/^\#ShowStatus=.*/ShowStatus=yes/g' /etc/systemd/system.conf
