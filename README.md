@@ -1,7 +1,8 @@
 # Finnix live-build tools
 
-Warning: While it should be possible to build this from anywhere, it's geared mainly to myself.
-If you want to build your own similar release, it's recommended to use this as a base for your own live-build project.
+`finnix-live-build` is Finnix image build system, and is a wrapper around Debian Live's `live-build` system.
+
+## Building
 
 Requirements:
 
@@ -9,13 +10,13 @@ Requirements:
 * live-build, built from [live-build git HEAD](https://salsa.debian.org/rfinnie/live-build).
     * This is available as a git submodule in this repository.
     * While upstream HEAD is usually fine, the link above (and this repository's submodule) points to a Finnix-specific branch which is usually in sync with upstream, but sometimes includes fixes/changes which have not (yet) been accepted upstream.
-* Additional required packages: debuilt python3-jinja2 librsvg2-bin fonts-liberation2
+* Additional required packages: debootstrap debian-archive-keyring apt-utils gzip bzip2 xz-utils cpio file coreutils rsync wget python3-jinja2 librsvg2-bin fonts-liberation2
 
 This can be built on dedicated hardware, in a virtual machine, or in a systemd-nspawn container.  Building in a chroot within one of these environments is supported.  Docker and LXD containers are not supported, as they do not allow mounting proc/devpts (even the container-specific restricted versions), required by live-build/debootstrap.
 
-The default build directory will be ```build/lb/``` from the script directory.
+The default build directory will be `build/lb/` from the script directory.
 
-## Builds
+## Scheduled builds
 
 * Weekly AMD64 builds are made on the [GitHub finnix-live-build "schedule" workflow](https://github.com/finnix/finnix-live-build/actions?query=workflow%3Aschedule), with ISO build artifacts uploaded.  The "ci" workflow is built on each push as an indication, but artifacts are not available.
 * Daily AMD64 builds are made on a [container in a colocated environment](https://ci.colobox.com/colobox/finnix-live-build-amd64/), with ISO build artifacts uploaded to [snapshots.finnix.org](https://snapshots.finnix.org/ci/finnix-live-build-amd64/).
@@ -51,3 +52,12 @@ Not supported, and produced images are not directly bootable.  However, they can
 
 To open a Finnix issue, please use the main [Finnix issue tracker](https://github.com/finnix/finnix/issues), not this repository's.
 Pull requests will be considered here, but you probably also want to open an issue to track it.
+
+## Remastering / forking
+
+If you are looking to build a live environment which is outside of the scope of Finnix's goals, feel free to use this build repository as a base.
+In essence, this repository is a thin wrapper around live-build, and builds upon the massive work done by the Debian Live project.
+I encourage you to study this repository, live-build and live-config, and to experiment with your own builds.
+
+If you do produce builds based directly off the finnix-live-build repository, please change the branding to indicate it is not an official Finnix release.
+Please see the top of `finnix-live-build` for branding-related variables.
