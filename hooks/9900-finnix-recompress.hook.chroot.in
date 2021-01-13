@@ -8,6 +8,7 @@ import glob
 import gzip
 import hashlib
 import itertools
+import logging
 import os
 import shutil
 
@@ -24,6 +25,62 @@ def readiter(fh, size=1024):
     )
 
 
+def numfmt(
+    num,
+    fmt="{num.real:0.02f} {num.prefix}",
+    binary=False,
+    rollover=1.0,
+    limit=0,
+    prefixes=None,
+):
+    """Formats a number with decimal or binary prefixes
+
+    num: Input number
+    fmt: Format string of default repr/str output
+    binary: If True, use divide by 1024 and use IEC binary prefixes
+    rollover: Threshold to roll over to the next prefix
+    limit: Stop after a specified number of rollovers
+    prefixes: List of (decimal, binary) prefix strings, ascending
+    """
+
+    class NumberFormat(float):
+        prefix = ""
+        fmt = "{num.real:0.02f} {num.prefix}"
+
+        def __repr__(self):
+            return self.fmt.format(num=self)
+
+    if prefixes is None:
+        prefixes = [
+            ("k", "Ki"),
+            ("M", "Mi"),
+            ("G", "Gi"),
+            ("T", "Ti"),
+            ("P", "Pi"),
+            ("E", "Ei"),
+            ("Z", "Zi"),
+            ("Y", "Yi"),
+        ]
+    divisor = 1024 if binary else 1000
+    if limit <= 0 or limit > len(prefixes):
+        limit = len(prefixes)
+
+    count = 0
+    p = ""
+    for prefix in prefixes:
+        if num < (divisor * rollover):
+            break
+        if count >= limit:
+            break
+        count += 1
+        num = num / float(divisor)
+        p = prefix[1] if binary else prefix[0]
+    ret = NumberFormat(num)
+    ret.fmt = fmt
+    ret.prefix = p
+    return ret
+
+
 def parse_diversions(base_dir="/"):
     with open(
         os.path.join(base_dir, "/var/lib/dpkg/diversions"), "r", encoding="utf-8"
@@ -36,13 +93,13 @@ def parse_diversions(base_dir="/"):
             diverted_to = f.readline().rstrip()
             _ = f.readline().rstrip()
             DIVERSIONS[orig] = diverted_to
+    logging.debug("Loaded {} diversions".format(len(DIVERSIONS)))
 
 
 def recompress(filename):
     global FILE_COUNT, PRE_SIZE, POST_SIZE
 
-    FILE_COUNT += 1
-    PRE_SIZE += os.stat(filename).st_size
+    file_size_pre = os.stat(filename).st_size
     with gzip.open(filename, "rb") as fsrc:
         with open(filename + "~recomp", "wb") as fdst:
             # Explicitly do not set filename and mtime in resulting .gz
@@ -52,13 +109,24 @@ def recompress(filename):
                 shutil.copyfileobj(fsrc, fdstgz)
     shutil.copystat(filename, filename + "~recomp")
     shutil.move(filename + "~recomp", filename)
-    POST_SIZE += os.stat(filename).st_size
+    file_size_post = os.stat(filename).st_size
 
     with open(filename, "rb") as f:
         m = hashlib.md5()
         for buf in readiter(f):
             m.update(buf)
-    return m.hexdigest()
+    md5_hex = m.hexdigest()
+
+    FILE_COUNT += 1
+    PRE_SIZE += file_size_pre
+    POST_SIZE += file_size_post
+
+    logging.debug(
+        "Recompressed {filename} - {pre.real:0.02f} {pre.prefix}B to {post.real:0.02f} {post.prefix}B".format(
+            filename=filename, pre=numfmt(file_size_pre), post=numfmt(file_size_post)
+        )
+    )
+    return md5_hex
 
 
 def process_dpkg_file(dpkg_filename, orig_md5, base_dir="/"):
@@ -67,16 +135,22 @@ def process_dpkg_file(dpkg_filename, orig_md5, base_dir="/"):
 
     filename = os.path.join("/", dpkg_filename)
     if filename in DIVERSIONS:
-        print("~~~ {} was diverted to {}".format(filename, DIVERSIONS[filename]))
+        logging.debug(
+            "{} was diverted to {} - using that instead".format(
+                filename, DIVERSIONS[filename]
+            )
+        )
         filename = DIVERSIONS[filename]
 
     filename = os.path.join(base_dir, filename)
     if os.path.islink(filename):
-        print("!!! IS SYMLINK: {}".format(filename))
+        logging.warning("File is a symlink, skipping: {}".format(filename))
         return orig_md5
     fstat = os.stat(filename)
     if fstat.st_nlink > 1:
-        print("!!! HARD LINKS {} > 1: {}".format(fstat.st_nlink, filename))
+        logging.warning(
+            "File has {} hard links, skipping: {}".format(fstat.st_nlink, filename)
+        )
         return orig_md5
     with open(filename, "rb") as f:
         m = hashlib.md5()
@@ -84,9 +158,9 @@ def process_dpkg_file(dpkg_filename, orig_md5, base_dir="/"):
             m.update(buf)
     found_md5 = m.hexdigest()
     if orig_md5 != found_md5:
-        print(
-            "!!! MD5 MISMATCH: {} (expected {}, got {})".format(
-                filename, orig_md5, found_md5
+        logging.error(
+            "MD5 mismatch (expected {}, got {}), skipping: {}".format(
+                orig_md5, found_md5, filename
             )
         )
         return orig_md5
@@ -95,6 +169,7 @@ def process_dpkg_file(dpkg_filename, orig_md5, base_dir="/"):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     time_start = datetime.datetime.now()
     base_dir = "/"
     parse_diversions(base_dir=base_dir)
@@ -109,8 +184,21 @@ if __name__ == "__main__":
             f.write(file_output)
     time_end = datetime.datetime.now()
 
-    print(
-        "{} files, {} -> {} bytes in {}.".format(
-            FILE_COUNT, PRE_SIZE, POST_SIZE, (time_end - time_start)
+    logging.info(
+        '{} files re-"compressed" at gzip level 0, in {}.'.format(
+            FILE_COUNT, (time_end - time_start)
+        )
+    )
+    logging.info(
+        "{pre.real:0.02f} {pre.prefix}B (previous gzip total) expanded to "
+        "{post.real:0.02f} {post.prefix}B (gzip level 0).".format(
+            pre=numfmt(PRE_SIZE), post=numfmt(POST_SIZE)
+        )
+    )
+    ballpark_xz = int(POST_SIZE * 0.15)
+    logging.info(
+        "If subsequently compressed with xz, {ballpark.real:0.02f} {ballpark.prefix}B "
+        "({ballpark_pct:0.02%} of previous gzip) might be achieved (ballpark).".format(
+            ballpark=numfmt(ballpark_xz), ballpark_pct=(ballpark_xz / PRE_SIZE)
         )
     )
