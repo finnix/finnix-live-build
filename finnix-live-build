@@ -135,10 +135,6 @@ if [ -d "${LB_CACHE_DIR}" ]; then
     fi
     rm -rf "${LB_DIR}/cache"
     ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
-else
-    echo "live-build cache is NOT being saved."
-    echo "If you want a persistent cache, after the run is complete:"
-    echo "    mv \"${LB_DIR}/cache\" \"${LB_CACHE_DIR}\""
 fi
 
 for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
@@ -167,6 +163,14 @@ if [ "${LINT}" = "true" ]; then
 fi
 
 lb build
+
+if [ ! -d "${LB_CACHE_DIR}" ]; then
+    echo
+    echo "live-build cache is NOT being saved.  If you want a persistent cache:"
+    echo "    mkdir -p \"${CACHE_DIR}\""
+    echo "    mv \"${LB_DIR}/cache\" \"${LB_CACHE_DIR}\""
+    echo
+fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
 file "${LB_DIR}/${ISO_FILENAME}"
