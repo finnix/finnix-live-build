@@ -118,24 +118,23 @@ lb config noauto \
   --zsync false \
   --mode debian
 
-if [ -d "${LB_CACHE_DIR}" ]; then
-    if [ -e "${LB_CACHE_DIR}/bootstrap/etc/hostname" ]; then
-        if [ -n "$(find "${LB_CACHE_DIR}/bootstrap/etc/hostname" -mmin +1080)" ]; then
-            rm -rf "${LB_CACHE_DIR}/bootstrap"
-        fi
-    else
+mkdir -p "${LB_CACHE_DIR}"
+if [ -e "${LB_CACHE_DIR}/bootstrap/etc/hostname" ]; then
+    if [ -n "$(find "${LB_CACHE_DIR}/bootstrap/etc/hostname" -mmin +1080)" ]; then
         rm -rf "${LB_CACHE_DIR}/bootstrap"
     fi
-    if [ -e "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" ]; then
-        if [ -n "$(find "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" -mmin +1080)" ]; then
-            rm -rf "${LB_CACHE_DIR}/indices.bootstrap"
-        fi
-    else
+else
+    rm -rf "${LB_CACHE_DIR}/bootstrap"
+fi
+if [ -e "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" ]; then
+    if [ -n "$(find "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" -mmin +1080)" ]; then
         rm -rf "${LB_CACHE_DIR}/indices.bootstrap"
     fi
-    rm -rf "${LB_DIR}/cache"
-    ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
+else
+    rm -rf "${LB_CACHE_DIR}/indices.bootstrap"
 fi
+rm -rf "${LB_DIR}/cache"
+ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
 
 for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
     basefn="$(basename "$i" .in)"
@@ -163,14 +162,6 @@ if [ "${LINT}" = "true" ]; then
 fi
 
 lb build
-
-if [ ! -d "${LB_CACHE_DIR}" ]; then
-    echo
-    echo "live-build cache is NOT being saved.  If you want a persistent cache:"
-    echo "    mkdir -p \"${CACHE_DIR}\""
-    echo "    mv \"${LB_DIR}/cache\" \"${LB_CACHE_DIR}\""
-    echo
-fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
 file "${LB_DIR}/${ISO_FILENAME}"
