@@ -82,7 +82,9 @@ Name=${interface}
 DHCP=yes
 EOM
 
-systemctl restart "wpa_supplicant@${interface}.service" systemd-networkd.service
+systemctl restart "wpa_supplicant@${interface}.service" systemd-networkd.service systemd-resolved.service
+rm -f /etc/resolv.conf
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
 echo ""
 echo "Interface ${interface} is now being managed by wpa_supplicant and networkd."
