@@ -35,16 +35,19 @@ render() {
 DATETIME="$(date -u +"%F %T")"
 DATE="$(date -u +"%F")"
 YEAR="$(date -u +"%Y")"
+SQUASHFS_COMP="xz"
 if [ "${ARCH}" = "amd64" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi,grub-pc"
     ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
     MEMTEST="memtest86+"
+    SQUASHFS_COMP="xz -Xbcj x86"
 elif [ "${ARCH}" = "i386" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi,grub-pc"
     ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
     MEMTEST="memtest86+"
+    SQUASHFS_COMP="xz -Xbcj x86"
 elif [ "${ARCH}" = "arm64" ]; then
     BINARY_IMAGES="iso-hybrid"
     BOOTLOADERS="grub-efi"
@@ -103,6 +106,7 @@ lb config noauto \
   --bootappend-live "boot=live quiet" \
   --bootloaders "${BOOTLOADERS}" \
   --cache-indices true \
+  --chroot-squashfs-compression-type "${SQUASHFS_COMP}" \
   --distribution testing \
   --hdd-label "$(echo "${PRODUCT_ID}" | tr '[:lower:]' '[:upper:]')" \
   --image-name "${PRODUCT_ID}" \
