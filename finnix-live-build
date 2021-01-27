@@ -161,6 +161,13 @@ if [ -e "${BASE_DIR}/squashfs.sort" ]; then
     cp "${BASE_DIR}/squashfs.sort" "${LB_DIR}/config/rootfs/squashfs.sort"
 fi
 
+# The in-squashfs initrds are unused; exclude them
+mkdir -p "${LB_DIR}/config/rootfs"
+cat <<"EOM" >"${LB_DIR}/config/rootfs/excludes"
+boot/initrd.img*
+initrd.img*
+EOM
+
 if [ "${LINT}" = "true" ]; then
     grep -l '^#!/bin/sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs shellcheck
 fi
