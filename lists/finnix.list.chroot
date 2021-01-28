@@ -13,8 +13,6 @@ bc
 bcache-tools
 bonnie++
 bridge-utils
-bsdextrautils
-bsdutils
 btrfs-progs
 buffer
 bzip2
@@ -128,7 +126,6 @@ mtools
 mtr-tiny
 mt-st
 nano
-ncal
 ncat
 netcat
 netcat-openbsd
