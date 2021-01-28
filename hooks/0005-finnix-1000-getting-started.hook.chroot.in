@@ -2,7 +2,7 @@
 
 mkdir -p /etc/issue.d
 cat <<"EOM" >/etc/issue.d/{{ PRODUCT_ID }}.issue
-Type "{{ PRODUCT_ID }}" to get started!
+Run "{{ PRODUCT_ID }}" to get started.
 EOM
 
 mkdir -p /usr/local/share/doc/{{ PRODUCT_ID }}
