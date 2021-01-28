@@ -14,6 +14,12 @@ useradd \
     --groups audio,cdrom,dip,floppy,video,plugdev,adm,sudo \
     {{ PRODUCT_ID }}
 
+mkdir -p /etc/sudoers.d
+cat <<EOM >"/etc/sudoers.d/{{ PRODUCT_ID }}"
+{{ PRODUCT_ID }} ALL=(ALL) NOPASSWD: ALL
+EOM
+chmod 0440 "/etc/sudoers.d/{{ PRODUCT_ID }}"
+
 echo 'Etc/UTC' >/etc/timezone
 rm -f /etc/localtime
 dpkg-reconfigure -f noninteractive -p critical tzdata
