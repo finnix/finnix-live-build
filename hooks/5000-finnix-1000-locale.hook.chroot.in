@@ -1,6 +1,12 @@
 #!/bin/sh
 
+# Must be run after 0040-create-locales-files.hook.chroot
+
 set -e
+
+echo 'LANG=en_US.UTF-8' >/etc/default/locale
+sed -i -e 's/^# en_US.UTF-8 /en_US.UTF-8 /g' /etc/locale.gen
+locale-gen
 
 cat <<"EOM" >/usr/local/sbin/0
 #!/bin/sh

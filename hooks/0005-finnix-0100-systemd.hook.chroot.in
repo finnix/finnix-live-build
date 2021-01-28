@@ -25,7 +25,6 @@ done
 rm -f /etc/rc?.d/*
 
 # Add needed services to our custom target
-systemctl add-wants {{ PRODUCT_ID }}.target live-config.service
 systemctl add-wants {{ PRODUCT_ID }}.target systemd-user-sessions.service
 systemctl add-wants {{ PRODUCT_ID }}.target systemd-update-utmp-runlevel.service
 

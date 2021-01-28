@@ -168,6 +168,19 @@ boot/initrd.img*
 initrd.img*
 EOM
 
+mkdir -p "${LB_DIR}/config/includes.chroot/etc"
+echo "${PRODUCT_ID}" >"${LB_DIR}/config/includes.chroot/etc/hostname"
+cat <<EOM >"${LB_DIR}/config/includes.chroot/etc/hosts"
+127.0.0.1	localhost
+127.0.1.1	${PRODUCT_ID}
+
+::1	ip6-localhost ip6-loopback
+fe00::0	ip6-localnet
+ff00::0	ip6-mcastprefix
+ff00::1	ip6-allnodes
+ff00::2	ip6-allrouters
+EOM
+
 if [ "${LINT}" = "true" ]; then
     grep -l '^#!/bin/sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs shellcheck
 fi

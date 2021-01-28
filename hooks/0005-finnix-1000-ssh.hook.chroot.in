@@ -2,12 +2,25 @@
 
 set -e
 
-# Requires: LIVE_CONFIG_NOCOMPONENTS="openssh-server"
+mkdir -p "/lib/{{ PRODUCT_ID }}"
+cat <<"EOM" >"/lib/{{ PRODUCT_ID }}/sshd-keygen"
+#!/bin/sh
+
+set -e
+
+for keytype in ecdsa ed25519 rsa; do
+    if [ ! -e "/etc/ssh/ssh_host_${keytype}_key" ] && grep -qs "ssh_host_${keytype}_key" /etc/ssh/sshd_config; then
+        ssh-keygen -q -f "/etc/ssh/ssh_host_${keytype}_key" -N "" -t "${keytype}"
+    fi
+done
+EOM
+chmod 0755 "/lib/{{ PRODUCT_ID }}/sshd-keygen"
+
 mkdir -p /etc/systemd/system/ssh.service.d
 cat <<"EOM" >/etc/systemd/system/ssh.service.d/{{ PRODUCT_ID }}.conf
 [Service]
 ExecStartPre=
-ExecStartPre=/bin/sh -c /lib/live/config/????-openssh-server
+ExecStartPre=/lib/{{ PRODUCT_ID }}/sshd-keygen
 ExecStartPre=/usr/sbin/sshd -t
 EOM
 

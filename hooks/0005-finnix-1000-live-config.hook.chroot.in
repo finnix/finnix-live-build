@@ -2,11 +2,18 @@
 
 set -e
 
-cat <<"EOM" >/etc/live/config.conf.d/{{ PRODUCT_ID }}.conf
-LIVE_HOSTNAME="{{ PRODUCT_ID }}"
-LIVE_USERNAME="{{ PRODUCT_ID }}"
-LIVE_USER_FULLNAME="{{ PRODUCT }} user"
-LIVE_CONFIG_NOCOMPONENTS="openssh-server"
-EOM
+apt-get -y --purge remove live-config live-config-systemd
 
 systemctl add-wants {{ PRODUCT_ID }}.target live-tools.service
+
+useradd \
+    --create-home \
+    --comment "{{ PRODUCT }} user" \
+    --password '*' \
+    --shell /bin/bash \
+    --groups audio,cdrom,dip,floppy,video,plugdev,adm,sudo \
+    {{ PRODUCT_ID }}
+
+echo 'Etc/UTC' >/etc/timezone
+rm -f /etc/localtime
+dpkg-reconfigure -f noninteractive -p critical tzdata

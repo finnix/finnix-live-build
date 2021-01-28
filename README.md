@@ -57,7 +57,7 @@ Pull requests will be considered here, but you probably also want to open an iss
 
 If you are looking to build a live environment which is outside of the scope of Finnix's goals, feel free to use this build repository as a base.
 In essence, this repository is a thin wrapper around live-build, and builds upon the massive work done by the Debian Live project.
-I encourage you to study this repository, live-build and live-config, and to experiment with your own builds.
+I encourage you to study this repository and live-build, and to experiment with your own builds.
 
 If you do produce builds based directly off the finnix-live-build repository, please change the branding to indicate it is not an official Finnix release.
 Please see the top of `finnix-live-build` for branding-related variables.
