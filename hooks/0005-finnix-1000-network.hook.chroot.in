@@ -6,78 +6,133 @@ mkdir -p "/lib/{{ PRODUCT_ID }}"
 cat <<"EOM" >"/lib/{{ PRODUCT_ID }}/interfaces-convert"
 #!/usr/bin/env python3
 
+# interfaces-convert
+# Copyright (C) 2021 Ryan Finnie
+# SPDX-License-Identifier: GPL-2.0+
+
+# This program converts sections in /etc/network/interfaces to files in
+# /etc/systemd/network/, and (if needed) from /etc/resolv.conf to
+# /etc/systemd/resolved.conf, putting the systemd-resolved stub in its
+# place.
+#
+# This must be run before anything uses e-n-i, namely before udevd as
+# ifupdown installs rules which bring up allow-hotplug entries.
+#
+# Note that this was built to translate entries built by live-boot, and
+# is not meant to be a general-purpose e-n-i converter.
+
+import configparser
 import os
-import sys
 
 
-if not os.path.exists("/etc/network/interfaces"):
-    sys.exit(0)
+def systemd_config():
+    config = configparser.ConfigParser()
+    config.optionxform = str
+    return config
 
 
-def write_networkd_unmanaged(interface):
-    with open("/etc/systemd/network/10-{}.network".format(interface), "w") as f:
-        f.write(
-            ("[Match]\n" "Name={}\n" "\n" "[Link]\n" "Unmanaged=yes\n").format(
-                interface
-            )
-        )
-
-
-def process_paragraph(paragraph):
-    paragraph_type, interface = paragraph[0].split(" ", 1)
-    if paragraph_type != "allow-hotplug":
-        write_networkd_unmanaged(interface)
+def process_section(section):
+    if "iface" not in section:
         return False
-    if paragraph[1] != "iface {} inet dhcp".format(interface):
-        write_networkd_unmanaged(interface)
+    interface = section["iface"][0]
+    if section["iface"][2] == "loopback":
         return False
-    with open("/etc/systemd/network/10-{}.network".format(interface), "w") as f:
-        f.write(
-            (
-                "[Match]\n"
-                "Name={}\n"
-                "\n"
-                "[Link]\n"
-                "RequiredForOnline=no\n"
-                "\n"
-                "[Network]\n"
-                "DHCP=yes\n"
-            ).format(interface)
+    if (section["iface"][1] != "inet") or (
+        section["iface"][2] not in ("dhcp", "static")
+    ):
+        output = systemd_config()
+        output["Match"] = {"Name": interface}
+        output["Link"] = {"Unmanaged": "yes"}
+        with open("/etc/systemd/network/10-{}.network".format(interface), "w") as f:
+            output.write(f, space_around_delimiters=False)
+        return False
+
+    output = systemd_config()
+    output["Match"] = {"Name": interface}
+    output["Link"] = {}
+    output["Network"] = {}
+    if ("address" in section) and ("netmask" in section):
+        output["Network"]["Address"] = "{}/{}".format(
+            section["address"][0], section["netmask"][0]
         )
+        if "gateway" in section:
+            output["Network"]["Gateway"] = section["gateway"][0]
+    else:
+        output["Network"]["DHCP"] = "yes"
+    if "allow-hotplug" in section:
+        output["Link"]["RequiredForOnline"] = "no"
+    with open("/etc/systemd/network/10-{}.network".format(interface), "w") as f:
+        output.write(f, space_around_delimiters=False)
     return True
 
 
-any_converted = False
-rewritten_interfaces = ""
-paragraph = []
-with open("/etc/network/interfaces") as f:
-    for line in f:
-        line = line.rstrip()
-        if line == "" and paragraph:
-            converted = process_paragraph(paragraph)
-            if converted:
-                any_converted = True
-            else:
-                rewritten_interfaces += "\n".join(paragraph) + "\n"
-            paragraph = []
-            continue
-        paragraph.append(line)
+def convert_interfaces():
+    if not os.path.exists("/etc/network/interfaces"):
+        return
 
-if paragraph:
-    converted = process_paragraph(paragraph)
-    if converted:
-        any_converted = True
-    else:
-        rewritten_interfaces += "\n".join(paragraph) + "\n"
-    paragraph = ""
+    rewritten_interfaces = ""
+    section = {}
+    section_text = ""
+    with open("/etc/network/interfaces") as f:
+        for raw_line in f:
+            line = raw_line.strip()
+            if line == "" and section:
+                if not process_section(section):
+                    rewritten_interfaces += section_text + "\n"
+                section = {}
+                section_text = ""
+                continue
+            ls = line.split(" ")
+            if not ls[0].startswith("#"):
+                section[ls[0]] = ls[1:]
+            section_text += raw_line
 
-with open("/etc/network/interfaces", "w") as f:
-    f.write(rewritten_interfaces)
+    if section:
+        if not process_section(section):
+            rewritten_interfaces += section_text + "\n"
 
-if any_converted:
-    if os.path.exists("/etc/resolv.conf"):
-        os.remove("/etc/resolv.conf")
+    with open("/etc/network/interfaces", "w") as f:
+        f.write(rewritten_interfaces)
+
+
+def convert_resolv():
+    if not os.path.exists("/etc/systemd/resolved.conf"):
+        return
+
+    nameservers = []
+    domains = []
+    with open("/etc/resolv.conf") as f:
+        for line in f:
+            line = line.strip()
+            ls = line.split(" ")
+            if ls[0] == "nameserver":
+                if ls[1] == "127.0.0.53":
+                    continue
+                nameservers.append(ls[1])
+            elif ls[0] in ("search", "domain"):
+                for s in ls[1:]:
+                    if s == ".":
+                        continue
+                    domains.append(s)
+
+    if nameservers or domains:
+        resolved = systemd_config()
+        resolved.read("/etc/systemd/resolved.conf")
+        if "Resolve" not in resolved:
+            resolved["Resolve"] = {}
+        if nameservers:
+            resolved["Resolve"]["DNS"] = " ".join(nameservers)
+        if domains:
+            resolved["Resolve"]["Domains"] = " ".join(domains)
+        with open("/etc/systemd/resolved.conf", "w") as f:
+            resolved.write(f, space_around_delimiters=False)
+
+    os.remove("/etc/resolv.conf")
     os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
+
+
+convert_interfaces()
+convert_resolv()
 EOM
 chmod 0755 "/lib/{{ PRODUCT_ID }}/interfaces-convert"
 
