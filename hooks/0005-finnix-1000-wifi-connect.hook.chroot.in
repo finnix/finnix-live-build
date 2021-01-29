@@ -90,8 +90,7 @@ echo ""
 echo "Interface ${interface} is now being managed by wpa_supplicant and networkd."
 echo "To see the status of these services:"
 echo "    networkctl"
-echo "    journalctl -xa -u wpa_supplicant@${interface}.service -u systemd-networkd.service"
-echo "(Wired connections are currently managed by live-boot through ifupdown, and will show as \"unmanaged\" in networkctl.)"
+echo "    journalctl -a -u wpa_supplicant@${interface}.service -u systemd-networkd.service"
 echo ""
 HOOKEOM
 chmod 0755 /usr/local/sbin/wifi-connect

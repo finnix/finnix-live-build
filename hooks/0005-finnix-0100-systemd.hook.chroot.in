@@ -14,7 +14,7 @@ EOM
 systemctl set-default {{ PRODUCT_ID }}.target
 
 # Clear unwanted targets below our custom target
-for target in basic.target sysinit.target timers.target default.target; do
+for target in basic.target sysinit.target timers.target default.target network.target network-online.target multi-user.target graphical.target; do
     rm -rf "/etc/systemd/system/${target}.wants"
     mkdir -p "/lib/systemd/diverted-system/${target}.wants"
     for i in "/lib/systemd/system/${target}.wants"/*.timer; do

@@ -1,0 +1,100 @@
+#!/bin/sh
+
+set -e
+
+mkdir -p "/lib/{{ PRODUCT_ID }}"
+cat <<"EOM" >"/lib/{{ PRODUCT_ID }}/interfaces-convert"
+#!/usr/bin/env python3
+
+import os
+import sys
+
+
+if not os.path.exists("/etc/network/interfaces"):
+    sys.exit(0)
+
+
+def write_networkd_unmanaged(interface):
+    with open("/etc/systemd/network/10-{}.network".format(interface), "w") as f:
+        f.write(
+            ("[Match]\n" "Name={}\n" "\n" "[Link]\n" "Unmanaged=yes\n").format(
+                interface
+            )
+        )
+
+
+def process_paragraph(paragraph):
+    paragraph_type, interface = paragraph[0].split(" ", 1)
+    if paragraph_type != "allow-hotplug":
+        write_networkd_unmanaged(interface)
+        return False
+    if paragraph[1] != "iface {} inet dhcp".format(interface):
+        write_networkd_unmanaged(interface)
+        return False
+    with open("/etc/systemd/network/10-{}.network".format(interface), "w") as f:
+        f.write(
+            (
+                "[Match]\n"
+                "Name={}\n"
+                "\n"
+                "[Link]\n"
+                "RequiredForOnline=no\n"
+                "\n"
+                "[Network]\n"
+                "DHCP=yes\n"
+            ).format(interface)
+        )
+    return True
+
+
+any_converted = False
+rewritten_interfaces = ""
+paragraph = []
+with open("/etc/network/interfaces") as f:
+    for line in f:
+        line = line.rstrip()
+        if line == "" and paragraph:
+            converted = process_paragraph(paragraph)
+            if converted:
+                any_converted = True
+            else:
+                rewritten_interfaces += "\n".join(paragraph) + "\n"
+            paragraph = []
+            continue
+        paragraph.append(line)
+
+if paragraph:
+    converted = process_paragraph(paragraph)
+    if converted:
+        any_converted = True
+    else:
+        rewritten_interfaces += "\n".join(paragraph) + "\n"
+    paragraph = ""
+
+with open("/etc/network/interfaces", "w") as f:
+    f.write(rewritten_interfaces)
+
+if any_converted:
+    if os.path.exists("/etc/resolv.conf"):
+        os.remove("/etc/resolv.conf")
+    os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
+EOM
+chmod 0755 "/lib/{{ PRODUCT_ID }}/interfaces-convert"
+
+cat <<"EOM" >/etc/systemd/system/network-config-setup.service
+[Unit]
+Description=Set up network configurations
+DefaultDependencies=no
+# Before systemd-udevd becuase ifupdown will try to manage hotplug
+# interfaces via udev
+Before=network.target ifupdown-pre.service systemd-udevd.service
+
+[Service]
+Type=oneshot
+ExecStart=/lib/{{ PRODUCT_ID }}/interfaces-convert
+EOM
+systemctl add-wants sysinit.target network-config-setup.service
+systemctl add-wants network.target systemd-networkd.service
+systemctl add-wants network.target systemd-resolved.service
+
+systemctl add-wants {{ PRODUCT_ID }}.target network.target
