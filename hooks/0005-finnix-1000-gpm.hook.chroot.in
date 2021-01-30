@@ -2,6 +2,8 @@
 
 set -e
 
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
 cat <<EOM >/etc/systemd/system/gpm.service
 [Unit]
 Description=Console mouse daemon
@@ -12,4 +14,4 @@ Type=forking
 ExecStart=/usr/sbin/gpm -m /dev/input/mice -t exps2
 PIDFile=/var/run/gpm.pid
 EOM
-systemctl add-wants {{ PRODUCT_ID }}.target gpm.service
+systemctl add-wants "${PRODUCT_ID}.target" gpm.service

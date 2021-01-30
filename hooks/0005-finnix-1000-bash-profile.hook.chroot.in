@@ -2,7 +2,9 @@
 
 set -e
 
-cat <<"EOM" >/etc/profile.d/{{ PRODUCT_ID }}.sh
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+cat <<"EOM" >"/etc/profile.d/${PRODUCT_ID}.sh"
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games
 EOM
 
@@ -16,7 +18,7 @@ fi
 EOM
 fi
 
-cat <<"EOM" >>/etc/skel/.bash_{{ PRODUCT_ID }}
+cat <<"EOM" >>"/etc/skel/.bash_${PRODUCT_ID}"
 __sh_exitcode() { ret=$?; if [[ $ret != 0 ]]; then echo "$ret "; fi }
 
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then

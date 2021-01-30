@@ -2,8 +2,10 @@
 
 set -e
 
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
 # Set up our custom target
-cat <<"EOM" >/etc/systemd/system/{{ PRODUCT_ID }}.target
+cat <<"EOM" >"/etc/systemd/system/${PRODUCT_ID}.target"
 [Unit]
 Description={{ PRODUCT }} System
 Requires=basic.target
@@ -11,7 +13,7 @@ Conflicts=rescue.service rescue.target
 After=basic.target rescue.service rescue.target
 AllowIsolate=yes
 EOM
-systemctl set-default {{ PRODUCT_ID }}.target
+systemctl set-default "${PRODUCT_ID}.target"
 
 # Clear unwanted targets below our custom target
 for target in basic.target sysinit.target timers.target default.target network.target network-online.target multi-user.target graphical.target; do
@@ -25,11 +27,11 @@ done
 rm -f /etc/rc?.d/*
 
 # Add needed services to our custom target
-systemctl add-wants {{ PRODUCT_ID }}.target systemd-user-sessions.service
+systemctl add-wants "${PRODUCT_ID}.target" systemd-user-sessions.service
 
 # Show service startup/shutdown statuses
 mkdir -p "/etc/systemd/system.conf.d"
-cat <<"EOM" >"/etc/systemd/system.conf.d/{{ PRODUCT_ID }}.conf"
+cat <<"EOM" >"/etc/systemd/system.conf.d/${PRODUCT_ID}.conf"
 [Manager]
 ShowStatus=yes
 EOM

@@ -1,12 +1,16 @@
 #!/bin/sh
 
+set -e
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
 mkdir -p /etc/issue.d
-cat <<"EOM" >/etc/issue.d/{{ PRODUCT_ID }}.issue
+cat <<"EOM" >"/etc/issue.d/${PRODUCT_ID}.issue"
 Run "{{ PRODUCT_ID }}" to get started.
 EOM
 
-mkdir -p /usr/local/share/doc/{{ PRODUCT_ID }}
-cat <<"EOM" >/usr/local/share/doc/{{ PRODUCT_ID }}/getting-started.txt
+mkdir -p "/usr/local/share/doc/${PRODUCT_ID}"
+cat <<"EOM" >"/usr/local/share/doc/${PRODUCT_ID}/getting-started.txt"
 Welcome to {{ PRODUCT }}!
 
 This is mostly a fully-featured Debian-based text utility distribution,
@@ -27,9 +31,9 @@ alternatives selection program.
 EOM
 
 mkdir -p /usr/local/bin
-cat <<"EOM" >/usr/local/bin/{{ PRODUCT_ID }}
+cat <<"EOM" >"/usr/local/bin/${PRODUCT_ID}"
 #!/bin/sh
 
 exec pager /usr/local/share/doc/{{ PRODUCT_ID }}/getting-started.txt
 EOM
-chmod 0755 /usr/local/bin/{{ PRODUCT_ID }}
+chmod 0755 "/usr/local/bin/${PRODUCT_ID}"

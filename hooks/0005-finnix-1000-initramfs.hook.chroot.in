@@ -4,7 +4,9 @@
 
 set -e
 
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
 mkdir -p /etc/initramfs-tools/conf.d
-cat <<"EOM" >/etc/initramfs-tools/conf.d/{{ PRODUCT_ID }}
+cat <<"EOM" >"/etc/initramfs-tools/conf.d/${PRODUCT_ID}"
 COMPRESS=xz
 EOM

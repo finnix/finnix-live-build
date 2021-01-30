@@ -2,9 +2,11 @@
 
 set -e
 
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
 apt-get -y --purge remove live-config live-config-systemd
 
-systemctl add-wants {{ PRODUCT_ID }}.target live-tools.service
+systemctl add-wants "${PRODUCT_ID}.target" live-tools.service
 
 useradd \
     --create-home \
@@ -12,13 +14,13 @@ useradd \
     --password '*' \
     --shell /bin/bash \
     --groups audio,cdrom,dip,floppy,video,plugdev,adm,sudo \
-    {{ PRODUCT_ID }}
+    "${PRODUCT_ID}"
 
 mkdir -p /etc/sudoers.d
-cat <<EOM >"/etc/sudoers.d/{{ PRODUCT_ID }}"
+cat <<EOM >"/etc/sudoers.d/${PRODUCT_ID}"
 {{ PRODUCT_ID }} ALL=(ALL) NOPASSWD: ALL
 EOM
-chmod 0440 "/etc/sudoers.d/{{ PRODUCT_ID }}"
+chmod 0440 "/etc/sudoers.d/${PRODUCT_ID}"
 
 echo 'Etc/UTC' >/etc/timezone
 rm -f /etc/localtime

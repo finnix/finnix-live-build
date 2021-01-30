@@ -2,8 +2,10 @@
 
 set -e
 
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
 # Light reading:
 # https://fedoraproject.org/wiki/Changes/SwapOnZRAM
 
 sed -i -e 's/^\#PERCENT=.*/PERCENT=50/g;' /etc/default/zramswap
-systemctl add-wants {{ PRODUCT_ID }}.target zramswap.service
+systemctl add-wants "${PRODUCT_ID}.target" zramswap.service

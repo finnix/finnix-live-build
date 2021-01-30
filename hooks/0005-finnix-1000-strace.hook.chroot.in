@@ -2,8 +2,10 @@
 
 set -e
 
-mkdir -p /lib/{{ PRODUCT_ID }}
-cat >/lib/{{ PRODUCT_ID }}/strace-init <<"EOM"
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+mkdir -p "/lib/${PRODUCT_ID}"
+cat >"/lib/${PRODUCT_ID}/strace-init" <<"EOM"
 #!/bin/sh
 
 # finnix-strace-init
@@ -35,4 +37,4 @@ else
   exec /sbin/init
 fi
 EOM
-chmod 0755 /lib/{{ PRODUCT_ID }}/strace-init
+chmod 0755 "/lib/${PRODUCT_ID}/strace-init"

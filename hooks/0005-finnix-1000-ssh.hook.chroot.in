@@ -2,8 +2,10 @@
 
 set -e
 
-mkdir -p "/lib/{{ PRODUCT_ID }}"
-cat <<"EOM" >"/lib/{{ PRODUCT_ID }}/sshd-keygen"
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+mkdir -p "/lib/${PRODUCT_ID}"
+cat <<"EOM" >"/lib/${PRODUCT_ID}/sshd-keygen"
 #!/bin/sh
 
 set -e
@@ -14,17 +16,17 @@ for keytype in ecdsa ed25519 rsa; do
     fi
 done
 EOM
-chmod 0755 "/lib/{{ PRODUCT_ID }}/sshd-keygen"
+chmod 0755 "/lib/${PRODUCT_ID}/sshd-keygen"
 
 mkdir -p /etc/systemd/system/ssh.service.d
-cat <<"EOM" >/etc/systemd/system/ssh.service.d/{{ PRODUCT_ID }}.conf
+cat <<"EOM" >"/etc/systemd/system/ssh.service.d/${PRODUCT_ID}.conf"
 [Service]
 ExecStartPre=
 ExecStartPre=/lib/{{ PRODUCT_ID }}/sshd-keygen
 ExecStartPre=/usr/sbin/sshd -t
 EOM
 
-cat <<"EOM" >/etc/ssh/sshd_config.d/{{ PRODUCT_ID }}.conf
+cat <<"EOM" >"/etc/ssh/sshd_config.d/${PRODUCT_ID}.conf"
 # "Safe" for maintenance use since by default, the user needs to set a
 # root password and start ssh.service.
 PasswordAuthentication yes
@@ -32,8 +34,8 @@ PermitRootLogin yes
 EOM
 
 # Shared per-user SSH agent
-mkdir -p /lib/{{ PRODUCT_ID }}
-cat <<"EOM" >/lib/{{ PRODUCT_ID }}/ssh-agent
+mkdir -p "/lib/${PRODUCT_ID}"
+cat <<"EOM" >"/lib/${PRODUCT_ID}/ssh-agent"
 #!/bin/sh
 
 [ -n "${HOME}" ] || exit 1
@@ -46,11 +48,11 @@ if [ ! -e "${HOME}/.ssh/ssh-agent.sh" ]; then
 fi
 . "${HOME}/.ssh/ssh-agent.sh"
 EOM
-chmod 0755 /lib/{{ PRODUCT_ID }}/ssh-agent
+chmod 0755 "/lib/${PRODUCT_ID}/ssh-agent"
 
-cat <<"EOM" >/etc/systemd/system/{{ PRODUCT_ID }}-ssh-agent.service
+cat <<"EOM" >/etc/systemd/system/shared-ssh-agent.service
 [Unit]
-Description={{ PRODUCT }} SSH agent init
+Description=Shared SSH agent init
 Before=getty.target
 
 [Service]
@@ -60,4 +62,4 @@ PIDFile=/root/.ssh/ssh-agent.pid
 Environment="USER=root"
 Environment="HOME=/root"
 EOM
-systemctl add-wants {{ PRODUCT_ID }}.target {{ PRODUCT_ID }}-ssh-agent.service
+systemctl add-wants "${PRODUCT_ID}.target" shared-ssh-agent.service
