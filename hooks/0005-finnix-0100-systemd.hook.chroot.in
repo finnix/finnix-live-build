@@ -28,4 +28,8 @@ rm -f /etc/rc?.d/*
 systemctl add-wants {{ PRODUCT_ID }}.target systemd-user-sessions.service
 
 # Show service startup/shutdown statuses
-sed -i -e 's/^\#ShowStatus=.*/ShowStatus=yes/g' /etc/systemd/system.conf
+mkdir -p "/etc/systemd/system.conf.d"
+cat <<"EOM" >"/etc/systemd/system.conf.d/{{ PRODUCT_ID }}.conf"
+[Manager]
+ShowStatus=yes
+EOM
