@@ -8,7 +8,6 @@ VERSION="${VERSION:-dev}"
 CODENAME="${CODENAME:-ashwaubenon}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
 SOURCE_ISO="${SOURCE_ISO:-false}"
-LINT="${LINT:-false}"
 
 lock() {
     _file=$1
@@ -83,7 +82,7 @@ fi
 mkdir -p "${LOCK_DIR}"
 lock "${LOCK_DIR}/${LOCK_NAME}.lock"
 
-if [ "${LINT}" = "true" ]; then
+if command -v shellcheck >/dev/null; then
     shellcheck "${BASE_DIR}/finnix-live-build"
 fi
 
@@ -181,7 +180,7 @@ ff00::1	ip6-allnodes
 ff00::2	ip6-allrouters
 EOM
 
-if [ "${LINT}" = "true" ]; then
+if command -v shellcheck >/dev/null; then
     grep -l '^#!/bin/sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs shellcheck
 fi
 

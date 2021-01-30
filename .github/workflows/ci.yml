@@ -12,4 +12,4 @@ jobs:
         sudo apt update
         sudo apt -y install debootstrap debian-archive-keyring apt-utils gzip bzip2 xz-utils cpio file coreutils rsync wget librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck
     - name: Build image
-      run: sudo env LINT=true ./finnix-live-build
+      run: sudo ./finnix-live-build
