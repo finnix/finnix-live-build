@@ -2,6 +2,7 @@
 #if ARCHITECTURES amd64 i386
 acpi
 #endif
+apg
 apt-utils
 arj
 arping
@@ -31,6 +32,7 @@ cpu-checker
 #if ARCHITECTURES amd64 i386
 cpuid
 #endif
+crda
 cron
 cryptsetup-bin
 curl
@@ -64,6 +66,8 @@ fetchmail
 file
 finger
 fsarchiver
+ftp
+ftp-ssl
 #if ARCHITECTURES amd64 i386
 fuseext2
 #endif
@@ -92,10 +96,12 @@ iptraf-ng
 iputils-ping
 irssi
 isomd5sum
+iw
 jfsutils
 joe
 kbd
 keyboard-configuration
+keyutils
 kpartx
 less
 lftp
@@ -122,6 +128,7 @@ mc
 mdadm
 memtester
 minicom
+mscompress
 mtools
 mtr-tiny
 mt-st
@@ -208,6 +215,7 @@ wakeonlan
 wget
 whois
 wipe
+wireless-regdb
 wireless-tools
 wpasupplicant
 xfsprogs

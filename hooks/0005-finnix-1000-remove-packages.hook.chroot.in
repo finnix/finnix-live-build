@@ -2,4 +2,4 @@
 
 set -e
 
-apt-get -y --purge remove rsyslog || true
+apt-get -y --purge remove rsyslog tasksel tasksel-data || true
