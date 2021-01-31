@@ -37,13 +37,13 @@ YEAR="$(date -u +"%Y")"
 SQUASHFS_COMP="xz"
 if [ "${ARCH}" = "amd64" ]; then
     BINARY_IMAGES="iso-hybrid"
-    BOOTLOADERS="grub-efi,grub-pc"
+    BOOTLOADERS="grub-efi,syslinux"
     ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
     MEMTEST="memtest86+"
     SQUASHFS_COMP="xz -Xbcj x86"
 elif [ "${ARCH}" = "i386" ]; then
     BINARY_IMAGES="iso-hybrid"
-    BOOTLOADERS="grub-efi,grub-pc"
+    BOOTLOADERS="grub-efi,syslinux"
     ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
     MEMTEST="memtest86+"
     SQUASHFS_COMP="xz -Xbcj x86"
@@ -147,6 +147,8 @@ for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
     render <"${i}" >"${LB_DIR}/config/hooks/normal/${basefn}"
 done
 
+mkdir -p "${LB_DIR}/config/bootloaders/syslinux_common"
+render <"${BASE_DIR}/syslinux/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/syslinux_common/splash.png"
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc"
 cp "${BASE_DIR}/grub"/*.cfg "${LB_DIR}/config/bootloaders/grub-pc/"
 render <"${BASE_DIR}/grub/splash.svg" | rsvg-convert --format png --width 1920 --height 1080 >"${LB_DIR}/config/bootloaders/grub-pc/splash.png"
