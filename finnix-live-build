@@ -80,10 +80,7 @@ else
     export PATH="${LIVE_BUILD}/frontend:${PATH}"
 fi
 
-GIT_DESC=""
-if [ -d "${BASE_DIR}/.git" ]; then
-    GIT_DESC="$(git describe --dirty)"
-fi
+GIT_DESC="$(git -C "${BASE_DIR}" describe --always --dirty 2>/dev/null || true)"
 
 mkdir -p "${LOCK_DIR}"
 lock "${LOCK_DIR}/${LOCK_NAME}.lock"
