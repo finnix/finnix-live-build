@@ -28,6 +28,7 @@ render() {
         "DATETIME=${DATETIME}" \
         "DATE=${DATE}" \
         "YEAR=${YEAR}" \
+        "GIT_DESC=${GIT_DESC}" \
    "${BASE_DIR}/tools/jinja2-render"
 }
 
@@ -77,6 +78,11 @@ if [ "${LIVE_BUILD}" = "-" ]; then
 else
     export LIVE_BUILD
     export PATH="${LIVE_BUILD}/frontend:${PATH}"
+fi
+
+GIT_DESC=""
+if [ -d "${BASE_DIR}/.git" ]; then
+    GIT_DESC="$(git describe --dirty)"
 fi
 
 mkdir -p "${LOCK_DIR}"

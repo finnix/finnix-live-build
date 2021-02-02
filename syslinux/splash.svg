@@ -170,7 +170,7 @@
          x="284.6962"
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:21.33333206px;line-height:1;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0.99999994px;writing-mode:lr-tb;text-anchor:start;fill:#000000;stroke-width:0.99999994"
-         id="tspan3066-5">{{ VERSION }}{% if VERSION == 'dev' %} ({{ CODENAME }}){% endif %}</tspan></text>
+         id="tspan3066-5">{{ VERSION }}{% if VERSION == 'dev' and GIT_DESC %} {{ GIT_DESC }}{% endif %}</tspan></text>
     <g
        aria-label="TM"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'Trebuchet MS';-inkscape-font-specification:'Trebuchet MS Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
@@ -187,7 +187,7 @@
          x="599.89075"
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.66666603px;line-height:120.00000477%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:1px;writing-mode:lr-tb;text-anchor:end;fill:#d9d9d9;fill-opacity:1;stroke-width:1"
-         id="tspan898">Build: {{ DATETIME }} ({{ ARCH }})</tspan></text>
+         id="tspan898">Build: {{ DATETIME }}{% if GIT_DESC %} {{ GIT_DESC }}{% endif %}</tspan></text>
     <text
        transform="scale(1.0000015,0.9999985)"
        id="text946"
