@@ -134,11 +134,12 @@ else
 fi
 if [ -e "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" ]; then
     if [ -n "$(find "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" -mmin +1080)" ]; then
-        rm -rf "${LB_CACHE_DIR}/indices.bootstrap"
+        rm -rf "${LB_CACHE_DIR}/indices.bootstrap" "${LB_CACHE_DIR}/contents.chroot"
     fi
 else
-    rm -rf "${LB_CACHE_DIR}/indices.bootstrap"
+    rm -rf "${LB_CACHE_DIR}/indices.bootstrap" "${LB_CACHE_DIR}/contents.chroot"
 fi
+find "${LB_CACHE_DIR}"/packages.* -name '*.deb' -mtime +30 -delete 2>/dev/null || true
 rm -rf "${LB_DIR}/cache"
 ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
 
