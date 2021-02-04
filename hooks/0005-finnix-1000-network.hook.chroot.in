@@ -24,7 +24,12 @@ cat <<"EOM" >"/lib/${PRODUCT_ID}/interfaces-convert"
 # is not meant to be a general-purpose e-n-i converter.
 
 import configparser
+import io
 import os
+
+
+FILES_TO_WRITE = {}
+REPLACE_RESOLVCONF = False
 
 
 def systemd_config():
@@ -34,6 +39,8 @@ def systemd_config():
 
 
 def process_section(section):
+    global FILES_TO_WRITE
+
     if "iface" not in section:
         return False
     interface = section["iface"][0]
@@ -45,8 +52,11 @@ def process_section(section):
         output = systemd_config()
         output["Match"] = {"Name": interface}
         output["Link"] = {"Unmanaged": "yes"}
-        with open("/etc/systemd/network/10-{}.network".format(interface), "w") as f:
+        with io.StringIO() as f:
             output.write(f, space_around_delimiters=False)
+            FILES_TO_WRITE[
+                "/etc/systemd/network/10-{}.network".format(interface)
+            ] = f.getvalue()
         return False
 
     output = systemd_config()
@@ -63,12 +73,17 @@ def process_section(section):
         output["Network"]["DHCP"] = "yes"
     if "allow-hotplug" in section:
         output["Link"]["RequiredForOnline"] = "no"
-    with open("/etc/systemd/network/10-{}.network".format(interface), "w") as f:
+    with io.StringIO() as f:
         output.write(f, space_around_delimiters=False)
+        FILES_TO_WRITE[
+            "/etc/systemd/network/10-{}.network".format(interface)
+        ] = f.getvalue()
     return True
 
 
 def convert_interfaces():
+    global FILES_TO_WRITE
+
     if not os.path.exists("/etc/network/interfaces"):
         return
 
@@ -93,11 +108,13 @@ def convert_interfaces():
         if not process_section(section):
             rewritten_interfaces += section_text + "\n"
 
-    with open("/etc/network/interfaces", "w") as f:
-        f.write(rewritten_interfaces)
+    FILES_TO_WRITE["/etc/network/interfaces"] = rewritten_interfaces
 
 
 def convert_resolv():
+    global FILES_TO_WRITE
+    global REPLACE_RESOLVCONF
+
     if not os.path.exists("/etc/systemd/resolved.conf"):
         return
 
@@ -126,15 +143,30 @@ def convert_resolv():
             resolved["Resolve"]["DNS"] = " ".join(nameservers)
         if domains:
             resolved["Resolve"]["Domains"] = " ".join(domains)
-        with open("/etc/systemd/resolved.conf", "w") as f:
+        with io.StringIO() as f:
             resolved.write(f, space_around_delimiters=False)
+            FILES_TO_WRITE["/etc/systemd/resolved.conf"] = f.getvalue()
 
-    os.remove("/etc/resolv.conf")
-    os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
+    REPLACE_RESOLVCONF = True
 
 
-convert_interfaces()
-convert_resolv()
+def write_files():
+    global FILES_TO_WRITE
+    global REPLACE_RESOLVCONF
+
+    for fn in FILES_TO_WRITE:
+        with open(fn, "w") as f:
+            f.write(FILES_TO_WRITE[fn])
+
+    if REPLACE_RESOLVCONF:
+        os.remove("/etc/resolv.conf")
+        os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
+
+
+if __name__ == "__main__":
+    convert_interfaces()
+    convert_resolv()
+    write_files()
 EOM
 chmod 0755 "/lib/${PRODUCT_ID}/interfaces-convert"
 
