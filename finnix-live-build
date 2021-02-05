@@ -8,6 +8,7 @@ VERSION="${VERSION:-dev}"
 CODENAME="${CODENAME:-ashwaubenon}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
 SOURCE_ISO="${SOURCE_ISO:-false}"
+CACHE_FROZEN="${CACHE_FROZEN:-false}"
 
 lock() {
     _file=$1
@@ -125,21 +126,23 @@ lb config noauto \
   --mode debian
 
 mkdir -p "${LB_CACHE_DIR}"
-if [ -e "${LB_CACHE_DIR}/bootstrap/etc/hostname" ]; then
-    if [ -n "$(find "${LB_CACHE_DIR}/bootstrap/etc/hostname" -mmin +1080)" ]; then
+if [ "${CACHE_FROZEN}" = "false" ]; then
+    if [ -e "${LB_CACHE_DIR}/bootstrap/etc/hostname" ]; then
+        if [ -n "$(find "${LB_CACHE_DIR}/bootstrap/etc/hostname" -mmin +1080)" ]; then
+            rm -rf "${LB_CACHE_DIR}/bootstrap"
+        fi
+    else
         rm -rf "${LB_CACHE_DIR}/bootstrap"
     fi
-else
-    rm -rf "${LB_CACHE_DIR}/bootstrap"
-fi
-if [ -e "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" ]; then
-    if [ -n "$(find "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" -mmin +1080)" ]; then
+    if [ -e "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" ]; then
+        if [ -n "$(find "${LB_CACHE_DIR}/indices.bootstrap/pkgcache.bin" -mmin +1080)" ]; then
+            rm -rf "${LB_CACHE_DIR}/indices.bootstrap" "${LB_CACHE_DIR}/contents.chroot"
+        fi
+    else
         rm -rf "${LB_CACHE_DIR}/indices.bootstrap" "${LB_CACHE_DIR}/contents.chroot"
     fi
-else
-    rm -rf "${LB_CACHE_DIR}/indices.bootstrap" "${LB_CACHE_DIR}/contents.chroot"
+    find "${LB_CACHE_DIR}"/packages.* -name '*.deb' -mtime +30 -delete 2>/dev/null || true
 fi
-find "${LB_CACHE_DIR}"/packages.* -name '*.deb' -mtime +30 -delete 2>/dev/null || true
 rm -rf "${LB_DIR}/cache"
 ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
 
