@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+
+# This replaces live-build's file (which always says Debian but
+# conflates our VERSION)
+cat <<"EOM" >.disk/info
+{{ PRODUCT }} {{ VERSION }}{% if VERSION == 'dev' %} ({{ DATETIME }}{% if GIT_DESC %} {{ GIT_DESC }}{% endif %}){% endif %}
+EOM
+
+# This is specific to finnix-live-build
+cat <<"EOM" >.disk/build_info
+PRODUCT="{{ PRODUCT }}"
+PRODUCT_ID="{{ PRODUCT_ID }}"
+VERSION="{{ VERSION }}"
+CODENAME="{{ CODENAME }}"
+ARCH="{{ ARCH }}"
+DATETIME="{{ DATETIME }}"
+GIT_DESC="{{ GIT_DESC }}"
+LIVE_BUILD_GIT_DESC="{{ LIVE_BUILD_GIT_DESC }}"
+EOM

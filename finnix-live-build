@@ -30,6 +30,7 @@ render() {
         "DATE=${DATE}" \
         "YEAR=${YEAR}" \
         "GIT_DESC=${GIT_DESC}" \
+        "LIVE_BUILD_GIT_DESC=${LIVE_BUILD_GIT_DESC}" \
    "${BASE_DIR}/tools/jinja2-render"
 }
 
@@ -82,6 +83,7 @@ else
 fi
 
 GIT_DESC="$(git -C "${BASE_DIR}" describe --always --dirty 2>/dev/null || true)"
+LIVE_BUILD_GIT_DESC="$(git -C "${LIVE_BUILD}" describe --always --dirty 2>/dev/null || true)"
 
 mkdir -p "${LOCK_DIR}"
 lock "${LOCK_DIR}/${LOCK_NAME}.lock"
@@ -146,7 +148,7 @@ fi
 rm -rf "${LB_DIR}/cache"
 ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
 
-for i in "${BASE_DIR}/hooks"/*.hook.chroot.in; do
+for i in "${BASE_DIR}/hooks"/*.hook.*.in; do
     basefn="$(basename "$i" .in)"
     rm -f "${LB_DIR}/config/hooks/normal/${basefn}"
     # False positive in earlier shellcheck
