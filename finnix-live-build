@@ -158,6 +158,7 @@ done
 
 mkdir -p "${LB_DIR}/config/bootloaders/syslinux_common"
 render <"${BASE_DIR}/syslinux/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/syslinux_common/splash.png"
+cp "${BASE_DIR}/syslinux/isolinux.cfg" "${LB_DIR}/config/bootloaders/syslinux_common/"
 mkdir -p "${LB_DIR}/config/bootloaders/grub-pc"
 cp "${BASE_DIR}/grub"/*.cfg "${LB_DIR}/config/bootloaders/grub-pc/"
 render <"${BASE_DIR}/grub/splash.svg" | rsvg-convert --format png --width 1920 --height 1080 >"${LB_DIR}/config/bootloaders/grub-pc/splash.png"
