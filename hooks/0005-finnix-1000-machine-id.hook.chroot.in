@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# live-build hook positioning doesn't really matter on this;
+# update-initramfs has almost certainly run before this, but is
+# guaranteed to run after the hooks.
+
+set -e
+
+mkdir -p /etc/initramfs-tools/scripts/live-bottom
+cat <<"EOM" >/etc/initramfs-tools/scripts/live-bottom/machine-id
+#!/bin/sh
+
+set -e
+
+PREREQS=""
+rootmnt="${rootmnt:-}"  # Set by initrd environment
+
+prereqs() { echo "$PREREQS"; }
+
+case "$1" in
+    prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
+is_usable_product_uuid() {
+    [ -e /sys/class/dmi/id/sys_vendor ] || return 1
+    [ -e /sys/class/dmi/id/product_uuid ] || return 1
+    [ "$(cat /sys/class/dmi/id/sys_vendor)" = "QEMU" ] || return 1
+    return 0
+}
+
+rm -f "${rootmnt}/etc/machine-id"
+if is_usable_product_uuid; then
+    # We can trust these vendors' product_uuid to be decent.
+    sed -e 's/-//g' </sys/class/dmi/id/product_uuid >"${rootmnt}/etc/machine-id"
+elif [ -e /sys/firmware/dmi/tables/DMI ]; then
+    # product_uuid is available, but isn't guaranteed to be decent on
+    # all systems, so let's just hash the entire DMI.
+    # Note that this isn't wise on a permanent machine, as it's
+    # possible two exact machines (with broken vendor UUIDs/serials)
+    # could have the exact same DMI, but it's fine in a live
+    # environment.
+    md5sum /sys/firmware/dmi/tables/DMI | cut -d' ' -f1 >"${rootmnt}/etc/machine-id"
+elif [ -e /proc/sys/kernel/random/boot_id ]; then
+    # Kernel boot ID (random per-boot)
+    sed -e 's/-//g' </proc/sys/kernel/random/boot_id >"${rootmnt}/etc/machine-id"
+else
+    # Random ID
+    sed -e 's/-//g' </proc/sys/kernel/random/uuid >"${rootmnt}/etc/machine-id"
+fi
+rm -f "${rootmnt}/var/lib/dbus/machine-id"
+mkdir -p "${rootmnt}/var/lib/dbus"
+ln -s /etc/machine-id "${rootmnt}/var/lib/dbus/machine-id"
+EOM
+chmod 0755 /etc/initramfs-tools/scripts/live-bottom/machine-id
