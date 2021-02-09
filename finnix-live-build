@@ -4,10 +4,10 @@ set -e
 
 PRODUCT="${PRODUCT:-Finnix}"
 PRODUCT_ID="${PRODUCT_ID:-finnix}"
-VERSION="${VERSION:-122}"
-CODENAME="${CODENAME:-ashwaubenon}"
+VERSION="${VERSION:-dev}"
+CODENAME="${CODENAME:-Winnebago}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
-SOURCE_ISO="${SOURCE_ISO:-true}"
+SOURCE_ISO="${SOURCE_ISO:-false}"
 CACHE_FROZEN="${CACHE_FROZEN:-false}"
 
 lock() {
