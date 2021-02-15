@@ -20,11 +20,15 @@ chmod 0755 "/lib/${PRODUCT_ID}/sshd-keygen"
 
 mkdir -p /etc/systemd/system/ssh.service.d
 cat <<"EOM" >"/etc/systemd/system/ssh.service.d/${PRODUCT_ID}.conf"
+[Unit]
+ConditionKernelCommandLine=sshd
+
 [Service]
 ExecStartPre=
 ExecStartPre=/lib/{{ PRODUCT_ID }}/sshd-keygen
 ExecStartPre=/usr/sbin/sshd -t
 EOM
+systemctl add-wants "${PRODUCT_ID}.target" ssh.service
 
 cat <<"EOM" >"/etc/ssh/sshd_config.d/${PRODUCT_ID}.conf"
 # "Safe" for maintenance use since by default, the user needs to set a
