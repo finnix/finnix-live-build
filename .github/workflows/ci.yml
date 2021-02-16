@@ -15,7 +15,7 @@ jobs:
     - name: Dependency packages
       run: |
         sudo apt update
-        sudo apt -y install debootstrap debian-archive-keyring apt-utils gzip bzip2 xz-utils cpio file coreutils rsync wget librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck
+        sudo apt -y install debootstrap debian-archive-keyring apt-utils gzip bzip2 xz-utils cpio file coreutils rsync wget librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck flake8
     - name: Build image
       run: sudo ./finnix-live-build
     - name: Post-build cleanup
