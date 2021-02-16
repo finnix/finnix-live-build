@@ -68,6 +68,14 @@ if [ "$(dnsdomainname)" = "snowman.lan" ]; then
 fi
 
 if [ "${LINT}" = "true" ]; then
+    if ! command -v shellcheck >/dev/null; then
+        echo "ERROR: LINT=true requires shellcheck" >&2
+        exit 1
+    fi
+    if ! command -v flake8 >/dev/null; then
+        echo "ERROR: LINT=true requires flake8" >&2
+        exit 1
+    fi
     LINT_DIR="$(mktemp -d)"
     DATA_DIR="${DATA_DIR:-${LINT_DIR}}"
 fi
