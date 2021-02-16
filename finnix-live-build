@@ -193,9 +193,9 @@ boot/initrd.img*
 initrd.img*
 EOM
 
-mkdir -p "${LB_DIR}/config/includes.chroot/etc"
-echo "${PRODUCT_ID}" >"${LB_DIR}/config/includes.chroot/etc/hostname"
-cat <<EOM >"${LB_DIR}/config/includes.chroot/etc/hosts"
+mkdir -p "${LB_DIR}/config/includes.chroot_after_packages/etc"
+echo "${PRODUCT_ID}" >"${LB_DIR}/config/includes.chroot_after_packages/etc/hostname"
+cat <<EOM >"${LB_DIR}/config/includes.chroot_after_packages/etc/hosts"
 127.0.0.1	localhost
 127.0.1.1	${PRODUCT_ID}
 
