@@ -1,3 +1,5 @@
 #!/bin/sh
 
-exec pager /usr/local/share/doc/{{ PRODUCT_ID }}/getting-started.txt
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+exec pager "/usr/local/share/doc/${PRODUCT_ID}/getting-started.txt"
