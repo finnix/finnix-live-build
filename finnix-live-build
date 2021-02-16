@@ -85,6 +85,7 @@ DATA_DIR="${DATA_DIR:-${BASE_DIR}/build}"
 CACHE_DIR="${CACHE_DIR:-${DATA_DIR}/cache}"
 LOCK_DIR="${LOCK_DIR:-${DATA_DIR}/lock}"
 LOCK_NAME="${LOCK_NAME:-$(basename "$(readlink -f "$0")")}"
+BUILD_INFO_DIR="${BUILD_INFO_DIR:-${DATA_DIR}/info}"
 LB_DIR="${LB_DIR:-${DATA_DIR}/lb}"
 LB_CACHE_DIR="${LB_CACHE_DIR:-${CACHE_DIR}/lb}"
 LIVE_BUILD="${LIVE_BUILD:-${BASE_DIR}/live-build}"
@@ -234,5 +235,48 @@ fi
 
 lb build
 
+if [ -d "${BUILD_INFO_DIR}" ]; then
+    last_build_id="$(find "${BUILD_INFO_DIR}" -maxdepth 1 -type d -name '20*' | sort | tail -n 1)"
+    if [ -n "${last_build_id}" ]; then
+        last_build_id="$(basename "${last_build_id}")"
+        if [ ! -e "${BUILD_INFO_DIR}/${last_build_id}/${ISO_FILENAME}.size" ]; then
+            last_build_id=""
+        fi
+    fi
+fi
+
+build_id="$(echo "${DATETIME}" | sed -e 's/ /_/g')_${GIT_DESC}"
+mkdir -p "${BUILD_INFO_DIR}/${build_id}"
+cp -a "${LB_DIR}"/*.contents "${BUILD_INFO_DIR}/${build_id}/"
+cp -a "${LB_DIR}"/*.files "${BUILD_INFO_DIR}/${build_id}/"
+cp -a "${LB_DIR}"/*.packages "${BUILD_INFO_DIR}/${build_id}/"
+cp -a "${LB_DIR}"/*.packages.* "${BUILD_INFO_DIR}/${build_id}/"
+stat -c "%s" "${LB_DIR}/${ISO_FILENAME}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
+
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
 file "${LB_DIR}/${ISO_FILENAME}"
+
+# This assumes ISOs will continue to end up being increments of 1 MiB
+if [ -n "${last_build_id}" ]; then
+    build_size="$(cat "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size")"
+    last_build_size="$(cat "${BUILD_INFO_DIR}/${last_build_id}/${ISO_FILENAME}.size")"
+    if [ ! "${build_size}" = "${last_build_size}" ]; then
+        echo
+        echo "NOTE: Build size changed from last build:"
+        echo "    - ${last_build_size} ${last_build_id}"
+        echo "    + ${build_size} ${build_id}"
+        echo
+    fi
+fi
+if [ -e "${BUILD_INFO_DIR}/focus/${ISO_FILENAME}.size" ]; then
+    focus_build_id="$(basename "$(readlink -f "${BUILD_INFO_DIR}/focus")")"
+    build_size="$(cat "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size")"
+    focus_build_size="$(cat "${BUILD_INFO_DIR}/focus/${ISO_FILENAME}.size")"
+    if [ ! "${build_size}" = "${focus_build_size}" ]; then
+        echo
+        echo "NOTE: Build size changed from focus build:"
+        echo "    - ${focus_build_size} ${focus_build_id}"
+        echo "    + ${build_size} ${build_id}"
+        echo
+    fi
+fi
