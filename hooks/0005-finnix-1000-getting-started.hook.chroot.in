@@ -31,9 +31,5 @@ alternatives selection program.
 EOM
 
 mkdir -p /usr/local/bin
-cat <<"EOM" >"/usr/local/bin/${PRODUCT_ID}"
-#!/bin/sh
-
-exec pager /usr/local/share/doc/{{ PRODUCT_ID }}/getting-started.txt
-EOM
+cp /hook-files/getting-started "/usr/local/bin/${PRODUCT_ID}"
 chmod 0755 "/usr/local/bin/${PRODUCT_ID}"

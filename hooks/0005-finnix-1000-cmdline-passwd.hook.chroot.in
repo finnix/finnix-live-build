@@ -5,55 +5,7 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 mkdir -p "/lib/${PRODUCT_ID}"
-cat <<"EOM" >"/lib/${PRODUCT_ID}/cmdline-passwd"
-#!/usr/bin/env python3
-
-# cmdline-passwd
-# Copyright (C) 2021 Ryan Finnie
-# SPDX-License-Identifier: GPL-2.0+
-
-import os
-import shlex
-import subprocess
-import sys
-
-
-def parse_cmdline(cmdline_text):
-    cmdline = []
-    for i in shlex.split(cmdline_text):
-        if "=" in i:
-            cmdline.append(tuple(i.split("=", 1)))
-        else:
-            cmdline.append((i, None))
-
-    return cmdline
-
-
-def main():
-    if not os.path.exists("/proc/cmdline"):
-        return
-
-    with open("/proc/cmdline") as f:
-        cmdline = parse_cmdline(f.read())
-
-    passwds = [v for k, v in cmdline if k == "passwd" and v is not None]
-    if not passwds:
-        return
-
-    chpasswd_command = ["chpasswd"]
-    if "passwd_encrypted" in [k for k, v in cmdline]:
-        chpasswd_command.append("--encrypted")
-
-    subprocess.run(
-        chpasswd_command,
-        input=("\n".join(sorted(passwds)) + "\n").encode("UTF-8"),
-        check=True,
-    )
-
-
-if __name__ == "__main__":
-    sys.exit(main())
-EOM
+cp /hook-files/cmdline-passwd "/lib/${PRODUCT_ID}/cmdline-passwd"
 chmod 0755 "/lib/${PRODUCT_ID}/cmdline-passwd"
 
 cat <<"EOM" >/etc/systemd/system/cmdline-passwd.service

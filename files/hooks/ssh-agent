@@ -1,0 +1,13 @@
+#!/bin/sh
+
+[ -n "${HOME}" ] || exit 1
+
+if [ ! -e "${HOME}/.ssh/ssh-agent.sh" ]; then
+    mkdir -p "${HOME}/.ssh"
+    ssh-agent -s | grep ^SSH >"${HOME}/.ssh/ssh-agent.sh"
+    # shellcheck source=/dev/null
+    . "${HOME}/.ssh/ssh-agent.sh"
+    echo "${SSH_AGENT_PID}" >"${HOME}/.ssh/ssh-agent.pid"
+fi
+# shellcheck source=/dev/null
+. "${HOME}/.ssh/ssh-agent.sh"

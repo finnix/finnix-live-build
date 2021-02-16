@@ -162,6 +162,14 @@ for i in "${BASE_DIR}/hooks"/*.hook.*.in; do
     render <"${i}" >"${LB_DIR}/config/hooks/normal/${basefn}"
 done
 
+mkdir -p "${LB_DIR}/config/includes.chroot_after_packages/hook-files"
+for i in "${BASE_DIR}/files/hooks"/*; do
+    basefn="$(basename "$i")"
+    # False positive in earlier shellcheck
+    # shellcheck disable=SC2094
+    render <"${i}" >"${LB_DIR}/config/includes.chroot_after_packages/hook-files/${basefn}"
+done
+
 mkdir -p "${LB_DIR}/config/bootloaders/syslinux_common"
 render <"${BASE_DIR}/syslinux/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/syslinux_common/splash.png"
 cp "${BASE_DIR}/syslinux/isolinux.cfg" "${LB_DIR}/config/bootloaders/syslinux_common/"
@@ -200,6 +208,7 @@ EOM
 
 if command -v shellcheck >/dev/null; then
     grep -l '^#!/bin/sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs shellcheck
+    grep -l '^#!/bin/sh' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs shellcheck
 fi
 
 if [ "${LINT}" = "true" ]; then

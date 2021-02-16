@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec pager /usr/local/share/doc/{{ PRODUCT_ID }}/getting-started.txt

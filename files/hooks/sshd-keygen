@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+for keytype in ecdsa ed25519 rsa; do
+    if [ ! -e "/etc/ssh/ssh_host_${keytype}_key" ] && grep -qs "ssh_host_${keytype}_key" /etc/ssh/sshd_config; then
+        ssh-keygen -q -f "/etc/ssh/ssh_host_${keytype}_key" -N "" -t "${keytype}"
+    fi
+done

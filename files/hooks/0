@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Reconfigure keyboard/locale access in a fairly universal way,
+# requiring the following keys on a potentially misconfigured keyboard:
+# - 0
+# - Enter
+# - Arrow keys
+
+set -e
+
+dpkg-reconfigure keyboard-configuration
+setupcon -k
+udevadm trigger --subsystem-match=input --action=change
+dpkg-reconfigure locales
