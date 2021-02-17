@@ -9,6 +9,7 @@ CODENAME="${CODENAME:-Winnebago}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
 SOURCE_ISO="${SOURCE_ISO:-false}"
 CACHE_FROZEN="${CACHE_FROZEN:-false}"
+SAVE_ISO="${SAVE_ISO:-false}"
 LINT="${LINT:-false}"
 
 lock() {
@@ -252,6 +253,9 @@ cp -a "${LB_DIR}"/*.files "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages.* "${BUILD_INFO_DIR}/${build_id}/"
 stat -c "%s" "${LB_DIR}/${ISO_FILENAME}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
+if [ "${SAVE_ISO}" = "true" ]; then
+    cp -a "${LB_DIR}/${ISO_FILENAME}" "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}"
+fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
 file "${LB_DIR}/${ISO_FILENAME}"
