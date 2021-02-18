@@ -34,10 +34,10 @@ def process_section(section):
     global FILES_TO_WRITE
 
     if "iface" not in section:
-        return False
+        return
     interface = section["iface"][0]
     if section["iface"][2] == "loopback":
-        return False
+        return
     if (section["iface"][1] != "inet") or (
         section["iface"][2] not in ("dhcp", "static")
     ):
@@ -49,7 +49,7 @@ def process_section(section):
             FILES_TO_WRITE[
                 "/etc/systemd/network/10-{}.network".format(interface)
             ] = f.getvalue()
-        return False
+        return
 
     output = systemd_config()
     output["Match"] = {"Name": interface}
@@ -70,7 +70,7 @@ def process_section(section):
         FILES_TO_WRITE[
             "/etc/systemd/network/10-{}.network".format(interface)
         ] = f.getvalue()
-    return True
+    return (interface, "/etc/systemd/network/10-{}.network".format(interface))
 
 
 def convert_interfaces():
@@ -86,7 +86,12 @@ def convert_interfaces():
         for raw_line in f:
             line = raw_line.strip()
             if line == "" and section:
-                if not process_section(section):
+                ret = process_section(section)
+                if ret:
+                    rewritten_interfaces += "# Interface {} migrated to {}\n\n".format(
+                        ret[0], ret[1]
+                    )
+                else:
                     rewritten_interfaces += section_text + "\n"
                 section = {}
                 section_text = ""
@@ -97,7 +102,12 @@ def convert_interfaces():
             section_text += raw_line
 
     if section:
-        if not process_section(section):
+        ret = process_section(section)
+        if ret:
+            rewritten_interfaces += "# Interface {} migrated to {}\n\n".format(
+                ret[0], ret[1]
+            )
+        else:
             rewritten_interfaces += section_text + "\n"
 
     FILES_TO_WRITE["/etc/network/interfaces"] = rewritten_interfaces
