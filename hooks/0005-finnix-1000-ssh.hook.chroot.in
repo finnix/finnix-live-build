@@ -10,15 +10,11 @@ chmod 0755 "/lib/${PRODUCT_ID}/sshd-keygen"
 
 mkdir -p /etc/systemd/system/ssh.service.d
 cat <<"EOM" >"/etc/systemd/system/ssh.service.d/${PRODUCT_ID}.conf"
-[Unit]
-ConditionKernelCommandLine=sshd
-
 [Service]
 ExecStartPre=
 ExecStartPre=/lib/{{ PRODUCT_ID }}/sshd-keygen
 ExecStartPre=/usr/sbin/sshd -t
 EOM
-systemctl add-wants "${PRODUCT_ID}.target" ssh.service
 
 cat <<"EOM" >"/etc/ssh/sshd_config.d/${PRODUCT_ID}.conf"
 # "Safe" for maintenance use since by default, the user needs to set a
@@ -45,3 +41,15 @@ Environment="USER=root"
 Environment="HOME=/root"
 EOM
 systemctl add-wants "${PRODUCT_ID}.target" shared-ssh-agent.service
+
+cat <<"EOM" >/etc/systemd/system/cmdline-sshd.service
+[Unit]
+Description=Kernel command line SSH daemon
+After=network.target
+ConditionKernelCommandLine=sshd
+
+[Service]
+Type=oneshot
+ExecStart=systemctl --no-block start ssh.service
+EOM
+systemctl add-wants "${PRODUCT_ID}.target" cmdline-sshd.service
