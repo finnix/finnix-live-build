@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# getting-started ({{ PRODUCT_ID}})
+# Copyright (C) 2021 Ryan Finnie
+# SPDX-License-Identifier: GPL-2.0+
+
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 exec pager "/usr/local/share/doc/${PRODUCT_ID}/getting-started.txt"

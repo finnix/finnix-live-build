@@ -1,6 +1,6 @@
 # Finnix live-build tools
 
-`finnix-live-build` is Finnix image build system, and is a wrapper around Debian Live's `live-build` system.
+`finnix-live-build` is Finnix's image build system, and is a wrapper around Debian Live's `live-build` system.
 
 ## Building
 

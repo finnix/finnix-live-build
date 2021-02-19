@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# locale chroot hook
+# Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-License-Identifier: GPL-2.0+
+
 # Must be run after 0040-create-locales-files.hook.chroot
 
 set -e

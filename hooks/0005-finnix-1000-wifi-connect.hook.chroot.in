@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# wifi-connect chroot hook
+# Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-License-Identifier: GPL-2.0+
+
 set -e
 
 cp /hook-files/wifi-connect /usr/local/sbin/wifi-connect

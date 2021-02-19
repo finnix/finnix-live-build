@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# cmdline-passwd
+# cmdline-passwd - Set user passwords from kernel command line
 # Copyright (C) 2021 Ryan Finnie
 # SPDX-License-Identifier: GPL-2.0+
 

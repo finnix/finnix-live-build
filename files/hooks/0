@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# 0 - Keyboard/locale reconfiguration
+# Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-License-Identifier: GPL-2.0+
+
 # Reconfigure keyboard/locale access in a fairly universal way,
 # requiring the following keys on a potentially misconfigured keyboard:
 # - 0
