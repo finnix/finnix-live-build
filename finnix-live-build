@@ -251,40 +251,49 @@ if [ -d "${BUILD_INFO_DIR}" ]; then
 fi
 
 build_id="$(echo "${DATETIME}" | sed -e 's/ /_/g')_${GIT_DESC}"
+build_size="$(stat -c "%s" "${LB_DIR}/${ISO_FILENAME}")"
 mkdir -p "${BUILD_INFO_DIR}/${build_id}"
 cp -a "${LB_DIR}"/*.contents "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.files "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages.* "${BUILD_INFO_DIR}/${build_id}/"
-stat -c "%s" "${LB_DIR}/${ISO_FILENAME}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
+echo "${build_size}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
 if [ "${SAVE_ISO}" = "true" ]; then
     cp -a "${LB_DIR}/${ISO_FILENAME}" "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}"
 fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
 file "${LB_DIR}/${ISO_FILENAME}"
+echo
 
-# This assumes ISOs will continue to end up being increments of 1 MiB
-if [ -n "${last_build_id}" ]; then
-    build_size="$(cat "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size")"
-    last_build_size="$(cat "${BUILD_INFO_DIR}/${last_build_id}/${ISO_FILENAME}.size")"
-    if [ ! "${build_size}" = "${last_build_size}" ]; then
-        echo
-        echo "NOTE: Build size changed from last build:"
-        echo "    - ${last_build_size} ${last_build_id}"
+current_tmp_fn="$(mktemp)"
+compare_tmp_fn="$(mktemp)"
+diff_tmp_fn="$(mktemp)"
+cut -f1 <"${BUILD_INFO_DIR}/${build_id}/chroot.packages.live" | sort >"${current_tmp_fn}"
+
+for compare_link in "${BUILD_INFO_DIR}"/*; do
+    [ -h "$compare_link" ] || continue
+    compare_name="$(basename "${compare_link}")"
+    compare_build_id="$(basename "$(readlink -f "${compare_link}")")"
+
+    compare_build_size="$(cat "${compare_link}/${ISO_FILENAME}.size")"
+    # This assumes ISOs will continue to end up being increments of 1 MiB
+    if [ ! "${build_size}" = "${compare_build_size}" ]; then
+        echo "NOTE: Build size changed from build \"${compare_name}\" (${compare_build_id}):"
+        echo "    - ${compare_build_size} ${compare_build_id}"
         echo "    + ${build_size} ${build_id}"
         echo
     fi
-fi
-if [ -e "${BUILD_INFO_DIR}/focus/${ISO_FILENAME}.size" ]; then
-    focus_build_id="$(basename "$(readlink -f "${BUILD_INFO_DIR}/focus")")"
-    build_size="$(cat "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size")"
-    focus_build_size="$(cat "${BUILD_INFO_DIR}/focus/${ISO_FILENAME}.size")"
-    if [ ! "${build_size}" = "${focus_build_size}" ]; then
-        echo
-        echo "NOTE: Build size changed from focus build:"
-        echo "    - ${focus_build_size} ${focus_build_id}"
-        echo "    + ${build_size} ${build_id}"
+
+    cut -f1 <"${compare_link}/chroot.packages.live" | sort >"${compare_tmp_fn}"
+    (diff "${compare_tmp_fn}" "${current_tmp_fn}" | grep -e '^[<>]') >"${diff_tmp_fn}" || true
+    if [ -s "${diff_tmp_fn}" ]; then
+        echo "NOTE: Packages names changed from build \"${compare_name}\" (${compare_build_id}):"
+        cat "${diff_tmp_fn}"
         echo
     fi
-fi
+done
+
+rm -f "${compare_tmp_fn}" "${current_tmp_fn}" "${diff_tmp_fn}"
+rm -f "${BUILD_INFO_DIR}/${build_id}/previous"
+ln -s "${build_id}" "${BUILD_INFO_DIR}/${build_id}/previous"
