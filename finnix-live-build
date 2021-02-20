@@ -240,16 +240,6 @@ fi
 
 lb build
 
-if [ -d "${BUILD_INFO_DIR}" ]; then
-    last_build_id="$(find "${BUILD_INFO_DIR}" -maxdepth 1 -type d -name '20*' | sort | tail -n 1)"
-    if [ -n "${last_build_id}" ]; then
-        last_build_id="$(basename "${last_build_id}")"
-        if [ ! -e "${BUILD_INFO_DIR}/${last_build_id}/${ISO_FILENAME}.size" ]; then
-            last_build_id=""
-        fi
-    fi
-fi
-
 build_id="$(echo "${DATETIME}" | sed -e 's/ /_/g')_${GIT_DESC}"
 build_size="$(stat -c "%s" "${LB_DIR}/${ISO_FILENAME}")"
 mkdir -p "${BUILD_INFO_DIR}/${build_id}"
