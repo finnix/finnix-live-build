@@ -285,5 +285,5 @@ for compare_link in "${BUILD_INFO_DIR}"/*; do
 done
 
 rm -f "${compare_tmp_fn}" "${current_tmp_fn}" "${diff_tmp_fn}"
-rm -f "${BUILD_INFO_DIR}/${build_id}/previous"
-ln -s "${build_id}" "${BUILD_INFO_DIR}/${build_id}/previous"
+rm -f "${BUILD_INFO_DIR}/previous"
+ln -s "${build_id}" "${BUILD_INFO_DIR}/previous"
