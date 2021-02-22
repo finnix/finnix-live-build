@@ -95,15 +95,24 @@ LB_DIR="${LB_DIR:-${DATA_DIR}/lb}"
 LB_CACHE_DIR="${LB_CACHE_DIR:-${CACHE_DIR}/lb}"
 LIVE_BUILD="${LIVE_BUILD:-${BASE_DIR}/live-build}"
 
-if [ "${LIVE_BUILD}" = "-" ]; then
-    export LIVE_BUILD=""
-else
-    export LIVE_BUILD
-    export PATH="${LIVE_BUILD}/frontend:${PATH}"
-fi
-
 GIT_DESC="$(git -C "${BASE_DIR}" describe --always --dirty 2>/dev/null || true)"
-LIVE_BUILD_GIT_DESC="$(git -C "${LIVE_BUILD}" describe --always --dirty 2>/dev/null || true)"
+LIVE_BUILD_GIT_DESC=""
+
+if [ "${LIVE_BUILD}" = "-" ]; then
+    LIVE_BUILD=""
+fi
+export LIVE_BUILD
+if [ -n "${LIVE_BUILD}" ]; then
+    if [ ! -e "${LIVE_BUILD}/frontend/lb" ]; then
+        echo "ERROR: ${LIVE_BUILD}/frontend/lb not found" >&2
+        if [ "${LIVE_BUILD}" = "${BASE_DIR}/live-build" ]; then
+            echo "You probably want: git -C \"${BASE_DIR}\" submodule update --init --recursive" >&2
+        fi
+        exit 1
+    fi
+    export PATH="${LIVE_BUILD}/frontend:${PATH}"
+    LIVE_BUILD_GIT_DESC="$(git -C "${LIVE_BUILD}" describe --always --dirty 2>/dev/null || true)"
+fi
 
 mkdir -p "${LOCK_DIR}"
 lock "${LOCK_DIR}/${LOCK_NAME}.lock"
