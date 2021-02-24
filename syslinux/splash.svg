@@ -187,7 +187,7 @@
          x="599.89075"
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.66666603px;line-height:120.00000477%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:1px;writing-mode:lr-tb;text-anchor:end;fill:#d9d9d9;fill-opacity:1;stroke-width:1"
-         id="tspan898">Build: {{ DATETIME }}{% if GIT_DESC %} {{ GIT_DESC }}{% endif %}</tspan></text>
+         id="tspan898">{% if VERSION == 'dev' %}Build: {{ DATETIME }} {{ GIT_DESC }} {{ BUILD_TAGS }}{% endif %}</tspan></text>
     <text
        transform="scale(1.0000015,0.9999985)"
        id="text946"

@@ -15,6 +15,7 @@ SOURCE_ISO="${SOURCE_ISO:-false}"
 CACHE_FROZEN="${CACHE_FROZEN:-false}"
 SAVE_ISO="${SAVE_ISO:-false}"
 LINT="${LINT:-false}"
+BUILD_TAGS="${BUILD_TAGS:-}"
 
 lock() {
     _file=$1
@@ -37,6 +38,7 @@ render() {
         "YEAR=${YEAR}" \
         "GIT_DESC=${GIT_DESC}" \
         "LIVE_BUILD_GIT_DESC=${LIVE_BUILD_GIT_DESC}" \
+        "BUILD_TAGS=${BUILD_TAGS}" \
    "${BASE_DIR}/tools/jinja2-render"
 }
 
@@ -96,6 +98,7 @@ LB_CACHE_DIR="${LB_CACHE_DIR:-${CACHE_DIR}/lb}"
 LIVE_BUILD="${LIVE_BUILD:-${BASE_DIR}/live-build}"
 
 GIT_DESC="$(git -C "${BASE_DIR}" describe --always --dirty 2>/dev/null || true)"
+git diff --quiet || BUILD_TAGS="${BUILD_TAGS} dirty"
 LIVE_BUILD_GIT_DESC=""
 
 if [ "${LIVE_BUILD}" = "-" ]; then
@@ -113,6 +116,19 @@ if [ -n "${LIVE_BUILD}" ]; then
     export PATH="${LIVE_BUILD}/frontend:${PATH}"
     LIVE_BUILD_GIT_DESC="$(git -C "${LIVE_BUILD}" describe --always --dirty 2>/dev/null || true)"
 fi
+
+BUILD_TAGS="${BUILD_TAGS} ${ARCH}"
+if [ -t 0 ]; then
+    BUILD_TAGS="${BUILD_TAGS} terminal"
+fi
+if [ -n "${SCHROOT_SESSION_ID}" ]; then
+    BUILD_TAGS="${BUILD_TAGS} schroot"
+fi
+# shellcheck disable=SC2154
+if [ "${container}" = "systemd-nspawn" ]; then
+    BUILD_TAGS="${BUILD_TAGS} systemd-nspawn"
+fi
+BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs)"
 
 mkdir -p "${LOCK_DIR}"
 lock "${LOCK_DIR}/${LOCK_NAME}.lock"
@@ -263,6 +279,7 @@ fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
 file "${LB_DIR}/${ISO_FILENAME}"
+echo "Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
 echo
 
 current_tmp_fn="$(mktemp)"

@@ -17,7 +17,7 @@ jobs:
         sudo apt update
         sudo apt -y install debootstrap debian-archive-keyring apt-utils gzip bzip2 xz-utils cpio file coreutils rsync wget librsvg2-bin fonts-liberation2 python3-jinja2 shellcheck flake8
     - name: Build image
-      run: sudo ./finnix-live-build
+      run: sudo env BUILD_TAGS="github ci" ./finnix-live-build
     - name: Post-build cleanup
       run: |
         sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
