@@ -1,3 +1,6 @@
+#if ARCHITECTURES amd64 i386
+amd64-microcode
+#endif
 atmel-firmware
 firmware-linux
 firmware-atheros
@@ -8,3 +11,6 @@ firmware-intelwimax
 firmware-ipw2x00
 firmware-iwlwifi
 firmware-realtek
+#if ARCHITECTURES amd64 i386
+intel-microcode
+#endif

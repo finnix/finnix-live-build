@@ -162,6 +162,7 @@ lb config noauto \
   --cache-indices true \
   --chroot-squashfs-compression-type "${SQUASHFS_COMP}" \
   --distribution testing \
+  --firmware-chroot false \
   --hdd-label "$(echo "${PRODUCT_ID}" | tr '[:lower:]' '[:upper:]')" \
   --image-name "${PRODUCT_ID}" \
   --iso-application "${PRODUCT}" \
@@ -247,6 +248,10 @@ fe00::0	ip6-localnet
 ff00::0	ip6-mcastprefix
 ff00::1	ip6-allnodes
 ff00::2	ip6-allrouters
+EOM
+
+cat <<"EOM" >config/preseed/firmware-nonfree.cfg.chroot
+firmware-ipw2x00 firmware-ipw2x00/license/accepted boolean true
 EOM
 
 if command -v shellcheck >/dev/null; then
