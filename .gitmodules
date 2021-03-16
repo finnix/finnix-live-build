@@ -1,4 +1,4 @@
 [submodule "live-build"]
 	path = live-build
-	url = https://salsa.debian.org/rfinnie/live-build.git
-	branch = master
+	url = https://github.com/finnix/live-build.git
+	branch = main
