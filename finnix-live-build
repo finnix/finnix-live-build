@@ -115,7 +115,9 @@ LB_CACHE_DIR="${LB_CACHE_DIR:-${CACHE_DIR}/lb}"
 LIVE_BUILD="${LIVE_BUILD:-${BASE_DIR}/live-build}"
 
 GIT_DESC="$(git -C "${BASE_DIR}" describe --always --dirty 2>/dev/null || true)"
-git diff --quiet 2>/dev/null || BUILD_TAGS="${BUILD_TAGS} dirty"
+if [ -n "${GIT_DESC}" ]; then
+    git -C "${BASE_DIR}" diff --quiet 2>/dev/null || BUILD_TAGS="${BUILD_TAGS} dirty"
+fi
 LIVE_BUILD_GIT_DESC=""
 
 if [ "${LIVE_BUILD}" = "-" ]; then
