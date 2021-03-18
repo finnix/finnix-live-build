@@ -214,8 +214,9 @@ if [ "${CACHE_FROZEN}" = "false" ]; then
     fi
     find "${LB_CACHE_DIR}"/packages.* -name '*.deb' -mtime +30 -delete 2>/dev/null || true
 fi
-if [ "${container}" = "systemd-nspawn" ]; then
-    # Restoring parts of bootstrap/dev/ will fail inside systemd-nspawn
+if [ "${container}" = "systemd-nspawn" ] && [ -e "${LB_CACHE_DIR}/bootstrap/dev/console" ]; then
+    # Restoring parts of bootstrap/dev/ created outside systemd-nspawn
+    # will fail inside systemd-nspawn
     rm -rf "${LB_CACHE_DIR}/bootstrap"
 fi
 rm -rf "${LB_DIR}/cache"
