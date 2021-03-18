@@ -95,7 +95,7 @@ else
     MEMTEST=""
 fi
 
-if [ "$(dnsdomainname)" = "snowman.lan" ]; then
+if [ -z "${APT_HTTP_PROXY}" ] && [ "$(dnsdomainname 2>/dev/null)" = "snowman.lan" ]; then
     APT_HTTP_PROXY="http://deb-proxy.snowman.lan:8000"
 fi
 
