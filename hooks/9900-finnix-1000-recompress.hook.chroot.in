@@ -201,7 +201,7 @@ if __name__ == "__main__":
     )
     ballpark_xz = int(POST_SIZE * 0.15)
     logging.info(
-        "If subsequently compressed with xz, {ballpark.real:0.02f} approximately "
+        "If subsequently compressed with xz, approximately {ballpark.real:0.02f} "
         "{ballpark.prefix}B might be saved ({ballpark_pct:0.02%} of previous gzip).".format(
             ballpark=numfmt(PRE_SIZE - ballpark_xz),
             ballpark_pct=((PRE_SIZE - ballpark_xz) / PRE_SIZE),
