@@ -4,10 +4,19 @@
 # Copyright (C) 2021 Ryan Finnie
 # SPDX-License-Identifier: GPL-2.0+
 
+# Kernel command-line usage examples:
+#     passwd=foo  (root assumed)
+#     passwd=root:foo passwd=finnix:bar
+#     passwd=root:$1$QnvsFWnz$MppFa1JL0xsMjB/VQwvwv.
+
 import os
+import re
 import shlex
 import subprocess
 import sys
+
+
+RE_ENCRYPTED = re.compile(r"\$.{1,2}\$")
 
 
 def parse_cmdline(cmdline_text):
@@ -28,19 +37,30 @@ def main():
     with open("/proc/cmdline") as f:
         cmdline = parse_cmdline(f.read())
 
-    passwds = [v for k, v in cmdline if k == "passwd" and v is not None]
-    if not passwds:
-        return
+    userpasses = []
+    userpasses_encrypted = []
+    for userpass in [v for k, v in cmdline if k == "passwd" and v is not None]:
+        if ":" not in userpass:
+            userpass = "root:" + userpass
+        username, password = userpass.split(":", 1)
+        if RE_ENCRYPTED.match(password):
+            userpasses_encrypted.append(userpass)
+        else:
+            userpasses.append(userpass)
 
-    chpasswd_command = ["chpasswd"]
-    if "passwd_encrypted" in [k for k, v in cmdline]:
-        chpasswd_command.append("--encrypted")
+    if userpasses:
+        subprocess.run(
+            ["chpasswd"],
+            input=("\n".join(sorted(userpasses)) + "\n").encode("UTF-8"),
+            check=True,
+        )
 
-    subprocess.run(
-        chpasswd_command,
-        input=("\n".join(sorted(passwds)) + "\n").encode("UTF-8"),
-        check=True,
-    )
+    if userpasses_encrypted:
+        subprocess.run(
+            ["chpasswd", "--encrypted"],
+            input=("\n".join(sorted(userpasses_encrypted)) + "\n").encode("UTF-8"),
+            check=True,
+        )
 
 
 if __name__ == "__main__":
