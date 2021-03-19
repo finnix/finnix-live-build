@@ -7,9 +7,9 @@
 Requirements:
 
 * Debian testing/sid, or Ubuntu 18.04 bionic or later.
-* live-build, built from [live-build git HEAD](https://salsa.debian.org/rfinnie/live-build).
+* live-build, built from [live-build git HEAD](https://github.com/finnix/live-build).
     * This is available as a git submodule in this repository.
-    * While upstream HEAD is usually fine, the link above (and this repository's submodule) points to a Finnix-specific branch which is usually in sync with upstream, but sometimes includes fixes/changes which have not (yet) been accepted upstream.
+    * While upstream HEAD is usually fine, the link above (and this repository's submodule) points to a Finnix-specific branch which is usually in sync with [live-build upstream](https://salsa.debian.org/live-team/live-build), but sometimes includes fixes/changes which have not (yet) been accepted upstream.
 * Additional required host packages: debootstrap debian-archive-keyring python3 python3-jinja2 librsvg2-bin fonts-liberation2
 
 This can be built on dedicated hardware, in a virtual machine, or in a systemd-nspawn container.  Building in a chroot within one of these environments is supported.  Docker and LXD containers are not supported, as they do not allow mounting proc/devpts (even the container-specific restricted versions), required by live-build/debootstrap.
@@ -61,3 +61,24 @@ I encourage you to study this repository and live-build, and to experiment with 
 
 If you do produce builds based directly off the finnix-live-build repository, please change the branding to indicate it is not an official Finnix release.
 Please see the top of `finnix-live-build` for branding-related variables.
+
+## License
+
+finnix-live-build
+
+Copyright (C) 2020-2021 [Ryan Finnie](https://www.finnie.org/)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301, USA.
