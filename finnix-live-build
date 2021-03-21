@@ -189,7 +189,6 @@ lb config noauto \
   --iso-publisher "${PRODUCT}" \
   --iso-volume "${PRODUCT} ${VERSION}" \
   --memtest "${MEMTEST}" \
-  --security false \
   --source "${SOURCE_ISO}" \
   --source-images iso \
   --updates false \
