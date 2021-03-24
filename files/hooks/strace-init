@@ -2,7 +2,7 @@
 
 # strace-init
 # Copyright (C) 2012-2021 Ryan Finnie
-# SPDX-License-Identifier: GPL-2.0+
+# SPDX-License-Identifier: MPL-2.0
 
 # Called as:
 #     init=/lib/{{ PRODUCT_ID }}/strace-init

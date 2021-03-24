@@ -2,7 +2,7 @@
 
 # initramfs-machine-id
 # Copyright (C) 2021 Ryan Finnie
-# SPDX-License-Identifier: GPL-2.0+
+# SPDX-License-Identifier: MPL-2.0
 
 set -e
 

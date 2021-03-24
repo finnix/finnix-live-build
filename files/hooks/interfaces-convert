@@ -2,7 +2,7 @@
 
 # interfaces-convert
 # Copyright (C) 2021 Ryan Finnie
-# SPDX-License-Identifier: GPL-2.0+
+# SPDX-License-Identifier: MPL-2.0
 
 # This program converts sections in /etc/network/interfaces to files in
 # /etc/systemd/network/, and (if needed) from /etc/resolv.conf to

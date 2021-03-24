@@ -2,7 +2,7 @@
 
 # strace-reorder
 # Copyright (C) 2011-2021 Ryan Finnie
-# SPDX-License-Identifier: GPL-2.0+
+# SPDX-License-Identifier: MPL-2.0
 
 import os
 import re

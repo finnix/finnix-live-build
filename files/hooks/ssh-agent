@@ -2,7 +2,7 @@
 
 # ssh-agent
 # Copyright (C) 2020-2021 Ryan Finnie
-# SPDX-License-Identifier: GPL-2.0+
+# SPDX-License-Identifier: MPL-2.0
 
 # Meant to be run from .profile or equivalent, to provide a per-user
 # shared SSH agent environment

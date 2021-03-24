@@ -2,7 +2,7 @@
 
 # cmdline-passwd - Set user passwords from kernel command line
 # Copyright (C) 2021 Ryan Finnie
-# SPDX-License-Identifier: GPL-2.0+
+# SPDX-License-Identifier: MPL-2.0
 
 # Kernel command-line usage examples:
 #     passwd=foo  (root assumed)
