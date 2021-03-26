@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+
+# Finnix command-not-found
+# Copyright (C) 2021 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+# TODO: Make handlers configurable, better coding, etc
+
+import argparse
+import os
+import sys
+
+
+HANDLERS = [
+    {"commands": ["ftp"], "packages": ["ftp"], "similar_commands": ["lftp"]},
+    {"commands": ["ftp-ssl"], "packages": ["ftp-ssl"], "similar_commands": ["lftp"]},
+    {"commands": ["lynx"], "packages": ["lynx"], "similar_commands": ["elinks", "w3m"]},
+    {
+        "commands": ["links2"],
+        "packages": ["links2"],
+        "similar_commands": ["elinks", "w3m"],
+    },
+    {"commands": ["strings"], "packages": ["binutils"]},
+    {"commands": ["vim"], "packages": ["vim"], "similar_commands": ["vim.tiny"]},
+]
+
+
+def eprint(*args, **kwargs):
+    kwargs["file"] = sys.stderr
+    return print(*args, **kwargs)
+
+
+if __name__ == "__main__":
+    if os.path.exists("/usr/lib/command-not-found.distrib"):
+        os.execv("/usr/lib/command-not-found.distrib", sys.argv)
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command")
+    args = parser.parse_args(args=sys.argv[1:])
+
+    eprint("{}: command not found".format(args.command))
+
+    for handler in HANDLERS:
+        if args.command not in handler["commands"]:
+            continue
+        if handler.get("packages"):
+            if os.getuid() == 0:
+                apt_command = "apt"
+            else:
+                apt_command = "sudo apt"
+            eprint()
+            eprint("It can be installed with:")
+            eprint("    {} update".format(apt_command))
+            for package in handler["packages"]:
+                eprint("    {} install {}".format(apt_command, package))
+        if handler.get("similar_commands"):
+            eprint()
+            eprint("Other installed programs provide similar functionality:")
+            for similar_command in handler["similar_commands"]:
+                eprint("    {}".format(similar_command))
+            eprint()
+        if handler.get("note"):
+            eprint()
+            eprint(handler["note"])
+        break
+
+    sys.exit(127)

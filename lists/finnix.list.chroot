@@ -66,8 +66,6 @@ fetchmail
 file
 finger
 fsarchiver
-ftp
-ftp-ssl
 #if ARCHITECTURES amd64 i386
 fuseext2
 #endif
@@ -99,6 +97,7 @@ isomd5sum
 iw
 jfsutils
 joe
+jove
 kbd
 keyboard-configuration
 keyutils
@@ -227,6 +226,5 @@ zerofree
 #if ARCHITECTURES amd64 armhf i386 ppc64el
 zfs-fuse
 #endif
-zile
 zip
 zram-tools

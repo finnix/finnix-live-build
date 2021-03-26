@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# command-not-found chroot hook
+# Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+mkdir -p "/lib/${PRODUCT_ID}"
+cp /hook-files/command-not-found "/lib/${PRODUCT_ID}/command-not-found"
+chmod 0755 "/lib/${PRODUCT_ID}/command-not-found"
+
+# Diverts /usr/lib/command-not-found to /usr/lib/command-not-found.distrib
+# in package "command-not-found" if it is installed after boot.
+dpkg-divert --rename --add /usr/lib/command-not-found
+
+ln -s "/lib/${PRODUCT_ID}/command-not-found" /usr/lib/command-not-found
