@@ -47,13 +47,19 @@ def numfmt(
     limit: Stop after a specified number of rollovers
     prefixes: List of (decimal, binary) prefix strings, ascending
     """
+    # SPDX-SnippetComment: Originally from https://github.com/rfinnie/rf-pymods
+    # SPDX-SnippetCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
+    # SPDX-LicenseInfoInSnippet: MIT
 
     class NumberFormat(float):
         prefix = ""
         fmt = "{num.real:0.02f} {num.prefix}"
 
-        def __repr__(self):
+        def __str__(self):
             return self.fmt.format(num=self)
+
+        def __repr__(self):
+            return str(self)
 
     if prefixes is None:
         prefixes = [
