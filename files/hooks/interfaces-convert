@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-# interfaces-convert
-# Copyright (C) 2021 Ryan Finnie
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: interfaces-convert
+# SPDX-FileCopyrightText: Copyright (C) 2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 # This program converts sections in /etc/network/interfaces to files in

@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# sshd-keygen
-# Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: sshd-keygen
+# SPDX-FileCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 # Populates SSH host keys; called before starting sshd.

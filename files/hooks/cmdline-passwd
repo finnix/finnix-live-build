@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-# cmdline-passwd - Set user passwords from kernel command line
-# Copyright (C) 2021 Ryan Finnie
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: cmdline-passwd - Set user passwords from kernel command line
+# SPDX-FileCopyrightText: Copyright (C) 2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 # Kernel command-line usage examples:

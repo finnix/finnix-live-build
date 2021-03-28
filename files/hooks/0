@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# 0 - Keyboard/locale reconfiguration
-# Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: 0 - Keyboard/locale reconfiguration
+# SPDX-FileCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 # Reconfigure keyboard/locale access in a fairly universal way,

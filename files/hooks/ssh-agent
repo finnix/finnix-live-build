@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# ssh-agent
-# Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: ssh-agent
+# SPDX-FileCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 # Meant to be run from .profile or equivalent, to provide a per-user

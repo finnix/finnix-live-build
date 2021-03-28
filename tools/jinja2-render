@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-# jinja2-render
-# Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: jinja2-render
+# SPDX-FileCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 import os

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-# Finnix command-not-found
-# Copyright (C) 2021 Ryan Finnie
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: Finnix command-not-found
+# SPDX-FileCopyrightText: Copyright (C) 2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 # TODO: Make handlers configurable, better coding, etc
