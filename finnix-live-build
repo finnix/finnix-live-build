@@ -288,6 +288,7 @@ fi
 
 if [ "${LINT}" = "true" ]; then
     rm -rf "${LINT_DIR}"
+    echo "Lint completed without error"
     exit 0
 fi
 
