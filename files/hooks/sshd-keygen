@@ -6,13 +6,11 @@
 # SPDX-License-Identifier: MPL-2.0
 
 # Populates SSH host keys; called before starting sshd.
-# Ideally this should programatically figure out which host keys are
-# configured in sshd_config, but for now it's a static list.
 
 set -e
 
-for keytype in ecdsa ed25519 rsa; do
-    if [ ! -e "/etc/ssh/ssh_host_${keytype}_key" ] && grep -qs "ssh_host_${keytype}_key" /etc/ssh/sshd_config; then
+for keytype in $(perl -ne 'm,^\#?HostKey .*/ssh_host_(.*?)_key, && print "$1\n"' /etc/ssh/sshd_config); do
+    if [ ! -e "/etc/ssh/ssh_host_${keytype}_key" ]; then
         ssh-keygen -q -f "/etc/ssh/ssh_host_${keytype}_key" -N "" -t "${keytype}"
     fi
 done
