@@ -327,8 +327,8 @@ for compare_link in "${BUILD_INFO_DIR}"/*; do
     compare_build_id="$(basename "$(readlink -f "${compare_link}")")"
 
     compare_build_size="$(cat "${compare_link}/${ISO_FILENAME}.size")"
-    # This assumes ISOs will continue to end up being increments of 1 MiB
-    if [ ! "${build_size}" = "${compare_build_size}" ]; then
+    build_size_delta=$((build_size - compare_build_size))
+    if [ "${build_size_delta}" -ge 1048576 ] || [ "${build_size_delta}" -le -1048576 ]; then
         echo "NOTE: Build size changed from build \"${compare_name}\" (${compare_build_id}):"
         echo "    - ${compare_build_size} ${compare_build_id}"
         echo "    + ${build_size} ${build_id}"
