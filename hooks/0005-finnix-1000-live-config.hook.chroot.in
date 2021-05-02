@@ -5,11 +5,14 @@
 # SPDX-FileCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
+# Replicate much of what we used live-config for at build time.
+# Note that to avoid installing live-config itself,
+# lists/live.list.chroot must exist and be installed to
+# config/package-lists/live.list.chroot .
+
 set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
-
-apt-get -y --purge remove live-config live-config-systemd
 
 systemctl add-wants "${PRODUCT_ID}.target" live-tools.service
 
