@@ -7,5 +7,4 @@
 
 set -e
 
-cp /hook-files/wifi-connect /usr/local/sbin/wifi-connect
-chmod 0755 /usr/local/sbin/wifi-connect
+install -D -m 0755 /hook-files/wifi-connect /usr/local/sbin/wifi-connect

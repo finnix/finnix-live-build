@@ -9,9 +9,7 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-mkdir -p "/lib/${PRODUCT_ID}"
-cp /hook-files/cmdline-passwd "/lib/${PRODUCT_ID}/cmdline-passwd"
-chmod 0755 "/lib/${PRODUCT_ID}/cmdline-passwd"
+install -D -m 0755 /hook-files/cmdline-passwd "/lib/${PRODUCT_ID}/cmdline-passwd"
 
 cat <<"EOM" >/etc/systemd/system/cmdline-passwd.service
 [Unit]

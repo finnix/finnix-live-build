@@ -9,9 +9,7 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-mkdir -p "/lib/${PRODUCT_ID}"
-cp /hook-files/command-not-found "/lib/${PRODUCT_ID}/command-not-found"
-chmod 0755 "/lib/${PRODUCT_ID}/command-not-found"
+install -D -m 0755 /hook-files/command-not-found "/lib/${PRODUCT_ID}/command-not-found"
 
 # Diverts /usr/lib/command-not-found to /usr/lib/command-not-found.distrib
 # in package "command-not-found" if it is installed after boot.

@@ -35,6 +35,4 @@ If you would like to update any dpkg alternatives, such as for the
 alternatives selection program.
 EOM
 
-mkdir -p /usr/local/bin
-cp /hook-files/getting-started "/usr/local/bin/${PRODUCT_ID}"
-chmod 0755 "/usr/local/bin/${PRODUCT_ID}"
+install -D -m 0755 /hook-files/getting-started "/usr/local/bin/${PRODUCT_ID}"
