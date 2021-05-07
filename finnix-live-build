@@ -150,7 +150,7 @@ fi
 
 if [ -e /etc/os-release ]; then
     for i in BUILD_OS_ID BUILD_OS_VERSION_CODENAME; do
-        read -r "${i?}"
+        read -r "${i?}" || true
     done <<EOM
 $(
     # shellcheck disable=SC1091
