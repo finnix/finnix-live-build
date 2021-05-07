@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: htop chroot hook
+# SPDX-FileCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+# Adds a few extra default fields:
+# - Zram (left, bar)
+# - DiskIO (left, bar)
+# - NetworkIO (right, text)
+# - Battery (right, text)
+#
+# Note that htoprc is not externally-modified friendly, and
+# pretty much any manual modification will cause the config to
+# reset back to default. The current hook-files file is based
+# on an htop 3.0.5 config, and should be periodically checked.
+
+set -e
+
+install -D -m 0644 /hook-files/htoprc /etc/htoprc
