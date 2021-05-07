@@ -21,7 +21,7 @@ useradd \
     --comment "{{ PRODUCT }} user" \
     --password '*' \
     --shell /bin/bash \
-    --groups audio,cdrom,dip,floppy,video,plugdev,adm,sudo \
+    --groups audio,cdrom,dialout,dip,floppy,video,plugdev,adm,sudo \
     "${PRODUCT_ID}"
 
 mkdir -p /etc/sudoers.d
