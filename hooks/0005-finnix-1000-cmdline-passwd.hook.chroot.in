@@ -14,7 +14,8 @@ install -D -m 0755 /hook-files/cmdline-passwd "/lib/${PRODUCT_ID}/cmdline-passwd
 cat <<"EOM" >/etc/systemd/system/cmdline-passwd.service
 [Unit]
 Description=Change passwords from command line
-ConditionKernelCommandLine=passwd
+ConditionKernelCommandLine=|passwd
+ConditionKernelCommandLine=|sshd_password
 
 [Service]
 Type=oneshot
