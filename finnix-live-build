@@ -147,6 +147,21 @@ fi
 if [ "${container}" = "systemd-nspawn" ]; then
     BUILD_TAGS="${BUILD_TAGS} systemd-nspawn"
 fi
+
+if [ -e /etc/os-release ]; then
+    for i in BUILD_OS_ID BUILD_OS_VERSION_CODENAME; do
+        read -r "${i?}"
+    done <<EOM
+$(
+    # shellcheck disable=SC1091
+    . /etc/os-release
+    echo "$ID"
+    echo "$VERSION_CODENAME"
+)
+EOM
+    BUILD_TAGS="${BUILD_TAGS} ${BUILD_OS_ID} ${BUILD_OS_VERSION_CODENAME}"
+fi
+
 BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs)"
 
 if command -v shellcheck >/dev/null; then
