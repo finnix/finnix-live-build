@@ -120,6 +120,9 @@ def convert_resolv():
 
     if not os.path.exists("/etc/systemd/resolved.conf"):
         return
+    if not os.path.exists("/etc/resolv.conf"):
+        REPLACE_RESOLVCONF = True
+        return
 
     nameservers = []
     domains = []
@@ -162,7 +165,8 @@ def write_files():
             f.write(FILES_TO_WRITE[fn])
 
     if REPLACE_RESOLVCONF:
-        os.remove("/etc/resolv.conf")
+        if os.path.exists("/etc/resolv.conf"):
+            os.remove("/etc/resolv.conf")
         os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
 
 
