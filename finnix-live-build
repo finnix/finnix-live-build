@@ -144,6 +144,8 @@ fi
 if [ -n "${SCHROOT_SESSION_ID}" ]; then
     BUILD_TAGS="${BUILD_TAGS} schroot"
 fi
+# (SC2154) Lowercase variable is conditionally set by systemd-nspawn,
+# nothing we can do
 # shellcheck disable=SC2154
 if [ "${container}" = "systemd-nspawn" ]; then
     BUILD_TAGS="${BUILD_TAGS} systemd-nspawn"
@@ -154,6 +156,7 @@ if [ -e /etc/os-release ]; then
         read -r "${i?}" || true
     done <<EOM
 $(
+    # (SC1091) Do not attempt to read os-release when linting
     # shellcheck disable=SC1091
     . /etc/os-release
     echo "$ID"
@@ -240,8 +243,6 @@ ln -sf "${LB_CACHE_DIR}" "${LB_DIR}/cache"
 for i in "${BASE_DIR}/hooks"/*.hook.*.in; do
     basefn="$(basename "$i" .in)"
     rm -f "${LB_DIR}/config/hooks/normal/${basefn}"
-    # False positive in earlier shellcheck
-    # shellcheck disable=SC2094
     render <"${i}" >"${LB_DIR}/config/hooks/normal/${basefn}"
 done
 
@@ -249,14 +250,10 @@ HOOK_FILES_DIR="${LB_DIR}/config/includes.chroot_after_packages/hook-files"
 mkdir -p "${HOOK_FILES_DIR}"
 for i in "${BASE_DIR}/files/hooks"/*; do
     basefn="$(basename "$i")"
-    # False positive in earlier shellcheck
-    # shellcheck disable=SC2094
     render <"${i}" >"${HOOK_FILES_DIR}/${basefn}"
 done
 for i in "${BASE_DIR}/manpages"/*.md; do
     basefn="$(basename "$i" .md)"
-    # False positive in earlier shellcheck
-    # shellcheck disable=SC2094
     render <"${i}" | pandoc -s -t man -o "${HOOK_FILES_DIR}/${basefn}.1"
 done
 
