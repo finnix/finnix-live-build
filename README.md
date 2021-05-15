@@ -6,7 +6,7 @@
 
 Requirements:
 
-* Debian testing/sid, or Ubuntu 18.04 bionic or later.
+* Debian testing/sid, or Ubuntu 20.04 focal or later.
 * live-build, built from [live-build git HEAD](https://github.com/finnix/live-build).
     * This is available as a git submodule in this repository.
     * While upstream HEAD is usually fine, the link above (and this repository's submodule) points to a Finnix-specific branch which is usually in sync with [live-build upstream](https://salsa.debian.org/live-team/live-build), but sometimes includes fixes/changes which have not (yet) been accepted upstream.
