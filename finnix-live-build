@@ -170,10 +170,10 @@ BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs
 
 if command -v shellcheck >/dev/null; then
     shellcheck "${BASE_DIR}/finnix-live-build"
-    grep -l '^#!/bin/sh' "${BASE_DIR}/tools"/* | xargs -r shellcheck
+    grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${BASE_DIR}/tools"/* | xargs -r shellcheck
 fi
 if command -v flake8 >/dev/null; then
-    grep -l '^#!/usr/bin/env python3' "${BASE_DIR}/tools"/* | xargs -r flake8 --config=/dev/null --max-line-length=120
+    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${BASE_DIR}/tools"/* | xargs -r flake8 --config=/dev/null --max-line-length=120
 fi
 
 mkdir -p "${LOCK_DIR}"
@@ -298,12 +298,12 @@ firmware-ipw2x00 firmware-ipw2x00/license/accepted boolean true
 EOM
 
 if command -v shellcheck >/dev/null; then
-    grep -l '^#!/bin/sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r shellcheck
-    grep -l '^#!/bin/sh' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r shellcheck
+    grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r shellcheck
+    grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r shellcheck
 fi
 if command -v flake8 >/dev/null; then
-    grep -l '^#!/usr/bin/env python3' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r flake8 --config=/dev/null --max-line-length=120
-    grep -l '^#!/usr/bin/env python3' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r flake8 --config=/dev/null --max-line-length=120
+    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r flake8 --config=/dev/null --max-line-length=120
+    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r flake8 --config=/dev/null --max-line-length=120
 fi
 
 if [ "${LINT}" = "true" ]; then

@@ -9,4 +9,4 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-install -D -m 0755 /hook-files/strace-init "/lib/${PRODUCT_ID}/strace-init"
+install -D -m 0755 /hook-files/strace-init "/usr/lib/${PRODUCT_ID}/strace-init"

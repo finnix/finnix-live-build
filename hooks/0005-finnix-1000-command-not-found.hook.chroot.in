@@ -9,10 +9,10 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-install -D -m 0755 /hook-files/command-not-found "/lib/${PRODUCT_ID}/command-not-found"
+install -D -m 0755 /hook-files/command-not-found "/usr/lib/${PRODUCT_ID}/command-not-found"
 
 # Diverts /usr/lib/command-not-found to /usr/lib/command-not-found.distrib
 # in package "command-not-found" if it is installed after boot.
 dpkg-divert --rename --add /usr/lib/command-not-found
 
-ln -s "/lib/${PRODUCT_ID}/command-not-found" /usr/lib/command-not-found
+ln -s "/usr/lib/${PRODUCT_ID}/command-not-found" /usr/lib/command-not-found

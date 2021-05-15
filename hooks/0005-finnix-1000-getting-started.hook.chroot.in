@@ -9,31 +9,7 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-mkdir -p /etc/issue.d
-cat <<"EOM" >"/etc/issue.d/${PRODUCT_ID}.issue"
-Run "{{ PRODUCT_ID }}" to get started.
-EOM
-
-mkdir -p "/usr/local/share/doc/${PRODUCT_ID}"
-cat <<"EOM" >"/usr/local/share/doc/${PRODUCT_ID}/getting-started.txt"
-Welcome to {{ PRODUCT }}!
-
-This is mostly a fully-featured Debian-based text utility distribution,
-but there are a few custom utilities to know about:
-
-- # 0
-  Easy (and mostly keyboard-agnostic) way to change your locale and
-  keyboard information.
-- # wifi-connect "Access Point" "Passphrase"
-  Set up a standard WPA wireless connection.
-
-DHCP is attemped on any found wired Ethernet interface. For a text-mode
-web browser, "elinks" and "w3m" are available.
-
-If you would like to update any dpkg alternatives, such as for the
-"editor" command perhaps, "rover" is a friendly curses-based
-alternatives selection program.
-EOM
-
-install -D -m 0755 /hook-files/getting-started /usr/local/bin/getting-started
-ln -sf getting-started "/usr/local/bin/${PRODUCT_ID}"
+install -D -m 0644 /hook-files/issue.txt "/etc/issue.d/${PRODUCT_ID}.issue"
+install -D -m 0644 /hook-files/getting-started.txt "/usr/share/doc/${PRODUCT_ID}/getting-started.txt"
+install -D -m 0755 /hook-files/getting-started /usr/bin/getting-started
+ln -sf getting-started "/usr/bin/${PRODUCT_ID}"

@@ -9,7 +9,7 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-install -D -m 0755 /hook-files/interfaces-convert "/lib/${PRODUCT_ID}/interfaces-convert"
+install -D -m 0755 /hook-files/interfaces-convert "/usr/lib/${PRODUCT_ID}/interfaces-convert"
 
 cat <<"EOM" >/etc/systemd/system/network-config-setup.service
 [Unit]
@@ -21,7 +21,7 @@ Before=network.target ifupdown-pre.service systemd-udevd.service
 
 [Service]
 Type=oneshot
-ExecStart=/lib/{{ PRODUCT_ID }}/interfaces-convert
+ExecStart=/usr/lib/{{ PRODUCT_ID }}/interfaces-convert
 EOM
 systemctl add-wants sysinit.target network-config-setup.service
 systemctl add-wants network.target systemd-networkd.service

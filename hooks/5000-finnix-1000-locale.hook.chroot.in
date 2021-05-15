@@ -13,7 +13,7 @@ echo 'LANG=en_US.UTF-8' >/etc/default/locale
 sed -i -e 's/^# en_US.UTF-8 /en_US.UTF-8 /g' /etc/locale.gen
 locale-gen
 
-install -D -m 0755 /hook-files/locale-config /usr/local/sbin/locale-config
-ln -sf locale-config /usr/local/sbin/0
-install -D -m 0755 /hook-files/locale-config.1 /usr/local/share/man/man1/locale-config.1
-ln -sf locale-config.1 /usr/local/share/man/man1/0.1
+install -D -m 0755 /hook-files/locale-config /usr/sbin/locale-config
+ln -sf locale-config /usr/sbin/0
+install -D -m 0755 /hook-files/locale-config.1 /usr/share/man/man1/locale-config.1
+ln -sf locale-config.1 /usr/share/man/man1/0.1

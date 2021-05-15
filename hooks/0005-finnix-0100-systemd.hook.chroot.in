@@ -23,10 +23,10 @@ systemctl set-default "${PRODUCT_ID}.target"
 # Clear unwanted targets below our custom target
 for target in basic.target sysinit.target timers.target default.target network.target network-online.target multi-user.target graphical.target; do
     rm -rf "/etc/systemd/system/${target}.wants"
-    mkdir -p "/lib/systemd/diverted-system/${target}.wants"
-    for i in "/lib/systemd/system/${target}.wants"/*.timer; do
+    mkdir -p "/usr/lib/systemd/diverted-system/${target}.wants"
+    for i in "/usr/lib/systemd/system/${target}.wants"/*.timer; do
         [ -e "${i}" ] || continue
-        dpkg-divert --add --rename --divert "/lib/systemd/diverted-system/${target}.wants/$(basename "${i}")" "${i}"
+        dpkg-divert --add --rename --divert "/usr/lib/systemd/diverted-system/${target}.wants/$(basename "${i}")" "${i}"
     done
 done
 rm -f /etc/rc?.d/*

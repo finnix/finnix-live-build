@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 # Called as:
-#     init=/lib/{{ PRODUCT_ID }}/strace-init
+#     init=/usr/lib/{{ PRODUCT_ID }}/strace-init
 # Once booted, wait about 10 seconds before running `killall strace`.
 # Use the `tools/strace-reorder` program in finnix-live-build to
 # convert to a sort format usable by mksquashfs:

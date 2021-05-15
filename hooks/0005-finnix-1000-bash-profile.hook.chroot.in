@@ -34,8 +34,8 @@ fi
 
 export GPG_TTY="$(tty)"
 
-if [ -x "/lib/{{ PRODUCT_ID }}/ssh-agent" ]; then
-    . "/lib/{{ PRODUCT_ID }}/ssh-agent"
+if [ -x "/usr/lib/{{ PRODUCT_ID }}/ssh-agent" ]; then
+    . "/usr/lib/{{ PRODUCT_ID }}/ssh-agent"
 fi
 
 #alias ls='ls --color=auto'  # Conditionally set by .bashrc if color supported
