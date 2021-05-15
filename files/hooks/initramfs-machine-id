@@ -26,10 +26,10 @@ is_usable_product_uuid() {
     return 0
 }
 
-rm -f "${rootmnt}/etc/machine-id"
+MACHINE_ID=""
 if is_usable_product_uuid; then
     # We can trust these vendors' product_uuid to be decent.
-    sed -e 's/-//g' </sys/class/dmi/id/product_uuid >"${rootmnt}/etc/machine-id"
+    MACHINE_ID="$(sed -e 's/-//g' </sys/class/dmi/id/product_uuid)"
 elif [ -e /sys/firmware/dmi/tables/DMI ]; then
     # product_uuid is available, but isn't guaranteed to be decent on
     # all systems, so let's just hash the entire DMI.
@@ -37,14 +37,18 @@ elif [ -e /sys/firmware/dmi/tables/DMI ]; then
     # possible two exact machines (with broken vendor UUIDs/serials)
     # could have the exact same DMI, but it's fine in a live
     # environment.
-    md5sum /sys/firmware/dmi/tables/DMI | cut -d' ' -f1 >"${rootmnt}/etc/machine-id"
+    MACHINE_ID="$(md5sum /sys/firmware/dmi/tables/DMI | cut -d' ' -f1)"
 elif [ -e /proc/sys/kernel/random/boot_id ]; then
     # Kernel boot ID (random per-boot)
-    sed -e 's/-//g' </proc/sys/kernel/random/boot_id >"${rootmnt}/etc/machine-id"
-else
+    MACHINE_ID="$(sed -e 's/-//g' </proc/sys/kernel/random/boot_id)"
+elif [ -e /proc/sys/kernel/random/uuid ]; then
     # Random ID
-    sed -e 's/-//g' </proc/sys/kernel/random/uuid >"${rootmnt}/etc/machine-id"
+    MACHINE_ID="$(sed -e 's/-//g' </proc/sys/kernel/random/uuid)"
 fi
-rm -f "${rootmnt}/var/lib/dbus/machine-id"
+
+[ -n "${MACHINE_ID}" ] || exit 0
+
+rm -f "${rootmnt}/etc/machine-id" "${rootmnt}/var/lib/dbus/machine-id"
+echo "${MACHINE_ID}" >"${rootmnt}/etc/machine-id"
 mkdir -p "${rootmnt}/var/lib/dbus"
 ln -s /etc/machine-id "${rootmnt}/var/lib/dbus/machine-id"
