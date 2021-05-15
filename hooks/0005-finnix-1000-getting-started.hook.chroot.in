@@ -35,4 +35,5 @@ If you would like to update any dpkg alternatives, such as for the
 alternatives selection program.
 EOM
 
-install -D -m 0755 /hook-files/getting-started "/usr/local/bin/${PRODUCT_ID}"
+install -D -m 0755 /hook-files/getting-started /usr/local/bin/getting-started
+ln -sf getting-started "/usr/local/bin/${PRODUCT_ID}"
