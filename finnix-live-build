@@ -49,6 +49,7 @@ render() {
 # Required: python3-jinja2: Templating
 # Required: librsvg2-bin (rsvg-convert): splash.png
 # Required: fonts-liberation2: splash.png
+# Required: pandoc: Manpage builds
 # Optional: shellcheck (shellcheck): Lint, required for LINT=true
 # Optional: flake8 (flake8): Lint, required for LINT=true
 # Optional: git (git): Build IDs
@@ -244,12 +245,19 @@ for i in "${BASE_DIR}/hooks"/*.hook.*.in; do
     render <"${i}" >"${LB_DIR}/config/hooks/normal/${basefn}"
 done
 
-mkdir -p "${LB_DIR}/config/includes.chroot_after_packages/hook-files"
+HOOK_FILES_DIR="${LB_DIR}/config/includes.chroot_after_packages/hook-files"
+mkdir -p "${HOOK_FILES_DIR}"
 for i in "${BASE_DIR}/files/hooks"/*; do
     basefn="$(basename "$i")"
     # False positive in earlier shellcheck
     # shellcheck disable=SC2094
-    render <"${i}" >"${LB_DIR}/config/includes.chroot_after_packages/hook-files/${basefn}"
+    render <"${i}" >"${HOOK_FILES_DIR}/${basefn}"
+done
+for i in "${BASE_DIR}/manpages"/*.md; do
+    basefn="$(basename "$i" .md)"
+    # False positive in earlier shellcheck
+    # shellcheck disable=SC2094
+    render <"${i}" | pandoc -s -t man -o "${HOOK_FILES_DIR}/${basefn}.1"
 done
 
 mkdir -p "${LB_DIR}/config/bootloaders/syslinux_common"
