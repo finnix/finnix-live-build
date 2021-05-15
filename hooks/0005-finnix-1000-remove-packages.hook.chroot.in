@@ -10,10 +10,3 @@ set -e
 # Remove unwanted bootstrap packages
 apt -y --purge remove rsyslog
 apt -y --purge remove tasksel tasksel-data
-
-# Since we have no syslog, create /var/log/syslog
-# pointing users to journalctl
-cat <<"EOM" >/var/log/syslog
-This environment does not log directly to disk using syslog.
-To see boot / service logs, please run `journalctl`.
-EOM

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: syslog chroot hook
+# SPDX-FileCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+# Must be run after 0140-remove-log-files.hook.chroot
+
+set -e
+
+# Since we have no syslog, create /var/log/syslog
+# pointing users to journalctl
+cat <<"EOM" >/var/log/syslog
+This environment does not log directly to disk using syslog.
+To see boot / service logs, please run `journalctl`.
+EOM
