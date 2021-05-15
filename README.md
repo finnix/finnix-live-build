@@ -10,7 +10,7 @@ Requirements:
 * live-build, built from [live-build git HEAD](https://github.com/finnix/live-build).
     * This is available as a git submodule in this repository.
     * While upstream HEAD is usually fine, the link above (and this repository's submodule) points to a Finnix-specific branch which is usually in sync with [live-build upstream](https://salsa.debian.org/live-team/live-build), but sometimes includes fixes/changes which have not (yet) been accepted upstream.
-* Additional required host packages: debootstrap debian-archive-keyring python3 python3-jinja2 librsvg2-bin fonts-liberation2
+* See `build-dependencies.txt` for required host packages.
 
 This can be built on dedicated hardware, in a virtual machine, or in a systemd-nspawn container.  Building in a chroot within one of these environments is supported.  Docker and LXD containers are not supported, as they do not allow mounting proc/devpts (even the container-specific restricted versions), required by live-build/debootstrap.
 

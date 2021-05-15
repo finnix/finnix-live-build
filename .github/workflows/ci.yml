@@ -15,7 +15,7 @@ jobs:
     - name: Dependency packages
       run: |
         sudo apt update
-        sudo apt -y install debootstrap debian-archive-keyring python3 python3-jinja2 librsvg2-bin fonts-liberation2 shellcheck flake8 git file
+        sudo apt -y install $(cat build-dependencies.txt)
     - name: Lint codebase
       run: env LINT=true ./finnix-live-build
     - name: Build image
