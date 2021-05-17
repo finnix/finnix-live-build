@@ -16,7 +16,7 @@ CACHE_FROZEN="${CACHE_FROZEN:-false}"
 SAVE_ISO="${SAVE_ISO:-false}"
 LINT="${LINT:-false}"
 BUILD_TAGS="${BUILD_TAGS:-}"
-PYTHON3="${PYTHON3:-python3}"
+PYTHON="${PYTHON:-python3}"
 
 lock() {
     _file=$1
@@ -46,17 +46,17 @@ render() {
 # PACKAGES USED:
 # Required: debootstrap (debootstrap): live-build initial bootstrap
 # Required: debian-archive-keyring: live-build initial bootstrap
-# Required: python3 (python3): Templating
+# Required: python3 (${PYTHON}): Templating
 # Required: python3-jinja2: Templating
 # Required: librsvg2-bin (rsvg-convert): splash.png
 # Required: fonts-liberation2: splash.png
 # Required: pandoc: Manpage builds
 # Optional: shellcheck (shellcheck): Lint, required for LINT=true
-# Optional: flake8 (flake8): Lint, required for LINT=true
+# Optional: flake8 (${PYTHON} -mflake8): Lint, required for LINT=true
 # Optional: git (git): Build IDs
 # Optional: file (file): Post-build file info
 
-host_commands="debootstrap ${PYTHON3} rsvg-convert"
+host_commands="debootstrap ${PYTHON} rsvg-convert"
 missing_commands=""
 if [ "${LINT}" = "true" ]; then
     host_commands="${host_commands} shellcheck"
@@ -75,7 +75,7 @@ if command -v dpkg >/dev/null 2>/dev/null; then
     fi
 fi
 if [ "${LINT}" = "true" ]; then
-    if ! "${PYTHON3}" -mflake8 /dev/null; then
+    if ! "${PYTHON}" -mflake8 /dev/null; then
         echo "ERROR: flake8 is required for LINT=true"
         exit 1
     fi
@@ -184,7 +184,7 @@ BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs
 if [ "${LINT}" = "true" ]; then
     shellcheck "${BASE_DIR}/finnix-live-build"
     grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${BASE_DIR}/tools"/* | xargs -r shellcheck
-    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${BASE_DIR}/tools"/* | xargs -r "${PYTHON3}" -mflake8 --config=/dev/null --max-line-length=120
+    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${BASE_DIR}/tools"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
 fi
 
 mkdir -p "${LOCK_DIR}"
@@ -311,8 +311,8 @@ EOM
 if [ "${LINT}" = "true" ]; then
     grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r shellcheck
     grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r shellcheck
-    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r "${PYTHON3}" -mflake8 --config=/dev/null --max-line-length=120
-    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r "${PYTHON3}" -mflake8 --config=/dev/null --max-line-length=120
+    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
+    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
 fi
 
 if [ "${LINT}" = "true" ]; then
