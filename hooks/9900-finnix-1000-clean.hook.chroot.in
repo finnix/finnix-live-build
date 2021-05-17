@@ -8,3 +8,11 @@
 set -e
 
 rm -rf /hook-files
+
+rm -f \
+  /etc/group- \
+  /etc/gshadow- \
+  /etc/passwd- \
+  /etc/shadow- \
+  /etc/subgid- \
+  /etc/subuid-
