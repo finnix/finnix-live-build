@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+# Dependency packages
+sudo apt update
+sudo apt -y install $(cat build-dependencies.txt)
+
+# Lint codebase
+env LINT=true ./finnix-live-build
+
+# Build image
+sudo env BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-build
