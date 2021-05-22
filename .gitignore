@@ -1,4 +1,5 @@
 build/
+.rrpcid/artifacts
 live-build_*.dsc
 live-build_*.tar.xz
 live-build_*.deb

@@ -12,3 +12,8 @@ env LINT=true ARCH="${ARCH}" BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-
 
 # Build image
 sudo env ARCH="${ARCH}" BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-build
+
+# Save artifacts
+mkdir -p .rrpcid/artifacts
+sudo mv build/lb/finnix-* .rrpcid/artifacts/
+sudo chown -R "$(id -un):$(id -gn)" .rrpcid/artifacts
