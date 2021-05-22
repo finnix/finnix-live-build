@@ -5,6 +5,8 @@ set -x
 
 # Dependency packages
 sudo apt update
+# (SC2046) Word splitting is desired here
+# shellcheck disable=SC2046
 sudo apt -y install $(cat build-dependencies.txt)
 
 # Lint codebase

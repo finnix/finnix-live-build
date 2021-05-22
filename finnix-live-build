@@ -183,8 +183,10 @@ BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs
 
 if [ "${LINT}" = "true" ]; then
     shellcheck "${BASE_DIR}/finnix-live-build"
-    grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${BASE_DIR}/tools"/* | xargs -r shellcheck
-    grep -l -E '^#!/(usr/)?bin/(env )?python3' "${BASE_DIR}/tools"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
+    for script_dir in "${BASE_DIR}/tools" .rrpcid/jobs/*; do
+        grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${script_dir}"/* | xargs -r shellcheck
+        grep -l -E '^#!/(usr/)?bin/(env )?python3' "${script_dir}"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
+    done
 fi
 
 mkdir -p "${LOCK_DIR}"
