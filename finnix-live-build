@@ -56,7 +56,7 @@ render() {
 # Optional: git (git): Build IDs
 # Optional: file (file): Post-build file info
 
-host_commands="debootstrap ${PYTHON} rsvg-convert"
+host_commands="debootstrap ${PYTHON} rsvg-convert pandoc"
 missing_commands=""
 if [ "${LINT}" = "true" ]; then
     host_commands="${host_commands} shellcheck"
