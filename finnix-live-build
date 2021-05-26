@@ -165,7 +165,7 @@ if [ "${container}" = "systemd-nspawn" ]; then
 fi
 
 if [ -e /etc/os-release ]; then
-    for i in BUILD_OS_ID BUILD_OS_VERSION_CODENAME; do
+    for i in BUILD_OS_ID BUILD_OS_VERSION_CODENAME BUILD_OS_VERSION_ID; do
         read -r "${i?}" || true
     done <<EOM
 $(
@@ -174,9 +174,15 @@ $(
     . /etc/os-release
     echo "$ID"
     echo "$VERSION_CODENAME"
+    echo "$VERSION_ID"
 )
 EOM
-    BUILD_TAGS="${BUILD_TAGS} ${BUILD_OS_ID} ${BUILD_OS_VERSION_CODENAME}"
+    if [ -n "${BUILD_OS_VERSION_CODENAME}" ]; then
+        build_os_ver="${BUILD_OS_VERSION_CODENAME}"
+    else
+        build_os_ver="${BUILD_OS_VERSION_ID}"
+    fi
+    BUILD_TAGS="${BUILD_TAGS} ${BUILD_OS_ID} ${build_os_ver}"
 fi
 
 BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs)"
