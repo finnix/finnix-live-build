@@ -25,8 +25,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.5"
-     inkscape:cx="959.28559"
-     inkscape:cy="518.91776"
+     inkscape:cx="1060.3521"
+     inkscape:cy="598.19879"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -120,14 +120,14 @@
        transform="scale(1.0000015,0.9999985)"
        id="text3002"
        y="250.34891"
-       x="1831.8335"
+       x="89.613144"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:30px;line-height:0%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#d9d9d9;fill-opacity:1;stroke:none;stroke-width:2.25"
        xml:space="preserve"><tspan
          y="250.34891"
-         x="1834.0835"
+         x="89.613144"
          sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:24px;line-height:120.00000477%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:2.25px;writing-mode:lr-tb;text-anchor:end;fill:#d9d9d9;fill-opacity:1;stroke-width:2.25"
-         id="tspan898">{% if VERSION == 'dev' %}Build: {{ DATETIME }} {{ GIT_DESC }} {{ BUILD_TAGS }}{% endif %}</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:24px;line-height:120.00000477%;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:2.25px;writing-mode:lr-tb;text-anchor:start;fill:#d9d9d9;fill-opacity:1;stroke-width:2.25"
+         id="tspan871">{% if VERSION == 'dev' %}Build: {{ DATETIME }} {{ GIT_DESC }} {{ BUILD_TAGS }}{% endif %}</tspan></text>
     <text
        transform="scale(1.0000015,0.9999985)"
        id="text946"
