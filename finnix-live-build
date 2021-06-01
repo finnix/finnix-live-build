@@ -185,6 +185,12 @@ EOM
     BUILD_TAGS="${BUILD_TAGS} ${BUILD_OS_ID} ${build_os_ver}"
 fi
 
+if [ -e /sys/class/dmi/id/chassis_asset_tag ]; then
+    if [ "$(cat /sys/class/dmi/id/chassis_asset_tag)" = "OracleCloud.com" ]; then
+        BUILD_TAGS="${BUILD_TAGS} oci"
+    fi
+fi
+
 BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs)"
 
 if [ "${LINT}" = "true" ]; then
