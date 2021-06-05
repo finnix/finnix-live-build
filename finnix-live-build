@@ -188,7 +188,17 @@ fi
 if [ -e /sys/class/dmi/id/chassis_asset_tag ]; then
     if [ "$(cat /sys/class/dmi/id/chassis_asset_tag)" = "OracleCloud.com" ]; then
         BUILD_TAGS="${BUILD_TAGS} oci"
+    elif [ "$(cat /sys/class/dmi/id/chassis_asset_tag)" = "Amazon EC2" ]; then
+        BUILD_TAGS="${BUILD_TAGS} aws"
     fi
+elif [ -e /sys/class/dmi/id/board_name ]; then
+    if [ "$(cat /sys/class/dmi/id/board_name)" = "Google Compute Engine" ]; then
+        BUILD_TAGS="${BUILD_TAGS} gce"
+    fi
+elif grep -q DataSourceAzure /run/cloud-init/status.json 2>/dev/null; then
+    # This relies on cloud-init, but there doesn't appear to be any
+    # hardware/etc way to determine if running on Azure.
+    BUILD_TAGS="${BUILD_TAGS} azure"
 fi
 
 BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs)"
