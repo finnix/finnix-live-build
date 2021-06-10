@@ -1,0 +1,8 @@
+[Unit]
+Description=Change passwords from command line
+ConditionKernelCommandLine=|passwd
+ConditionKernelCommandLine=|sshd_password
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/{{ PRODUCT_ID }}/cmdline-passwd

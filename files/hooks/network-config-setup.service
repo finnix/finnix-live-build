@@ -1,0 +1,10 @@
+[Unit]
+Description=Set up network configurations
+DefaultDependencies=no
+# Before systemd-udevd becuase ifupdown will try to manage hotplug
+# interfaces via udev
+Before=network.target ifupdown-pre.service systemd-udevd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/lib/{{ PRODUCT_ID }}/interfaces-convert

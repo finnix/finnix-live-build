@@ -1,0 +1,4 @@
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear --skip-login %I $TERM
+TTYVTDisallocate=no

@@ -1,0 +1,10 @@
+[Unit]
+Description=Shared SSH agent init
+Before=getty.target
+
+[Service]
+Type=forking
+ExecStart=/usr/lib/{{ PRODUCT_ID }}/ssh-agent
+PIDFile=/root/.ssh/ssh-agent.pid
+Environment="USER=root"
+Environment="HOME=/root"

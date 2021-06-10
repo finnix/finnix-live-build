@@ -10,15 +10,5 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0755 /hook-files/cmdline-passwd "/usr/lib/${PRODUCT_ID}/cmdline-passwd"
-
-cat <<"EOM" >/etc/systemd/system/cmdline-passwd.service
-[Unit]
-Description=Change passwords from command line
-ConditionKernelCommandLine=|passwd
-ConditionKernelCommandLine=|sshd_password
-
-[Service]
-Type=oneshot
-ExecStart=/usr/lib/{{ PRODUCT_ID }}/cmdline-passwd
-EOM
+install -D -m 0644 /hook-files/cmdline-passwd.service /etc/systemd/system/cmdline-passwd.service
 systemctl add-wants "${PRODUCT_ID}.target" cmdline-passwd.service

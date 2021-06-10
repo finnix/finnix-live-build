@@ -1,0 +1,4 @@
+[Service]
+ExecStartPre=
+ExecStartPre=/usr/lib/{{ PRODUCT_ID }}/sshd-keygen
+ExecStartPre=/usr/sbin/sshd -t

@@ -1,0 +1,8 @@
+[Unit]
+Description=Kernel command line SSH daemon
+After=network.target
+ConditionKernelCommandLine=sshd
+
+[Service]
+Type=oneshot
+ExecStart=systemctl --no-block start ssh.service

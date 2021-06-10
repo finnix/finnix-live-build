@@ -14,24 +14,6 @@ systemctl add-wants "${PRODUCT_ID}.target" getty.target
 mkdir -p /usr/lib/systemd/diverted-generators
 dpkg-divert --add --rename --divert /usr/lib/systemd/diverted-generators/live-config-getty-generator /usr/lib/systemd/system-generators/live-config-getty-generator
 
-mkdir -p /etc/systemd/system/getty@.service.d
-cat <<"EOM" >"/etc/systemd/system/getty@.service.d/${PRODUCT_ID}.conf"
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin root --noclear --skip-login %I $TERM
-TTYVTDisallocate=no
-EOM
-
-mkdir -p /etc/systemd/system/serial-getty@.service.d
-cat <<"EOM" >"/etc/systemd/system/serial-getty@.service.d/${PRODUCT_ID}.conf"
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin root --noclear --skip-login --keep-baud 115200,38400,9600 %I $TERM
-EOM
-
-mkdir -p /etc/systemd/system/container-getty@.service.d
-cat <<"EOM" >"/etc/systemd/system/container-getty@.service.d/${PRODUCT_ID}.conf"
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin root --noclear --skip-login --keep-baud 115200,38400,9600 pts/%I $TERM
-EOM
+install -D -m 0644 /hook-files/getty.service "/etc/systemd/system/getty@.service.d/${PRODUCT_ID}.conf"
+install -D -m 0644 /hook-files/serial-getty.service "/etc/systemd/system/serial-getty@.service.d/${PRODUCT_ID}.conf"
+install -D -m 0644 /hook-files/container-getty.service "/etc/systemd/system/container-getty@.service.d/${PRODUCT_ID}.conf"

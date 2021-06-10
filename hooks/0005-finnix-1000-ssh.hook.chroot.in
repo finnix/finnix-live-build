@@ -10,14 +10,7 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0755 /hook-files/sshd-keygen "/usr/lib/${PRODUCT_ID}/sshd-keygen"
-
-mkdir -p /etc/systemd/system/ssh.service.d
-cat <<"EOM" >"/etc/systemd/system/ssh.service.d/${PRODUCT_ID}.conf"
-[Service]
-ExecStartPre=
-ExecStartPre=/usr/lib/{{ PRODUCT_ID }}/sshd-keygen
-ExecStartPre=/usr/sbin/sshd -t
-EOM
+install -D -m 0644 /hook-files/ssh.service "/etc/systemd/system/ssh.service.d/${PRODUCT_ID}.conf"
 
 cat <<"EOM" >"/etc/ssh/sshd_config.d/${PRODUCT_ID}.conf"
 # "Safe" for maintenance use since by default, the user needs to set a
@@ -28,29 +21,8 @@ EOM
 
 # Shared per-user SSH agent
 install -D -m 0755 /hook-files/ssh-agent "/usr/lib/${PRODUCT_ID}/ssh-agent"
-
-cat <<"EOM" >/etc/systemd/system/shared-ssh-agent.service
-[Unit]
-Description=Shared SSH agent init
-Before=getty.target
-
-[Service]
-Type=forking
-ExecStart=/usr/lib/{{ PRODUCT_ID }}/ssh-agent
-PIDFile=/root/.ssh/ssh-agent.pid
-Environment="USER=root"
-Environment="HOME=/root"
-EOM
+install -D -m 0644 /hook-files/shared-ssh-agent.service /etc/systemd/system/shared-ssh-agent.service
 systemctl add-wants "${PRODUCT_ID}.target" shared-ssh-agent.service
 
-cat <<"EOM" >/etc/systemd/system/cmdline-sshd.service
-[Unit]
-Description=Kernel command line SSH daemon
-After=network.target
-ConditionKernelCommandLine=sshd
-
-[Service]
-Type=oneshot
-ExecStart=systemctl --no-block start ssh.service
-EOM
+install -D -m 0644 /hook-files/cmdline-sshd.service /etc/systemd/system/cmdline-sshd.service
 systemctl add-wants "${PRODUCT_ID}.target" cmdline-sshd.service

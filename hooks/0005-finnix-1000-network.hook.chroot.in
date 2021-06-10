@@ -10,19 +10,7 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0755 /hook-files/interfaces-convert "/usr/lib/${PRODUCT_ID}/interfaces-convert"
-
-cat <<"EOM" >/etc/systemd/system/network-config-setup.service
-[Unit]
-Description=Set up network configurations
-DefaultDependencies=no
-# Before systemd-udevd becuase ifupdown will try to manage hotplug
-# interfaces via udev
-Before=network.target ifupdown-pre.service systemd-udevd.service
-
-[Service]
-Type=oneshot
-ExecStart=/usr/lib/{{ PRODUCT_ID }}/interfaces-convert
-EOM
+install -D -m 0644 /hook-files/network-config-setup.service /etc/systemd/system/network-config-setup.service
 systemctl add-wants sysinit.target network-config-setup.service
 systemctl add-wants network.target systemd-networkd.service
 systemctl add-wants network.target systemd-resolved.service

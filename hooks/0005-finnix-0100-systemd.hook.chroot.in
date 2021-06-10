@@ -10,14 +10,7 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 # Set up our custom target
-cat <<"EOM" >"/etc/systemd/system/${PRODUCT_ID}.target"
-[Unit]
-Description={{ PRODUCT }} System
-Requires=basic.target
-Conflicts=rescue.service rescue.target
-After=basic.target rescue.service rescue.target
-AllowIsolate=yes
-EOM
+install -D -m 0644 /hook-files/live.target "/etc/systemd/system/${PRODUCT_ID}.target"
 systemctl set-default "${PRODUCT_ID}.target"
 
 # Clear unwanted targets below our custom target
