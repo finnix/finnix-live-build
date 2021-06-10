@@ -1,2 +1,6 @@
+# Note that we don't want to install live-config itself, as we
+# replicate all of its functionality we want. To avoid automatic
+# installation of live-config, this file (which is installed to
+# config/package-lists/live.list.chroot) must exist.
 live-boot
 live-tools

@@ -17,3 +17,7 @@ install -D -m 0755 /hook-files/locale-config /usr/sbin/locale-config
 ln -sf locale-config /usr/sbin/0
 install -D -m 0755 /hook-files/locale-config.1 /usr/share/man/man1/locale-config.1
 ln -sf locale-config.1 /usr/share/man/man1/0.1
+
+echo 'Etc/UTC' >/etc/timezone
+rm -f /etc/localtime
+dpkg-reconfigure -f noninteractive -p critical tzdata

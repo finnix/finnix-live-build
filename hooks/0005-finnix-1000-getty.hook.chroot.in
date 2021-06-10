@@ -11,6 +11,11 @@ PRODUCT_ID="{{ PRODUCT_ID }}"
 
 systemctl add-wants "${PRODUCT_ID}.target" getty.target
 
+# live-config-getty-generator is part of live-config which we don't
+# install, but technically isn't incompatible with our setup... except
+# for live-config-getty-generator, we we don't want in any case.
+# Diverting here is therefore pre-emptive, in case the end user does
+# install it during the live session.
 mkdir -p /usr/lib/systemd/diverted-generators
 dpkg-divert --add --rename --divert /usr/lib/systemd/diverted-generators/live-config-getty-generator /usr/lib/systemd/system-generators/live-config-getty-generator
 
