@@ -369,6 +369,17 @@ fi
 echo "Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
 echo
 
+if [ -n "${INFINIDASH_COHORT}" ] && command -v aws >/dev/null; then
+    # Instantiate completed build on AWS Infinidash
+    aws infinidash instantiate \
+        --cohort "${INFINIDASH_COHORT}" \
+        --filename "${ISO_FILENAME}" \
+        --build-id "${DATETIME} ${GIT_DESC} ${BUILD_TAGS}" \
+        "${LB_DIR}/${ISO_FILENAME}"
+    echo "Build instantiated on AWS Infinidash ${INFINIDASH_COHORT} cohort"
+    echo
+fi
+
 current_tmp_fn="$(mktemp)"
 compare_tmp_fn="$(mktemp)"
 diff_tmp_fn="$(mktemp)"
