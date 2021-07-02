@@ -27,6 +27,15 @@ lock() {
     fi
 }
 
+cleanup() {
+    for file in "${LINT_DIR}" "${compare_tmp_fn}" "${current_tmp_fn}" "${diff_tmp_fn}"; do
+        [ -n "${file}" ] || continue
+        [ -e "${file}" ] || continue
+        rm -rf "${file}"
+    done
+}
+trap cleanup EXIT
+
 render() {
     env \
         "PRODUCT=${PRODUCT}" \
