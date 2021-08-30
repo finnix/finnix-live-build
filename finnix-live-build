@@ -8,10 +8,10 @@ set -e
 
 PRODUCT="${PRODUCT:-Finnix}"
 PRODUCT_ID="${PRODUCT_ID:-finnix}"
-VERSION="${VERSION:-dev}"
+VERSION="${VERSION:-123}"
 CODENAME="${CODENAME:-Winnebago}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
-SOURCE_ISO="${SOURCE_ISO:-false}"
+SOURCE_ISO="${SOURCE_ISO:-true}"
 CACHE_FROZEN="${CACHE_FROZEN:-false}"
 SAVE_ISO="${SAVE_ISO:-false}"
 LINT="${LINT:-false}"
