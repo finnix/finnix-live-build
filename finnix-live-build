@@ -237,13 +237,12 @@ lb config noauto \
   --apt-source-archives true \
   --architectures "${ARCH}" \
   --archive-areas "main contrib non-free" \
-  --backports false \
   --binary-images "${BINARY_IMAGES}" \
   --bootappend-live "boot=live quiet" \
   --bootloaders "${BOOTLOADERS}" \
   --cache-indices true \
   --chroot-squashfs-compression-type "${SQUASHFS_COMP}" \
-  --distribution testing \
+  --distribution stable \
   --firmware-chroot false \
   --hdd-label "$(echo "${PRODUCT_ID}" | tr '[:lower:]' '[:upper:]')" \
   --image-name "${PRODUCT_ID}" \
@@ -254,7 +253,6 @@ lb config noauto \
   --memtest "${MEMTEST}" \
   --source "${SOURCE_ISO}" \
   --source-images iso \
-  --updates false \
   --zsync false \
   --mode debian
 
