@@ -8,10 +8,10 @@ set -e
 
 PRODUCT="${PRODUCT:-Finnix}"
 PRODUCT_ID="${PRODUCT_ID:-finnix}"
-VERSION="${VERSION:-123}"
-CODENAME="${CODENAME:-Winnebago}"
+VERSION="${VERSION:-dev}"
+CODENAME="${CODENAME:-Sturgeon Bay}"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
-SOURCE_ISO="${SOURCE_ISO:-true}"
+SOURCE_ISO="${SOURCE_ISO:-false}"
 CACHE_FROZEN="${CACHE_FROZEN:-false}"
 SAVE_ISO="${SAVE_ISO:-false}"
 LINT="${LINT:-false}"
@@ -242,7 +242,7 @@ lb config noauto \
   --bootloaders "${BOOTLOADERS}" \
   --cache-indices true \
   --chroot-squashfs-compression-type "${SQUASHFS_COMP}" \
-  --distribution stable \
+  --distribution testing \
   --firmware-chroot false \
   --hdd-label "$(echo "${PRODUCT_ID}" | tr '[:lower:]' '[:upper:]')" \
   --image-name "${PRODUCT_ID}" \
