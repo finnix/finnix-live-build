@@ -52,8 +52,14 @@ if __name__ == "__main__":
             eprint()
             eprint("It can be installed with:")
             eprint("    {} update".format(apt_command))
-            for package in handler["packages"]:
-                eprint("    {} install {}".format(apt_command, package))
+            for i, package in enumerate(handler["packages"], 1):
+                eprint(
+                    "    {} install {}{}".format(
+                        apt_command,
+                        package,
+                        ("  # or" if i < len(handler["packages"]) else ""),
+                    )
+                )
         if handler.get("similar_commands"):
             eprint()
             eprint("Other installed programs provide similar functionality:")
