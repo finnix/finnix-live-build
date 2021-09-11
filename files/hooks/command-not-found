@@ -22,7 +22,11 @@ HANDLERS = [
         "similar_commands": ["elinks", "w3m"],
     },
     {"commands": ["strings"], "packages": ["binutils"]},
-    {"commands": ["vim"], "packages": ["vim"], "similar_commands": ["vim.tiny"]},
+    {
+        "commands": ["vim"],
+        "packages": ["vim", "neovim"],
+        "similar_commands": ["vim.tiny"],
+    },
 ]
 
 
