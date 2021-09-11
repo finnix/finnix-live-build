@@ -12,6 +12,8 @@ attr
 bash-completion
 bc
 bcache-tools
+bind9-dnsutils
+bind9-host
 bonnie++
 bridge-utils
 btrfs-progs
@@ -41,7 +43,6 @@ debootstrap
 #if ARCHITECTURES amd64 arm64 armhf i386
 dmidecode
 #endif
-dnsutils
 dosfstools
 dselect
 dump
@@ -73,6 +74,7 @@ fxload
 gawk
 gddrescue
 gdisk
+gdu
 genromfs
 git
 gpart
@@ -85,6 +87,7 @@ hfsutils
 htop
 ifenslave
 iftop
+inxi
 iotop
 iozone3
 ipcalc
@@ -140,6 +143,7 @@ nmap
 ntfs-3g
 ntpdate
 nvme-cli
+nwipe
 oathtool
 openssh-client
 openssh-server
@@ -167,7 +171,9 @@ rdate
 rdiff-backup
 reiser4progs
 reiserfsprogs
+rename
 rlwrap
+rmlint
 robotfindskitten
 rover
 rsync
