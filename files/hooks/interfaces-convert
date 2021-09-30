@@ -19,158 +19,145 @@
 import configparser
 import io
 import os
+import sys
 
 
-FILES_TO_WRITE = {}
-REPLACE_RESOLVCONF = False
+class InterfacesConvert:
+    def __init__(self):
+        self.files = {}
+        self.replace_resolvconf = False
 
+    def systemd_config(self):
+        config = configparser.ConfigParser()
+        config.optionxform = str
+        return config
 
-def systemd_config():
-    config = configparser.ConfigParser()
-    config.optionxform = str
-    return config
+    def generate_systemd_conf(self, config, filename):
+        with io.StringIO() as f:
+            config.write(f, space_around_delimiters=False)
+            self.files[filename] = f.getvalue()
 
+    def process_section(self, section):
+        if "iface" not in section:
+            return
+        interface = section["iface"][0]
+        if section["iface"][2] == "loopback":
+            return
+        filename = "/etc/systemd/network/10-{}.network".format(interface)
+        if (section["iface"][1] != "inet") or (
+            section["iface"][2] not in ("dhcp", "static")
+        ):
+            output = self.systemd_config()
+            output["Match"] = {"Name": interface}
+            output["Link"] = {"Unmanaged": "yes"}
+            self.generate_systemd_conf(output, filename)
+            return
 
-def process_section(section):
-    global FILES_TO_WRITE
-
-    if "iface" not in section:
-        return
-    interface = section["iface"][0]
-    if section["iface"][2] == "loopback":
-        return
-    if (section["iface"][1] != "inet") or (
-        section["iface"][2] not in ("dhcp", "static")
-    ):
-        output = systemd_config()
+        output = self.systemd_config()
         output["Match"] = {"Name": interface}
-        output["Link"] = {"Unmanaged": "yes"}
-        with io.StringIO() as f:
-            output.write(f, space_around_delimiters=False)
-            FILES_TO_WRITE[
-                "/etc/systemd/network/10-{}.network".format(interface)
-            ] = f.getvalue()
-        return
-
-    output = systemd_config()
-    output["Match"] = {"Name": interface}
-    output["Link"] = {}
-    output["Network"] = {}
-    if ("address" in section) and ("netmask" in section):
-        output["Network"]["Address"] = "{}/{}".format(
-            section["address"][0], section["netmask"][0]
-        )
-        if "gateway" in section:
-            output["Network"]["Gateway"] = section["gateway"][0]
-    else:
-        output["Network"]["DHCP"] = "yes"
-    if "allow-hotplug" in section:
-        output["Link"]["RequiredForOnline"] = "no"
-    with io.StringIO() as f:
-        output.write(f, space_around_delimiters=False)
-        FILES_TO_WRITE[
-            "/etc/systemd/network/10-{}.network".format(interface)
-        ] = f.getvalue()
-    return (interface, "/etc/systemd/network/10-{}.network".format(interface))
-
-
-def convert_interfaces():
-    global FILES_TO_WRITE
-
-    if not os.path.exists("/etc/network/interfaces"):
-        return
-
-    rewritten_interfaces = ""
-    section = {}
-    section_text = ""
-    with open("/etc/network/interfaces") as f:
-        for raw_line in f:
-            line = raw_line.strip()
-            if line == "" and section:
-                ret = process_section(section)
-                if ret:
-                    rewritten_interfaces += "# Interface {} migrated to {}\n\n".format(
-                        ret[0], ret[1]
-                    )
-                else:
-                    rewritten_interfaces += section_text + "\n"
-                section = {}
-                section_text = ""
-                continue
-            ls = line.split(" ")
-            if not ls[0].startswith("#"):
-                section[ls[0]] = ls[1:]
-            section_text += raw_line
-
-    if section:
-        ret = process_section(section)
-        if ret:
-            rewritten_interfaces += "# Interface {} migrated to {}\n\n".format(
-                ret[0], ret[1]
+        output["Link"] = {}
+        output["Network"] = {}
+        if ("address" in section) and ("netmask" in section):
+            output["Network"]["Address"] = "{}/{}".format(
+                section["address"][0], section["netmask"][0]
             )
+            if "gateway" in section:
+                output["Network"]["Gateway"] = section["gateway"][0]
         else:
-            rewritten_interfaces += section_text + "\n"
+            output["Network"]["DHCP"] = "yes"
+        if "allow-hotplug" in section:
+            output["Link"]["RequiredForOnline"] = "no"
+        self.generate_systemd_conf(output, filename)
+        return (interface, filename)
 
-    FILES_TO_WRITE["/etc/network/interfaces"] = rewritten_interfaces
+    def convert_interfaces(self):
+        if not os.path.exists("/etc/network/interfaces"):
+            return
 
-
-def convert_resolv():
-    global FILES_TO_WRITE
-    global REPLACE_RESOLVCONF
-
-    if not os.path.exists("/etc/systemd/resolved.conf"):
-        return
-    if not os.path.exists("/etc/resolv.conf"):
-        REPLACE_RESOLVCONF = True
-        return
-
-    nameservers = []
-    domains = []
-    with open("/etc/resolv.conf") as f:
-        for line in f:
-            line = line.strip()
-            ls = line.split(" ")
-            if ls[0] == "nameserver":
-                if ls[1] == "127.0.0.53":
+        rewritten_interfaces = ""
+        section = {}
+        section_text = ""
+        with open("/etc/network/interfaces") as f:
+            for raw_line in f:
+                line = raw_line.strip()
+                if line == "" and section:
+                    ret = self.process_section(section)
+                    if ret:
+                        rewritten_interfaces += "# Interface {} migrated to {}\n\n".format(
+                            ret[0], ret[1]
+                        )
+                    else:
+                        rewritten_interfaces += section_text + "\n"
+                    section = {}
+                    section_text = ""
                     continue
-                nameservers.append(ls[1])
-            elif ls[0] in ("search", "domain"):
-                for s in ls[1:]:
-                    if s == ".":
+                ls = line.split(" ")
+                if not ls[0].startswith("#"):
+                    section[ls[0]] = ls[1:]
+                section_text += raw_line
+
+        if section:
+            ret = self.process_section(section)
+            if ret:
+                rewritten_interfaces += "# Interface {} migrated to {}\n\n".format(
+                    ret[0], ret[1]
+                )
+            else:
+                rewritten_interfaces += section_text + "\n"
+
+        self.files["/etc/network/interfaces"] = rewritten_interfaces
+
+    def convert_resolv(self):
+        if not os.path.exists("/etc/systemd/resolved.conf"):
+            return
+        if not os.path.exists("/etc/resolv.conf"):
+            self.replace_resolvconf = True
+            return
+
+        nameservers = []
+        domains = []
+        with open("/etc/resolv.conf") as f:
+            for line in f:
+                line = line.strip()
+                ls = line.split(" ")
+                if ls[0] == "nameserver":
+                    if ls[1] == "127.0.0.53":
                         continue
-                    domains.append(s)
+                    nameservers.append(ls[1])
+                elif ls[0] in ("search", "domain"):
+                    for s in ls[1:]:
+                        if s == ".":
+                            continue
+                        domains.append(s)
 
-    if nameservers or domains:
-        resolved = systemd_config()
-        resolved.read("/etc/systemd/resolved.conf")
-        if "Resolve" not in resolved:
-            resolved["Resolve"] = {}
-        if nameservers:
-            resolved["Resolve"]["DNS"] = " ".join(nameservers)
-        if domains:
-            resolved["Resolve"]["Domains"] = " ".join(domains)
-        with io.StringIO() as f:
-            resolved.write(f, space_around_delimiters=False)
-            FILES_TO_WRITE["/etc/systemd/resolved.conf"] = f.getvalue()
+        if nameservers or domains:
+            resolved = self.systemd_config()
+            resolved.read("/etc/systemd/resolved.conf")
+            if "Resolve" not in resolved:
+                resolved["Resolve"] = {}
+            if nameservers:
+                resolved["Resolve"]["DNS"] = " ".join(nameservers)
+            if domains:
+                resolved["Resolve"]["Domains"] = " ".join(domains)
+            self.generate_systemd_conf(resolved, "/etc/systemd/resolved.conf")
 
-    REPLACE_RESOLVCONF = True
+        self.replace_resolvconf = True
 
+    def write_files(self):
+        for fn in self.files:
+            with open(fn, "w") as f:
+                f.write(self.files[fn])
 
-def write_files():
-    global FILES_TO_WRITE
-    global REPLACE_RESOLVCONF
+        if self.replace_resolvconf:
+            if os.path.exists("/etc/resolv.conf"):
+                os.remove("/etc/resolv.conf")
+            os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
 
-    for fn in FILES_TO_WRITE:
-        with open(fn, "w") as f:
-            f.write(FILES_TO_WRITE[fn])
-
-    if REPLACE_RESOLVCONF:
-        if os.path.exists("/etc/resolv.conf"):
-            os.remove("/etc/resolv.conf")
-        os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
+    def main(self):
+        self.convert_interfaces()
+        self.convert_resolv()
+        self.write_files()
 
 
 if __name__ == "__main__":
-    convert_interfaces()
-    convert_resolv()
-    write_files()
+    sys.exit(InterfacesConvert().main())
