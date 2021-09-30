@@ -5,39 +5,46 @@
 # SPDX-FileCopyrightText: Copyright (C) 2011-2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
-import os
+import pathlib
 import re
 import sys
 
 
-SQUASHFS_ROOT = "/run/live/rootfs/filesystem.squashfs"
+class StraceReorder:
+    squashfs_root = "/run/live/rootfs/filesystem.squashfs"
 
-R_OPEN = re.compile(r"^[0-9]+ +(open|openat)\(.*?\) = [0-9]+<(.*?)>$")
-R_EXEC = re.compile(r"^[0-9]+ +(execve)\(\"(.*?)\".*?\) = [0-9]+$")
+    r_open = re.compile(r"^[0-9]+ +(open|openat)\(.*?\) = [0-9]+<(.*?)>$")
+    r_exec = re.compile(r"^[0-9]+ +(execve)\(\"(.*?)\".*?\) = [0-9]+$")
 
+    def get_filename(self, line):
+        m = re.search(self.r_open, line)
+        if m:
+            return m.group(2)
+        m = re.search(self.r_exec, line)
+        if m:
+            return m.group(2)
 
-def get_filename(line):
-    m = re.search(R_OPEN, line)
-    if m:
-        return m.group(2)
-    m = re.search(R_EXEC, line)
-    if m:
-        return m.group(2)
+    def main(self):
+        seen = []
+        for line in sys.stdin.readlines():
+            filename = self.get_filename(line.rstrip())
+            if not filename:
+                continue
+
+            file = pathlib.Path(filename).resolve()
+            if (
+                not pathlib.Path()
+                .joinpath(self.squashfs_root, *file.parts[1:])
+                .is_file()
+            ):
+                continue
+            if file in seen:
+                continue
+            seen.append(file)
+
+        for pos, file in enumerate(seen, 1):
+            print("{}\t{}".format(str(file)[1:], 0 - pos))
 
 
 if __name__ == "__main__":
-    seen = []
-    for line in sys.stdin.readlines():
-        filename = get_filename(line.rstrip())
-        if not filename:
-            continue
-        if not os.path.isfile(os.path.join(SQUASHFS_ROOT, filename[1:])):
-            continue
-        if filename in seen:
-            continue
-        seen.append(filename)
-
-    pos = -1
-    for filename in seen:
-        print("{}\t{}".format(filename[1:], pos))
-        pos -= 1
+    sys.exit(StraceReorder().main())
