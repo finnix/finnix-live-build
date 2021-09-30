@@ -110,9 +110,7 @@ class RecompressGz:
         return parser.parse_args(args=argv[1:])
 
     def load_diversions(self):
-        with pathlib.Path().joinpath(
-            self.args.base_dir, "var/lib/dpkg/diversions"
-        ).open() as f:
+        with self.args.base_dir.joinpath("var/lib/dpkg/diversions").open() as f:
             while True:
                 orig = f.readline()
                 if orig == "":
@@ -151,7 +149,7 @@ class RecompressGz:
         if not dpkg_filename.endswith(".gz"):
             return orig_md5
 
-        file = pathlib.Path().joinpath("/", dpkg_filename)
+        file = pathlib.Path("/").joinpath(dpkg_filename)
         if file in self.diversions:
             logging.debug(
                 "{} was diverted to {} - using that instead".format(
@@ -160,7 +158,7 @@ class RecompressGz:
             )
             file = self.diversions[file]
 
-        file = pathlib.Path().joinpath(self.args.base_dir, *file.parts[1:])
+        file = self.args.base_dir.joinpath(*file.parts[1:])
         if file.is_symlink():
             logging.warning("File is a symlink, skipping: {}".format(file))
             return orig_md5
@@ -188,11 +186,7 @@ class RecompressGz:
             format="%(asctime)s %(levelname)-8s %(message)s",
         )
         self.load_diversions()
-        for file in (
-            pathlib.Path()
-            .joinpath(self.args.base_dir, "var/lib/dpkg/info")
-            .glob("*.md5sums")
-        ):
+        for file in self.args.base_dir.joinpath("var/lib/dpkg/info").glob("*.md5sums"):
             file_mod = pathlib.Path(str(file) + "~mod")
             file_output = ""
             with file.open() as f:
