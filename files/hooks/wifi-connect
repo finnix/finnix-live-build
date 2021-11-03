@@ -55,6 +55,20 @@ if [ ! -e "/sys/class/net/${interface}" ]; then
 fi
 if [ -z "${ap}" ] || [ -z "${passphrase}" ]; then
     echo "Usage: $0 [-i interface] \"access point\" \"passphrase\""
+    echo
+    echo "Nearby access points:"
+    echo
+    ip link set dev "${interface}" up
+    iw dev "${interface}" scan | \
+        grep -E 'signal:|SSID:' | \
+        sed -E -e 's/\t(SSID|signal): //' | \
+        awk '{ORS = (NR % 2 == 0)? "\n" : " "; print}' | \
+        sort -n -r | \
+        sed -E -e 's/^.*? dBm //' | \
+        awk '$1 && $1 !~ /\\x00/' | \
+        awk '!seen[$0]++' | \
+        head -n 15
+    echo
     exit 1
 fi
 
