@@ -5,16 +5,46 @@
 # SPDX-FileCopyrightText: Copyright (C) 2011-2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
+import argparse
 import pathlib
 import re
 import sys
 
 
 class StraceReorder:
-    squashfs_root = "/run/live/rootfs/filesystem.squashfs"
-
     r_open = re.compile(r"^[0-9]+ +(open|openat)\(.*?\) = [0-9]+<(.*?)>$")
     r_exec = re.compile(r"^[0-9]+ +(execve)\(\"(.*?)\".*?\) = [0-9]+$")
+
+    def parse_args(self, argv=None):
+        if argv is None:
+            argv = sys.argv
+
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        )
+
+        parser.add_argument(
+            "trace_file", nargs="?", type=argparse.FileType("r"), default=sys.stdin
+        )
+
+        parser.add_argument(
+            "--layout",
+            default="end",
+            const="end",
+            nargs="?",
+            choices=["end", "beginning", "pain"],
+            help="SquashFS order file layout strategy",
+        )
+
+        parser.add_argument(
+            "--root",
+            type=pathlib.Path,
+            default="/run/live/rootfs/filesystem.squashfs",
+            help="Actual root of SquashFS tree",
+            metavar="DIR",
+        )
+
+        return parser.parse_args(args=argv[1:])
 
     def get_filename(self, line):
         m = re.search(self.r_open, line)
@@ -25,25 +55,42 @@ class StraceReorder:
             return m.group(2)
 
     def main(self):
+        self.args = self.parse_args()
+
         seen = []
-        for line in sys.stdin.readlines():
+        for line in self.args.trace_file.readlines():
             filename = self.get_filename(line.rstrip())
             if not filename:
                 continue
 
             file = pathlib.Path(filename).resolve()
-            if (
-                not pathlib.Path()
-                .joinpath(self.squashfs_root, *file.parts[1:])
-                .is_file()
-            ):
+            if not self.args.root.joinpath(*file.parts[1:]).is_file():
                 continue
             if file in seen:
                 continue
             seen.append(file)
 
-        for pos, file in enumerate(seen, 1):
-            print("{}\t{}".format(str(file)[1:], 0 - pos))
+        # The position numbers work with SquashFS order files as follows:
+        #     <beginning> 65535 65534 [...] 3 2 1 0 -1 -2 -3 [...] -65534 -65535 <end>
+        # All files not in the order file default to 0.
+        # Beginning or end doesn't matter for flash devices, but end is
+        # preferred for CDs since the highest speeds are at the end of
+        # the CD.
+        for idx, file in enumerate(seen):
+            if self.args.layout == "pain":
+                # Beginning/end alternating seeks on a CD
+                # Please don't use this for anything serious...
+                if idx % 2:
+                    pos = (-1 - len(seen) + idx) / 2
+                else:
+                    pos = (len(seen) - idx) / 2
+            elif self.args.layout == "beginning":
+                # Files move forward from the beginning of the CD
+                pos = len(seen) - idx
+            else:
+                # Files move forward to the end of the CD
+                pos = -1 - idx
+            print("{}\t{}".format(str(file)[1:], int(pos)))
 
 
 if __name__ == "__main__":
