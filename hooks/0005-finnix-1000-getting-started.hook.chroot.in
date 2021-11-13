@@ -10,6 +10,7 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0644 /hook-files/issue.txt "/etc/issue.d/${PRODUCT_ID}.issue"
-install -D -m 0644 /hook-files/getting-started.txt "/usr/share/doc/${PRODUCT_ID}/getting-started.txt"
+install -D -m 0755 /hook-files/getting-started.1 /usr/share/man/man1/getting-started.1
+ln -sf getting-started.1 "/usr/share/man/man1/${PRODUCT_ID}.1"
 install -D -m 0755 /hook-files/getting-started /usr/bin/getting-started
 ln -sf getting-started "/usr/bin/${PRODUCT_ID}"

@@ -5,6 +5,4 @@
 # SPDX-FileCopyrightText: Copyright (C) 2021 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
-PRODUCT_ID="{{ PRODUCT_ID }}"
-
-exec pager "/usr/share/doc/${PRODUCT_ID}/getting-started.txt"
+exec man getting-started
