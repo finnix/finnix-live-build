@@ -18,6 +18,7 @@
 
 import configparser
 import io
+import ipaddress
 import os
 import sys
 
@@ -58,9 +59,9 @@ class InterfacesConvert:
         output["Link"] = {}
         output["Network"] = {}
         if ("address" in section) and ("netmask" in section):
-            output["Network"]["Address"] = "{}/{}".format(
-                section["address"][0], section["netmask"][0]
-            )
+            output["Network"]["Address"] = ipaddress.ip_interface(
+                "{}/{}".format(section["address"][0], section["netmask"][0])
+            ).with_prefixlen
             if "gateway" in section:
                 output["Network"]["Gateway"] = section["gateway"][0]
         else:
