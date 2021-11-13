@@ -78,31 +78,36 @@ class InterfacesConvert:
         rewritten_interfaces = ""
         section = {}
         section_text = ""
+        section_text_commented = ""
         with open("/etc/network/interfaces") as f:
             for raw_line in f:
                 line = raw_line.strip()
                 if line == "" and section:
                     ret = self.process_section(section)
                     if ret:
-                        rewritten_interfaces += "# Interface {} migrated to {}\n\n".format(
+                        rewritten_interfaces += "# Interface {} migrated to {}\n".format(
                             ret[0], ret[1]
                         )
+                        rewritten_interfaces += section_text_commented + "\n"
                     else:
                         rewritten_interfaces += section_text + "\n"
                     section = {}
                     section_text = ""
+                    section_text_commented = ""
                     continue
                 ls = line.split(" ")
                 if not ls[0].startswith("#"):
                     section[ls[0]] = ls[1:]
                 section_text += raw_line
+                section_text_commented += "#" + raw_line
 
         if section:
             ret = self.process_section(section)
             if ret:
-                rewritten_interfaces += "# Interface {} migrated to {}\n\n".format(
+                rewritten_interfaces += "# Interface {} migrated to {}\n".format(
                     ret[0], ret[1]
                 )
+                rewritten_interfaces += section_text_commented + "\n"
             else:
                 rewritten_interfaces += section_text + "\n"
 
