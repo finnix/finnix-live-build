@@ -228,33 +228,46 @@ rm -rf "${LB_DIR}"
 mkdir -p "${LB_DIR}"
 cd "${LB_DIR}"
 
-# Note that --source true also requires --apt-source-archives true
+do_lb_config() {
+    # Note that --source true also requires --apt-source-archives true
 
-lb config noauto \
-  --apt-http-proxy "${APT_HTTP_PROXY}" \
-  --apt-indices false \
-  --apt-recommends false \
-  --apt-source-archives true \
-  --architectures "${ARCH}" \
-  --archive-areas "main contrib non-free" \
-  --binary-images "${BINARY_IMAGES}" \
-  --bootappend-live "boot=live quiet" \
-  --bootloaders "${BOOTLOADERS}" \
-  --cache-indices true \
-  --chroot-squashfs-compression-type "${SQUASHFS_COMP}" \
-  --distribution testing \
-  --firmware-chroot false \
-  --hdd-label "$(echo "${PRODUCT_ID}" | tr '[:lower:]' '[:upper:]')" \
-  --image-name "${PRODUCT_ID}" \
-  --iso-application "${PRODUCT}" \
-  --iso-preparer "${PRODUCT}" \
-  --iso-publisher "${PRODUCT}" \
-  --iso-volume "${PRODUCT} ${VERSION}" \
-  --memtest "${MEMTEST}" \
-  --source "${SOURCE_ISO}" \
-  --source-images iso \
-  --zsync false \
-  --mode debian
+    lb config noauto \
+        --apt-http-proxy "${APT_HTTP_PROXY}" \
+        --apt-indices false \
+        --apt-recommends false \
+        --apt-source-archives true \
+        --architectures "${ARCH}" \
+        --archive-areas "main contrib non-free" \
+        --binary-images "${BINARY_IMAGES}" \
+        --bootappend-live "boot=live quiet" \
+        --bootloaders "${BOOTLOADERS}" \
+        --cache-indices true \
+        --chroot-squashfs-compression-type "${SQUASHFS_COMP}" \
+        --distribution testing \
+        --firmware-chroot false \
+        --hdd-label "$(echo "${PRODUCT_ID}" | tr '[:lower:]' '[:upper:]')" \
+        --image-name "${PRODUCT_ID}" \
+        --iso-application "${PRODUCT}" \
+        --iso-preparer "${PRODUCT}" \
+        --iso-publisher "${PRODUCT}" \
+        --iso-volume "${PRODUCT} ${VERSION}" \
+        --memtest "${MEMTEST}" \
+        --source "${SOURCE_ISO}" \
+        --source-images iso \
+        --zsync false \
+        --mode debian \
+        "$@"
+}
+
+if [ "${ARCH}" = "riscv64" ]; then
+    do_lb_config \
+        --distribution unstable \
+        --mirror-bootstrap  http://ftp.ports.debian.org/debian-ports/ \
+        --security false \
+        --debootstrap-options --keyring=/usr/share/keyrings/debian-ports-archive-keyring.gpg
+else
+    do_lb_config
+fi
 
 mkdir -p "${LB_CACHE_DIR}"
 if [ "${CACHE_FROZEN}" = "false" ]; then

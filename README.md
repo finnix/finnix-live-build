@@ -44,6 +44,7 @@ While ISOs are not officially released, these are still considered important arc
 
 * armhf
 * ppc64el
+* riscv64
 * s390x
 
 Not supported, and produced images are not directly bootable.  However, they can be booted by direct kernel/initrd boot in QEMU, and are tested occasionally.  Build failures are not a blocker.
