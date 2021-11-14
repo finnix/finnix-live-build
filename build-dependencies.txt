@@ -1,4 +1,5 @@
 debian-archive-keyring
+debian-ports-archive-keyring
 debootstrap
 file
 flake8
