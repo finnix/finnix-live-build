@@ -5,4 +5,4 @@ ConditionPathExists=/dev/input/mice
 [Service]
 Type=forking
 ExecStart=/usr/sbin/gpm -m /dev/input/mice -t exps2
-PIDFile=/var/run/gpm.pid
+PIDFile=/run/gpm.pid
