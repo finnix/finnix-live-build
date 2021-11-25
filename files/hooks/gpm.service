@@ -1,8 +1,2 @@
 [Unit]
-Description=Console mouse daemon
 ConditionPathExists=/dev/input/mice
-
-[Service]
-Type=forking
-ExecStart=/usr/sbin/gpm -m /dev/input/mice -t exps2
-PIDFile=/run/gpm.pid

@@ -9,5 +9,5 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-install -D -m 0644 /hook-files/gpm.service /etc/systemd/system/gpm.service
+install -D -m 0644 /hook-files/gpm.service "/etc/systemd/system/gpm.service.d/${PRODUCT_ID}.conf"
 systemctl add-wants "${PRODUCT_ID}.target" gpm.service
