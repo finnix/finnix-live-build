@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+
+# SPDX-FileComment: Pure Python semi-reimplimentation of GNU strings
+# SPDX-FileCopyrightText: Copyright (C) 2021 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+import argparse
+import itertools
+import pathlib
+import sys
+
+
+def readiter(fh, size=1024):
+    return itertools.takewhile(
+        lambda t: t, map(lambda chunk: fh.read(size), itertools.count(0))
+    )
+
+
+class Strings:
+    def parse_args(self, argv=None):
+        if argv is None:
+            argv = sys.argv
+
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        )
+
+        parser.add_argument(
+            "files",
+            nargs="*",
+            type=pathlib.Path,
+            help="File to examine",
+            metavar="file",
+        )
+        parser.add_argument(
+            "--print-file-name",
+            "-f",
+            action="store_true",
+            help="Print filename before each string line",
+        )
+        parser.add_argument(
+            "--include-all-whitespace",
+            "-w",
+            action="store_true",
+            help="Include all whitespace when considering strings",
+        )
+        parser.add_argument(
+            "--bytes",
+            "-n",
+            type=int,
+            default=4,
+            metavar="number",
+            help="Length of printable bytes to be considered a string",
+        )
+        parser.add_argument(
+            "--output-separator",
+            "-s",
+            default="\n",
+            metavar="string",
+            help="Line separator between output strings",
+        )
+        parser.add_argument(
+            "--radix",
+            "-t",
+            choices=["d", "x", "o"],
+            help="Print byte position of string in decimal/hex/octal",
+        )
+
+        return parser.parse_args(args=argv[1:])
+
+    def process_file(self, fn):
+        self.output_buffer = bytearray()
+        self.position = 0
+        self.filename = fn
+
+        i = -1
+        if fn is None:
+            fh = sys.stdin.buffer
+        else:
+            fh = fn.open("rb")
+        for buf in readiter(fh):
+            for b in buf:
+                i += 1
+                if (b >= 32 and b <= 126) or b in self.whitespace:
+                    if len(self.output_buffer) == 0:
+                        self.position = i
+                    self.output_buffer.append(b)
+                elif len(self.output_buffer) > 0:
+                    self.print_output()
+        self.print_output()
+        fh.close()
+
+    def print_output(self):
+        if len(self.output_buffer) < self.args.bytes:
+            self.output_buffer.clear()
+            return
+
+        output_format = "{string}"
+        if self.args.radix:
+            output_format = "{position:>7" + self.args.radix + "} " + output_format
+        if self.args.print_file_name:
+            output_format = "{filename}: " + output_format
+
+        if self.filename is None:
+            filename = "{standard input}"
+        else:
+            filename = self.filename
+        print(
+            output_format.format(
+                string=self.output_buffer.decode("ascii"),
+                filename=filename,
+                position=self.position,
+            ),
+            end=self.args.output_separator,
+        )
+        self.output_buffer.clear()
+
+    def main(self):
+        self.args = self.parse_args()
+        if self.args.include_all_whitespace:
+            self.whitespace = bytearray(b" \t\v\r\n\f")
+        else:
+            self.whitespace = bytearray(b" \t")
+
+        if not self.args.files:
+            self.args.files.append(None)
+
+        for fn in self.args.files:
+            try:
+                self.process_file(fn)
+            except BrokenPipeError:
+                return 0
+            except KeyboardInterrupt:
+                return 130
+
+
+if __name__ == "__main__":
+    sys.exit(Strings().main())

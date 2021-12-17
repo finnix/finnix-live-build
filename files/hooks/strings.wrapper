@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# SPDX-FileComment: Wrapper for preferring GNU strings
+# SPDX-FileCopyrightText: Copyright (C) 2021 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+if command -v strings.distrib >/dev/null; then
+    exec strings.distrib "$@"
+else
+    exec "strings.${PRODUCT_ID}" "$@"
+fi

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: strings chroot hook
+# SPDX-FileCopyrightText: Copyright (C) 2021 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+install -D -m 0755 /hook-files/strings "/usr/bin/strings.${PRODUCT_ID}"
+
+# Diverts /usr/bin/strings to /usr/bin/strings.distrib
+# in package "binutils" if it is installed after boot.
+dpkg-divert --rename --add /usr/bin/strings
+
+install -D -m 0755 /hook-files/strings.wrapper /usr/bin/strings
