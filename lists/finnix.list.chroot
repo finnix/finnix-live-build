@@ -169,6 +169,7 @@ pptp-linux
 procinfo
 psmisc
 pv
+pwgen
 quota
 quotatool
 ranger
@@ -190,6 +191,7 @@ sipcalc
 smartmontools
 smbclient
 snmp
+sntp
 socat
 squashfs-tools
 sshfs
