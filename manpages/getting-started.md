@@ -21,4 +21,4 @@ If you would like to update any dpkg alternatives, such as for the "editor" comm
 
 If you need to work with ZFS disks, run the following beforehand:
 
-    systemctl start zfs-fuse.service
+    service zfs-fuse start
