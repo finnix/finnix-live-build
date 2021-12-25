@@ -11,6 +11,7 @@ set -e
 
 echo 'LANG=en_US.UTF-8' >/etc/default/locale
 sed -i -e 's/^# en_US.UTF-8 /en_US.UTF-8 /g' /etc/locale.gen
+grep -q '^en_US.UTF-8 ' /etc/locale.gen  # Verification
 locale-gen
 
 install -D -m 0755 /hook-files/locale-config /usr/sbin/locale-config
