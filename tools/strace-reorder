@@ -6,14 +6,84 @@
 # SPDX-License-Identifier: MPL-2.0
 
 import argparse
+import logging
 import pathlib
+import random
 import re
 import sys
 
 
+def numfmt(
+    num,
+    fmt="{num.real:0.02f} {num.prefix}",
+    binary=False,
+    rollover=1.0,
+    limit=0,
+    prefixes=None,
+):
+    """Formats a number with decimal or binary prefixes
+
+    num: Input number
+    fmt: Format string of default repr/str output
+    binary: If True, use divide by 1024 and use IEC binary prefixes
+    rollover: Threshold to roll over to the next prefix
+    limit: Stop after a specified number of rollovers
+    prefixes: List of (decimal, binary) prefix strings, ascending
+    """
+    # SPDX-SnippetComment: Originally from https://github.com/rfinnie/rf-pymods
+    # SPDX-SnippetCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
+    # SPDX-LicenseInfoInSnippet: MIT
+
+    class NumberFormat(float):
+        prefix = ""
+        fmt = "{num.real:0.02f} {num.prefix}"
+
+        def __str__(self):
+            return self.fmt.format(num=self)
+
+        def __repr__(self):
+            return str(self)
+
+    if prefixes is None:
+        prefixes = [
+            ("k", "Ki"),
+            ("M", "Mi"),
+            ("G", "Gi"),
+            ("T", "Ti"),
+            ("P", "Pi"),
+            ("E", "Ei"),
+            ("Z", "Zi"),
+            ("Y", "Yi"),
+        ]
+    divisor = 1024 if binary else 1000
+    if limit <= 0 or limit > len(prefixes):
+        limit = len(prefixes)
+
+    count = 0
+    p = ""
+    for prefix in prefixes:
+        if num < (divisor * rollover):
+            break
+        if count >= limit:
+            break
+        count += 1
+        num = num / float(divisor)
+        p = prefix[1] if binary else prefix[0]
+    ret = NumberFormat(num)
+    ret.fmt = fmt
+    ret.prefix = p
+    return ret
+
+
 class StraceReorder:
-    r_open = re.compile(r"^[0-9]+ +(open|openat)\(.*?\) = [0-9]+<(.*?)>$")
-    r_exec = re.compile(r"^[0-9]+ +(execve)\(\"(.*?)\".*?\) = [0-9]+$")
+    regexps = (
+        re.compile(
+            r"^[0-9]+ +(?P<syscall>(open|openat))\(.*?\) = [0-9]+<(?P<filename>.*?)(<char [0-9]+:[0-9]+>)?>$"
+        ),
+        re.compile(
+            r"^[0-9]+ +(?P<syscall>(execve))\(\"(?P<filename>.*?)\".*?\) = [0-9]+$"
+        ),
+    )
 
     def parse_args(self, argv=None):
         if argv is None:
@@ -28,11 +98,14 @@ class StraceReorder:
         )
 
         parser.add_argument(
+            "--debug", action="store_true", help="Print debugging information"
+        )
+        parser.add_argument(
             "--layout",
             default="end",
             const="end",
             nargs="?",
-            choices=["end", "beginning", "pain"],
+            choices=["end", "beginning", "pain", "random"],
             help="SquashFS order file layout strategy",
         )
 
@@ -47,28 +120,33 @@ class StraceReorder:
         return parser.parse_args(args=argv[1:])
 
     def get_filename(self, line):
-        m = re.search(self.r_open, line)
-        if m:
-            return m.group(2)
-        m = re.search(self.r_exec, line)
-        if m:
-            return m.group(2)
+        for r in self.regexps:
+            m = r.search(line)
+            if m:
+                return m.group("filename")
 
     def main(self):
         self.args = self.parse_args()
+        logging.basicConfig(
+            level=(logging.DEBUG if self.args.debug else logging.INFO),
+            format="%(asctime)s %(levelname)-8s %(message)s",
+        )
 
         seen = []
+        seen_size = 0
         for line in self.args.trace_file.readlines():
             filename = self.get_filename(line.rstrip())
             if not filename:
                 continue
 
             file = pathlib.Path(filename).resolve()
-            if not self.args.root.joinpath(*file.parts[1:]).is_file():
-                continue
             if file in seen:
                 continue
+            root_file = self.args.root.joinpath(*file.parts[1:])
+            if not root_file.is_file():
+                continue
             seen.append(file)
+            seen_size += root_file.stat().st_size
 
         # The position numbers work with SquashFS order files as follows:
         #     <beginning> 65535 65534 [...] 3 2 1 0 -1 -2 -3 [...] -65534 -65535 <end>
@@ -83,7 +161,10 @@ class StraceReorder:
                 if idx % 2:
                     pos = (-1 - len(seen) + idx) / 2
                 else:
-                    pos = (len(seen) - idx) / 2
+                    pos = ((len(seen) - idx) / 2) + 1
+            elif self.args.layout == "random":
+                # Again, please don't use this.
+                pos = random.randint(-65535, 65535)
             elif self.args.layout == "beginning":
                 # Files move forward from the beginning of the CD
                 pos = len(seen) - idx
@@ -91,6 +172,13 @@ class StraceReorder:
                 # Files move forward to the end of the CD
                 pos = -1 - idx
             print("{}\t{}".format(str(file)[1:], int(pos)))
+        logging.info(
+            "{files} files arranged at {layout}, {size.real:0.02f} {size.prefix}B".format(
+                files=len(seen),
+                layout=self.args.layout,
+                size=numfmt(seen_size, binary=True),
+            )
+        )
 
 
 if __name__ == "__main__":
