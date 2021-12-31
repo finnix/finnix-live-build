@@ -10,6 +10,8 @@ set -e
 rm -rf /hook-files
 
 rm -f \
+  /etc/nvme/hostnqn \
+  /etc/nvme/hostid \
   /etc/group- \
   /etc/gshadow- \
   /etc/passwd- \
