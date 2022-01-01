@@ -2,6 +2,7 @@
 amd64-microcode
 #endif
 #if ARCHITECTURES amd64 arm64 armhf i386 ppc64el s390x
+# atmel-firmware
 firmware-linux
 firmware-atheros
 firmware-bnx2
