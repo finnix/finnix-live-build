@@ -15,4 +15,4 @@ systemctl add-wants sysinit.target network-config-setup.service
 systemctl add-wants network.target systemd-networkd.service
 systemctl add-wants network.target systemd-resolved.service
 
-systemctl add-wants "${PRODUCT_ID}.target" network.target
+systemctl add-wants multi-user.target network.target

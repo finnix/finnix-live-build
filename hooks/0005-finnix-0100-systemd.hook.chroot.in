@@ -9,11 +9,10 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-# Set up our custom target
-install -D -m 0644 /hook-files/live.target "/etc/systemd/system/${PRODUCT_ID}.target"
-systemctl set-default "${PRODUCT_ID}.target"
+# Set up our running target
+systemctl set-default multi-user.target
 
-# Clear unwanted targets below our custom target
+# Clear unwanted targets below our running target
 for target in basic.target sysinit.target timers.target default.target network.target network-online.target multi-user.target graphical.target; do
     rm -rf "/etc/systemd/system/${target}.wants"
     mkdir -p "/usr/lib/systemd/diverted-system/${target}.wants"
@@ -22,10 +21,16 @@ for target in basic.target sysinit.target timers.target default.target network.t
         dpkg-divert --add --rename --divert "/usr/lib/systemd/diverted-system/${target}.wants/$(basename "${i}")" "${i}"
     done
 done
+for target in multi-user.target graphical.target; do
+    for i in "/usr/lib/systemd/system/${target}.wants"/*.service; do
+        [ -e "${i}" ] || continue
+        dpkg-divert --add --rename --divert "/usr/lib/systemd/diverted-system/${target}.wants/$(basename "${i}")" "${i}"
+    done
+done
 rm -f /etc/rc?.d/*
 
-# Add needed services to our custom target
-systemctl add-wants "${PRODUCT_ID}.target" systemd-user-sessions.service
+# Add needed services to our running target
+systemctl add-wants multi-user.target systemd-user-sessions.service
 
 # Show service startup/shutdown statuses
 mkdir -p "/etc/systemd/system.conf.d"
@@ -35,4 +40,9 @@ ShowStatus=yes
 EOM
 
 # live-tools pseudo-service should be installed
-systemctl add-wants "${PRODUCT_ID}.target" live-tools.service
+systemctl add-wants multi-user.target live-tools.service
+
+# udisks2.service is (currently) the only service in an installed package
+# which wants to install to graphical.target.  Override it to instead
+# use multi-user.target.
+install -D -m 0644 /hook-files/udisks2.service "/etc/systemd/system/udisks2.service.d/${PRODUCT_ID}.conf"

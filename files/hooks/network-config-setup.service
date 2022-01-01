@@ -8,3 +8,6 @@ Before=network.target ifupdown-pre.service systemd-udevd.service
 [Service]
 Type=oneshot
 ExecStart=/usr/lib/{{ PRODUCT_ID }}/interfaces-convert
+
+[Install]
+WantedBy=multi-user.target

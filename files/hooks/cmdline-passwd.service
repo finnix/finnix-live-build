@@ -6,3 +6,6 @@ ConditionKernelCommandLine=|sshd_password
 [Service]
 Type=oneshot
 ExecStart=/usr/lib/{{ PRODUCT_ID }}/cmdline-passwd
+
+[Install]
+WantedBy=multi-user.target

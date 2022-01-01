@@ -6,3 +6,6 @@ ConditionKernelCommandLine=sshd
 [Service]
 Type=oneshot
 ExecStart=systemctl --no-block start ssh.service
+
+[Install]
+WantedBy=multi-user.target

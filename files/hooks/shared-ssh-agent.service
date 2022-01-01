@@ -8,3 +8,6 @@ ExecStart=/usr/lib/{{ PRODUCT_ID }}/ssh-agent
 PIDFile=/root/.ssh/ssh-agent.pid
 Environment="USER=root"
 Environment="HOME=/root"
+
+[Install]
+WantedBy=multi-user.target

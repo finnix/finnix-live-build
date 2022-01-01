@@ -9,7 +9,7 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-systemctl add-wants "${PRODUCT_ID}.target" getty.target
+systemctl add-wants multi-user.target getty.target
 
 # live-config-getty-generator is part of live-config which we don't
 # install, but technically isn't incompatible with our setup... except
