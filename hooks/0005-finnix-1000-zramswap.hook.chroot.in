@@ -7,8 +7,6 @@
 
 set -e
 
-PRODUCT_ID="{{ PRODUCT_ID }}"
-
 # Light reading:
 # https://fedoraproject.org/wiki/Changes/SwapOnZRAM
 
