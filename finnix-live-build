@@ -263,7 +263,8 @@ do_lb_config() {
 if [ "${ARCH}" = "riscv64" ]; then
     do_lb_config \
         --distribution unstable \
-        --mirror-bootstrap  http://ftp.ports.debian.org/debian-ports/ \
+        --mirror-bootstrap http://ftp.ports.debian.org/debian-ports/ \
+        --mirror-binary http://ftp.ports.debian.org/debian-ports/ \
         --security false \
         --debootstrap-options --keyring=/usr/share/keyrings/debian-ports-archive-keyring.gpg
 else

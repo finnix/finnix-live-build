@@ -39,6 +39,9 @@ cron
 cryptsetup-bin
 curl
 dbus
+#if ARCHITECTURES riscv64
+debian-ports-archive-keyring
+#endif
 debootstrap
 #if ARCHITECTURES amd64 arm64 armhf i386 riscv64
 dmidecode
