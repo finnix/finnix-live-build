@@ -203,6 +203,7 @@ stress
 stunnel4
 sunxi-tools
 sudo
+systemd-timesyncd
 tcpdump
 telnet
 testdisk
