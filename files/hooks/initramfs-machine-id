@@ -22,14 +22,17 @@ esac
 is_usable_product_uuid() {
     [ -e /sys/class/dmi/id/sys_vendor ] || return 1
     [ -e /sys/class/dmi/id/product_uuid ] || return 1
-    [ "$(cat /sys/class/dmi/id/sys_vendor)" = "QEMU" ] || return 1
-    return 0
+    [ "$(cat /sys/class/dmi/id/sys_vendor)" = "QEMU" ] && return 0
+    return 1
 }
 
 MACHINE_ID=""
 if is_usable_product_uuid; then
     # We can trust these vendors' product_uuid to be decent.
-    MACHINE_ID="$(sed -e 's/-//g' </sys/class/dmi/id/product_uuid)"
+    MACHINE_ID="$(sed -e 's/-//g' /sys/class/dmi/id/product_uuid)"
+elif [ -e /proc/device-tree/vm,uuid ]; then
+    # DT vm,uuid will be unique, but can have a trailing null byte
+    MACHINE_ID="$(sed -e 's/[-\x0]//g' /proc/device-tree/vm,uuid)"
 elif [ -e /sys/firmware/dmi/tables/DMI ]; then
     # product_uuid is available, but isn't guaranteed to be decent on
     # all systems, so let's just hash the entire DMI.
@@ -40,13 +43,11 @@ elif [ -e /sys/firmware/dmi/tables/DMI ]; then
     MACHINE_ID="$(md5sum /sys/firmware/dmi/tables/DMI | cut -d' ' -f1)"
 elif [ -e /proc/sys/kernel/random/boot_id ]; then
     # Kernel boot ID (random per-boot)
-    MACHINE_ID="$(sed -e 's/-//g' </proc/sys/kernel/random/boot_id)"
+    MACHINE_ID="$(sed -e 's/-//g' /proc/sys/kernel/random/boot_id)"
 elif [ -e /proc/sys/kernel/random/uuid ]; then
     # Random ID
-    MACHINE_ID="$(sed -e 's/-//g' </proc/sys/kernel/random/uuid)"
+    MACHINE_ID="$(sed -e 's/-//g' /proc/sys/kernel/random/uuid)"
 fi
-
-[ -n "${MACHINE_ID}" ] || exit 0
 
 rm -f "${rootmnt}/etc/machine-id" "${rootmnt}/var/lib/dbus/machine-id"
 echo "${MACHINE_ID}" >"${rootmnt}/etc/machine-id"
