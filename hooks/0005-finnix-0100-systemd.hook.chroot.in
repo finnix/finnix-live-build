@@ -21,16 +21,7 @@ for target in basic.target sysinit.target timers.target default.target network.t
         dpkg-divert --add --rename --divert "/usr/lib/systemd/diverted-system/${target}.wants/$(basename "${i}")" "${i}"
     done
 done
-for target in multi-user.target graphical.target; do
-    for i in "/usr/lib/systemd/system/${target}.wants"/*.service; do
-        [ -e "${i}" ] || continue
-        dpkg-divert --add --rename --divert "/usr/lib/systemd/diverted-system/${target}.wants/$(basename "${i}")" "${i}"
-    done
-done
 rm -f /etc/rc?.d/*
-
-# Add needed services to our running target
-systemctl add-wants multi-user.target systemd-user-sessions.service
 
 # Show service startup/shutdown statuses
 mkdir -p "/etc/systemd/system.conf.d"
