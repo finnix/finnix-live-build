@@ -167,7 +167,7 @@ policykit-1
 powermgmt-base
 pppconfig
 pppoe
-pppoeconf
+# pppoeconf
 pptp-linux
 procinfo
 psmisc
