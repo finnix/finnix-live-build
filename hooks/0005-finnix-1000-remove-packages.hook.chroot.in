@@ -10,3 +10,6 @@ set -e
 # Remove unwanted bootstrap packages
 apt -y --purge remove rsyslog
 apt -y --purge remove tasksel tasksel-data
+
+# Not used (and conflicts with interfaces-convert)
+apt -y --purge remove ifupdown

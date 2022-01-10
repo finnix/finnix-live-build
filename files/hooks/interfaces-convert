@@ -10,9 +10,6 @@
 # /etc/systemd/resolved.conf, putting the systemd-resolved stub in its
 # place.
 #
-# This must be run before anything uses e-n-i, namely before udevd as
-# ifupdown installs rules which bring up allow-hotplug entries.
-#
 # Note that this was built to translate entries built by live-boot, and
 # is not meant to be a general-purpose e-n-i converter.
 
@@ -20,42 +17,78 @@ import configparser
 import io
 import ipaddress
 import os
+import shlex
 import sys
+
+import pyudev
 
 
 class InterfacesConvert:
     def __init__(self):
         self.files = {}
         self.replace_resolvconf = False
+        self.udev_context = pyudev.Context()
+
+    def get_udev_properties(self, interface_name):
+        try:
+            device = pyudev.Devices.from_path(
+                self.udev_context, "/sys/class/net/{}".format(interface_name)
+            )
+        except pyudev.DeviceNotFoundAtPathError:
+            return
+        if "ID_PATH" not in device.properties or "ID_PATH_TAG" not in device.properties:
+            return
+        return dict(device.properties)
 
     def systemd_config(self):
         config = configparser.ConfigParser()
         config.optionxform = str
         return config
 
-    def generate_systemd_conf(self, config, filename):
+    def generate_systemd_conf(self, config, filename, device_properties=None):
         with io.StringIO() as f:
+            if device_properties is not None:
+                for k, v in device_properties.items():
+                    print("# {}={}".format(k, shlex.quote(v)), file=f)
+                print(file=f)
             config.write(f, space_around_delimiters=False)
             self.files[filename] = f.getvalue()
 
     def process_section(self, section):
         if "iface" not in section:
             return
-        interface = section["iface"][0]
+        interface_name = section["iface"][0]
         if section["iface"][2] == "loopback":
             return
-        filename = "/etc/systemd/network/10-{}.network".format(interface)
+        elif not os.path.exists("/sys/class/net/{}".format(interface_name)):
+            return
+
+        device_properties = self.get_udev_properties(interface_name)
+        if device_properties is None:
+            id_path = None
+            interface_fn_id = interface_name
+        else:
+            id_path = device_properties["ID_PATH"]
+            interface_fn_id = device_properties["ID_PATH_TAG"]
+
+        filename = "/etc/systemd/network/10-{}.network".format(interface_fn_id)
         if (section["iface"][1] != "inet") or (
             section["iface"][2] not in ("dhcp", "static")
         ):
             output = self.systemd_config()
-            output["Match"] = {"Name": interface}
+            if id_path is None:
+                output["Match"] = {"Name": interface_name}
+            else:
+                output["Match"] = {"Path": id_path}
             output["Link"] = {"Unmanaged": "yes"}
             self.generate_systemd_conf(output, filename)
             return
 
         output = self.systemd_config()
-        output["Match"] = {"Name": interface}
+        if id_path is None:
+            output["Match"] = {"Name": interface_name}
+        else:
+            output["Match"] = {"Path": id_path}
         output["Link"] = {}
         output["Network"] = {}
         if ("address" in section) and ("netmask" in section):
@@ -68,8 +101,8 @@ class InterfacesConvert:
             output["Network"]["DHCP"] = "yes"
         if "allow-hotplug" in section:
             output["Link"]["RequiredForOnline"] = "no"
-        self.generate_systemd_conf(output, filename)
-        return (interface, filename)
+        self.generate_systemd_conf(output, filename, device_properties)
+        return (interface_name, filename)
 
     def convert_interfaces(self):
         if not os.path.exists("/etc/network/interfaces"):

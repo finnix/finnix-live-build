@@ -4,3 +4,6 @@
 # config/package-lists/live.list.chroot) must exist.
 live-boot
 live-tools
+# Required by interfaces-convert, used to convert live-boot
+# e-n-i to systemd-networkd configs.
+python3-pyudev

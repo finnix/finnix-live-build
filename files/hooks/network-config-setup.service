@@ -1,9 +1,8 @@
 [Unit]
 Description=Set up network configurations
-DefaultDependencies=no
-# Before systemd-udevd becuase ifupdown will try to manage hotplug
-# interfaces via udev
-Before=network.target ifupdown-pre.service systemd-udevd.service
+Before=systemd-networkd.service
+After=systemd-udev-settle.service
+Wants=systemd-udev-settle.service
 
 [Service]
 Type=oneshot
