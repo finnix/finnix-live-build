@@ -188,8 +188,10 @@ class InterfacesConvert:
                 f.write(self.files[fn])
 
         if self.replace_resolvconf:
-            if os.path.exists("/etc/resolv.conf"):
+            try:
                 os.remove("/etc/resolv.conf")
+            except FileNotFoundError:
+                pass
             os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
 
     def main(self):
