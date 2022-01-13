@@ -130,6 +130,9 @@ lsof
 ltrace
 #endif
 lvm2
+lz4
+lzip
+lzop
 makedev
 man-db
 mbr
@@ -243,3 +246,4 @@ zfs-fuse
 #endif
 zip
 zram-tools
+zstd
