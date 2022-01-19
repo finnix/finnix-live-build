@@ -15,4 +15,12 @@ systemctl add-wants sysinit.target network-config-setup.service
 systemctl add-wants network.target systemd-networkd.service
 systemctl add-wants network.target systemd-resolved.service
 
+# Do our best to work around ifupdown, even if it gets installed.
+dpkg-divert --rename --add /lib/udev/rules.d/80-ifupdown.rules
+dpkg-divert --rename --add /lib/udev/ifupdown-hotplug
+# ifupdown uses /lib, but if it ever gets updated to /usr/lib to match
+# the /usr migration, guard against that too.
+dpkg-divert --rename --add /usr/lib/udev/rules.d/80-ifupdown.rules
+dpkg-divert --rename --add /usr/lib/udev/ifupdown-hotplug
+
 systemctl add-wants multi-user.target network.target

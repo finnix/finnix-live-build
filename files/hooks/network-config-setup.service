@@ -1,6 +1,6 @@
 [Unit]
 Description=Set up network configurations
-Before=systemd-networkd.service
+Before=systemd-networkd.service networking.service
 After=systemd-udev-settle.service
 Wants=systemd-udev-settle.service
 
