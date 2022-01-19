@@ -64,7 +64,7 @@ if [ -z "${ap}" ] || [ -z "${passphrase}" ]; then
         sed -E -e 's/\t(SSID|signal): //' | \
         awk '{ORS = (NR % 2 == 0)? "\n" : " "; print}' | \
         sort -n -r | \
-        sed -E -e 's/^.*? dBm //' | \
+        sed -E -e 's/ dBm / /; s/^[-0-9\/\.]+ //' | \
         awk '$1 && $1 !~ /\\x00/' | \
         awk '!seen[$0]++' | \
         head -n 15
