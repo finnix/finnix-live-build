@@ -34,7 +34,6 @@ cpu-checker
 #if ARCHITECTURES amd64 i386
 cpuid
 #endif
-crda
 cron
 cryptsetup-bin
 curl
