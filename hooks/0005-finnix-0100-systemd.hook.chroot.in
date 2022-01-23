@@ -2,7 +2,7 @@
 
 # SPDX-PackageSummary: finnix-live-build
 # SPDX-FileComment: systemd chroot hook
-# SPDX-FileCopyrightText: Copyright (C) 2020-2021 Ryan Finnie
+# SPDX-FileCopyrightText: Copyright (C) 2020-2022 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 set -e
