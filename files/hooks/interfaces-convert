@@ -20,16 +20,24 @@ import os
 import shlex
 import sys
 
-import pyudev
+try:
+    import pyudev
+except ImportError as e:
+    pyudev = e
 
 
 class InterfacesConvert:
     def __init__(self):
         self.files = {}
         self.replace_resolvconf = False
-        self.udev_context = pyudev.Context()
+        if isinstance(pyudev, ImportError):
+            self.udev_context = None
+        else:
+            self.udev_context = pyudev.Context()
 
     def get_udev_properties(self, interface_name):
+        if self.udev_context is None:
+            return
         try:
             device = pyudev.Devices.from_path(
                 self.udev_context, "/sys/class/net/{}".format(interface_name)
