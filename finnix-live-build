@@ -326,9 +326,21 @@ cp "${BASE_DIR}/grub/theme.txt" "${LB_DIR}/config/bootloaders/grub-pc/live-theme
 
 cp "${BASE_DIR}/lists"/*.list.chroot "${LB_DIR}/config/package-lists/"
 
-if [ -e "${BASE_DIR}/squashfs.sort" ]; then
+if [ -z "${SQUASHFS_SORT_FILE}" ]; then
+    for f in \
+        "${BASE_DIR}/files/squashfs.${VERSION}.${ARCH}.sort" \
+        "${BASE_DIR}/files/squashfs.${ARCH}.sort" \
+        "${BASE_DIR}/files/squashfs.sort"
+    do
+        if [ -e "${f}" ]; then
+            SQUASHFS_SORT_FILE="${f}"
+            break
+        fi
+    done
+fi
+if [ -n "${SQUASHFS_SORT_FILE}" ]; then
     mkdir -p "${LB_DIR}/config/rootfs"
-    cp "${BASE_DIR}/squashfs.sort" "${LB_DIR}/config/rootfs/squashfs.sort"
+    cp "${SQUASHFS_SORT_FILE}" "${LB_DIR}/config/rootfs/squashfs.sort"
 fi
 
 # The in-squashfs initrds are unused; exclude them
