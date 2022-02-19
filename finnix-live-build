@@ -64,7 +64,6 @@ render() {
 # Optional: flake8 (${PYTHON} -mflake8): Lint, required for LINT=true
 # Optional: git (git): Build IDs
 # Optional: file (file): Post-build file info
-# Optional: debian-ports-archive-keyring: Required for riscv64 architecture
 
 host_commands="debootstrap ${PYTHON} rsvg-convert pandoc"
 missing_commands=""
@@ -267,7 +266,7 @@ if [ "${ARCH}" = "riscv64" ]; then
         --mirror-binary http://ftp.ports.debian.org/debian-ports/ \
         --keyring-packages "debian-archive-keyring debian-ports-archive-keyring" \
         --security false \
-        --debootstrap-options --keyring=/usr/share/keyrings/debian-ports-archive-keyring.gpg
+        --debootstrap-options --keyring="${BASE_DIR}/files/keyrings/debian-ports-archive.gpg"
 else
     do_lb_config
 fi
