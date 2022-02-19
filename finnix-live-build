@@ -366,6 +366,15 @@ cat <<"EOM" >config/preseed/firmware-nonfree.cfg.chroot
 firmware-ipw2x00 firmware-ipw2x00/license/accepted boolean true
 EOM
 
+if [ "${ARCH}" = "riscv64" ]; then
+    mkdir -p "${LB_DIR}/config/archives"
+    cp "${BASE_DIR}/files/keyrings/debian-ports-archive.gpg" "${LB_DIR}/config/archives/ports.key.chroot"
+    cat >"${LB_DIR}/config/archives/ports.list.chroot" <<"EOM"
+deb http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free
+deb-src http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free
+EOM
+fi
+
 if [ "${LINT}" = "true" ]; then
     grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r shellcheck
     grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r shellcheck
