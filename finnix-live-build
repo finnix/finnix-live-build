@@ -373,6 +373,21 @@ if [ "${ARCH}" = "riscv64" ]; then
 deb http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free
 deb-src http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free
 EOM
+else
+    mkdir -p "${LB_DIR}/config/archives"
+    cat >"${LB_DIR}/config/archives/unstable.list.chroot" <<"EOM"
+deb http://deb.debian.org/debian/ unstable main contrib non-free
+deb-src http://deb.debian.org/debian/ unstable main contrib non-free
+EOM
+    cat >"${LB_DIR}/config/archives/unstable.pref.chroot" <<"EOM"
+Package: *
+Pin: release a=unstable
+Pin-Priority: 400
+
+Package: bridge-utils
+Pin: release a=unstable
+Pin-Priority: 900
+EOM
 fi
 
 if [ "${LINT}" = "true" ]; then
