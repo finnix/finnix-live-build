@@ -383,10 +383,6 @@ EOM
 Package: *
 Pin: release a=unstable
 Pin-Priority: 400
-
-Package: bridge-utils
-Pin: release a=unstable
-Pin-Priority: 900
 EOM
 fi
 
