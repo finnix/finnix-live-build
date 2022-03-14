@@ -414,6 +414,9 @@ cp -a "${LB_DIR}"/*.packages.* "${BUILD_INFO_DIR}/${build_id}/"
 echo "${build_size}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
 if [ "${SAVE_ISO}" = "true" ]; then
     cp -a "${LB_DIR}/${ISO_FILENAME}" "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}"
+    if [ "${SOURCE_ISO}" = "true" ]; then
+        cp -a "${LB_DIR}/${PRODUCT_ID}-source.iso" "${BUILD_INFO_DIR}/${build_id}/${PRODUCT_ID}-source.iso"
+    fi
 fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
