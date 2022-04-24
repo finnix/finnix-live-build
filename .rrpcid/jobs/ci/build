@@ -13,10 +13,11 @@ sudo apt -y install $(cat build-dependencies.txt)
 env LINT=true ARCH="${ARCH}" BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-build
 
 # Build image
+sudo chown -R root:root .
 sudo env ARCH="${ARCH}" BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-build
 
 # Save artifacts
-mkdir -p .rrpcid/artifacts
+sudo mkdir -p .rrpcid/artifacts
 sudo mv \
     build/lb/finnix-* \
     build/lb/chroot.files \

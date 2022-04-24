@@ -17,7 +17,9 @@ jobs:
     - name: Lint codebase
       run: env LINT=true ./finnix-live-build
     - name: Build image
-      run: sudo env BUILD_TAGS="github schedule" ./finnix-live-build
+      run: |
+        sudo chown -R root:root .
+        sudo env BUILD_TAGS="github schedule" ./finnix-live-build
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
