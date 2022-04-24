@@ -25,3 +25,4 @@ jobs:
     - name: Post-build cleanup
       run: |
         sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
+        sudo chown -R "$(id -un):$(id -gn)" .

@@ -15,12 +15,13 @@ env LINT=true ARCH="${ARCH}" BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-
 # Build image
 sudo chown -R root:root .
 sudo env ARCH="${ARCH}" BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-build
+sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
+sudo chown -R "$(id -un):$(id -gn)" .
 
 # Save artifacts
-sudo mkdir -p .rrpcid/artifacts
-sudo mv \
+mkdir -p .rrpcid/artifacts
+mv \
     build/lb/finnix-* \
     build/lb/chroot.files \
     build/lb/chroot.packages.* \
     .rrpcid/artifacts/
-sudo chown -R "$(id -un):$(id -gn)" .rrpcid/artifacts
