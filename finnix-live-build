@@ -230,6 +230,12 @@ if [ "${LINT}" = "true" ]; then
         grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${script_dir}"/* | xargs -r shellcheck
         grep -l -E '^#!/(usr/)?bin/(env )?python3' "${script_dir}"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
     done
+
+    for fn in "${BASE_DIR}"/*.md "${BASE_DIR}/.rrpcid"/*.md "${BASE_DIR}/files/manpages"/*.md; do
+        md_temp_fn="$(basename "${fn}")"
+        pandoc -s -t gfm+smart --columns=80 -i "${fn}" -o "${LINT_DIR}/${md_temp_fn}"
+        diff -u "${fn}" "${LINT_DIR}/${md_temp_fn}"
+    done
 fi
 
 mkdir -p "${LOCK_DIR}"
@@ -315,7 +321,7 @@ HOOK_FILES_DIR="${LB_DIR}/config/includes.chroot_after_packages/hook-files"
 render_files "${HOOK_FILES_DIR}" "${FILES_DIR}/hooks"/*
 for i in "${FILES_DIR}/manpages"/*.md; do
     basefn="$(basename "$i" .md)"
-    render <"${i}" | pandoc -s -t man -o "${HOOK_FILES_DIR}/${basefn}.1"
+    (render <"${FILES_DIR}/manpages/${basefn}.title"; render <"${i}") | pandoc -s -f gfm-smart -t man -o "${HOOK_FILES_DIR}/${basefn}.1"
 done
 
 render_files "${LB_DIR}/config/bootloaders/syslinux_common" "${FILES_DIR}/syslinux"/*.cfg
