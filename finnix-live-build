@@ -17,6 +17,7 @@ SAVE_ISO="${SAVE_ISO:-false}"
 LINT="${LINT:-false}"
 BUILD_TAGS="${BUILD_TAGS:-}"
 PYTHON="${PYTHON:-python3}"
+UNSTABLE_PIN="${UNSTABLE_PIN:-false}"
 
 lock() {
     _file=$1
@@ -372,7 +373,7 @@ if [ "${ARCH}" = "riscv64" ]; then
 deb http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free
 deb-src http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free
 EOM
-else
+elif [ "${UNSTABLE_PIN}" = "true" ]; then
     mkdir -p "${LB_DIR}/config/archives"
     cat >"${LB_DIR}/config/archives/unstable.list.chroot" <<"EOM"
 deb http://deb.debian.org/debian/ unstable main contrib non-free
