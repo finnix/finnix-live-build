@@ -17,7 +17,7 @@ SAVE_ISO="${SAVE_ISO:-false}"
 LINT="${LINT:-false}"
 BUILD_TAGS="${BUILD_TAGS:-}"
 PYTHON="${PYTHON:-python3}"
-UNSTABLE_PIN="${UNSTABLE_PIN:-false}"
+UNSTABLE_PIN="${UNSTABLE_PIN:-true}"
 
 lock() {
     _file=$1
