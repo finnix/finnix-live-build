@@ -9,3 +9,7 @@ set -e
 
 install -D -m 0755 /hook-files/wifi-connect /usr/sbin/wifi-connect
 install -D -m 0755 /hook-files/wifi-connect.1 /usr/share/man/man1/wifi-connect.1
+
+# Utilized by wifi-connect but not enabled at install time;
+# make sure it exists.
+[ -e /usr/lib/systemd/system/wpa_supplicant@.service ]
