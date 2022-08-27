@@ -92,6 +92,7 @@ hexedit
 hfsutils
 htop
 iftop
+inetutils-telnet
 inxi
 iotop
 #if ARCHITECTURES amd64 arm64 armhf i386 ppc64el s390x
@@ -151,7 +152,8 @@ net-tools
 nicstat
 nmap
 ntfs-3g
-ntpdate
+ntpsec-ntpdate
+ntpsec-ntpdig
 nvme-cli
 nwipe
 nyancat
@@ -196,7 +198,6 @@ sipcalc
 smartmontools
 smbclient
 snmp
-sntp
 socat
 squashfs-tools
 sshfs
@@ -207,7 +208,6 @@ sunxi-tools
 sudo
 systemd-timesyncd
 tcpdump
-telnet
 testdisk
 tftp
 thin-provisioning-tools
