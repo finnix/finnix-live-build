@@ -149,9 +149,13 @@ LB_DIR="${LB_DIR:-${DATA_DIR}/lb}"
 LB_CACHE_DIR="${LB_CACHE_DIR:-${CACHE_DIR}/lb}"
 LIVE_BUILD="${LIVE_BUILD:-${BASE_DIR}/live-build}"
 
+is_dirty=false
 GIT_DESC="$(git -C "${BASE_DIR}" describe --always --dirty 2>/dev/null || true)"
 if [ -n "${GIT_DESC}" ]; then
-    git -C "${BASE_DIR}" diff --quiet 2>/dev/null || BUILD_TAGS="${BUILD_TAGS} dirty"
+    if ! git -C "${BASE_DIR}" diff --quiet 2>/dev/null; then
+        is_dirty=true
+        BUILD_TAGS="${BUILD_TAGS} dirty"
+    fi
 fi
 LIVE_BUILD_GIT_DESC=""
 
@@ -417,6 +421,10 @@ cp -a "${LB_DIR}"/*.contents "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.files "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages.* "${BUILD_INFO_DIR}/${build_id}/"
+if [ "${is_dirty}" = "true" ]; then
+    git -C "${BASE_DIR}" status > "${BUILD_INFO_DIR}/${build_id}/dirty.patch"
+    git -C "${BASE_DIR}" diff >> "${BUILD_INFO_DIR}/${build_id}/dirty.patch"
+fi
 echo "${build_size}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
 if [ "${SAVE_ISO}" = "true" ]; then
     cp -a "${LB_DIR}/${ISO_FILENAME}" "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}"
