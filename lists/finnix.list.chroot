@@ -99,6 +99,7 @@ iotop
 iozone3
 #endif
 ipcalc
+iperf3
 ipmitool
 iptables
 iptraf-ng
