@@ -325,7 +325,12 @@ HOOK_FILES_DIR="${LB_DIR}/config/includes.chroot_after_packages/hook-files"
 render_files "${HOOK_FILES_DIR}" "${FILES_DIR}/hooks"/*
 for i in "${FILES_DIR}/manpages"/*.md; do
     basefn="$(basename "$i" .md)"
-    (render <"${FILES_DIR}/manpages/${basefn}.title"; render <"${i}") | pandoc -s -f gfm-smart -t man -o "${HOOK_FILES_DIR}/${basefn}.1"
+    (
+        echo "---"
+        render <"${FILES_DIR}/manpages/${basefn}.metadata.yaml"
+        echo "---"
+        render <"${i}"
+    ) | pandoc -s -f markdown_github-smart+yaml_metadata_block -t man -o "${HOOK_FILES_DIR}/${basefn}.1"
 done
 
 render_files "${LB_DIR}/config/bootloaders/syslinux_common" "${FILES_DIR}/syslinux"/*.cfg
