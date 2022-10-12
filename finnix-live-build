@@ -236,9 +236,12 @@ if [ "${LINT}" = "true" ]; then
     done
 
     for fn in "${BASE_DIR}"/*.md "${BASE_DIR}/.rrpcid"/*.md "${BASE_DIR}/files/manpages"/*.md; do
-        md_temp_fn="$(basename "${fn}")"
-        pandoc -s -t gfm+smart --columns=80 -i "${fn}" -o "${LINT_DIR}/${md_temp_fn}"
-        diff -u "${fn}" "${LINT_DIR}/${md_temp_fn}"
+        md_temp_in_fn="in_$(basename "${fn}")"
+        md_temp_out_fn="out_$(basename "${fn}")"
+        render <"${fn}" >"${LINT_DIR}/${md_temp_in_fn}"
+        pandoc -s -t gfm+smart --columns=80 -i "${LINT_DIR}/${md_temp_in_fn}" -o "${LINT_DIR}/${md_temp_out_fn}"
+        diff -u "${LINT_DIR}/${md_temp_in_fn}" "${LINT_DIR}/${md_temp_out_fn}"
+        echo "${LINT_DIR}/${md_temp_in_fn}" "${LINT_DIR}/${md_temp_out_fn}"
     done
 fi
 

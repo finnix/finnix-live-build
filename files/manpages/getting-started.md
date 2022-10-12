@@ -29,8 +29,7 @@ If you need to work with ZFS disks, run the following beforehand:
 
     service zfs-fuse start
 
-{% if PRODUCT_ID == 'finnix' %}
-# DOCUMENTATION
+{% if PRODUCT_ID == 'finnix' %}# DOCUMENTATION
 
-More Finnix documentation is available at [the finnix-docs repository on GitHub](https://github.com/finnix/finnix-docs).
-{% endif %}
+More Finnix documentation is available at [the finnix-docs repository on
+GitHub](https://github.com/finnix/finnix-docs).{% endif %}
