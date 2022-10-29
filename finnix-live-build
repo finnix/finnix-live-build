@@ -89,8 +89,8 @@ if [ -n "${missing_commands}" ]; then
     exit 1
 fi
 if command -v dpkg >/dev/null 2>/dev/null; then
-    if ! dpkg --compare-versions "$(debootstrap --version | cut -d' ' -f2)" ge 1.0.102; then
-        echo "ERROR: debootstrap 1.0.102 or later is required"
+    if ! dpkg --compare-versions "$(debootstrap --version | cut -d' ' -f2)" ge 1.0.107; then
+        echo "ERROR: debootstrap 1.0.107 or later is required"
         exit 1
     fi
 fi
@@ -181,6 +181,9 @@ if [ -t 0 ]; then
 fi
 if [ -n "${SCHROOT_SESSION_ID}" ]; then
     BUILD_TAGS="${BUILD_TAGS} schroot"
+fi
+if [ -e "/.dockerenv" ]; then
+    BUILD_TAGS="${BUILD_TAGS} docker"
 fi
 # (SC2154) Lowercase variable is conditionally set by systemd-nspawn,
 # nothing we can do
