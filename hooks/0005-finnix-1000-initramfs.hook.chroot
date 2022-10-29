@@ -12,4 +12,4 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
-install -D -m 0755 /hook-files/initramfs-conf "/etc/initramfs-tools/conf.d/{{ PRODUCT_ID }}"
+install -D -m 0755 /hook-files/initramfs-conf "/etc/initramfs-tools/conf.d/${PRODUCT_ID}"
