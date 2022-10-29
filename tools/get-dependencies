@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: get-dependencies
+# SPDX-FileCopyrightText: Copyright (C) 2022 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+import json
+import os
+import sys
+
+# TODO: make this more accurate (dnf tool installed in Debian?)
+IS_RH = os.path.exists("/etc/dnf/dnf.conf")
+
+if __name__ == "__main__":
+    with open(sys.argv[1]) as f:
+        for d in json.load(f):
+            if IS_RH:
+                print(d.get("rh", d["debian"]))
+            else:
+                print(d["debian"])

@@ -3,14 +3,16 @@
 set -e
 set -x
 
-# Dependency packages
-sudo apt update
-# (SC2046) Word splitting is desired here
-# shellcheck disable=SC2046
-sudo apt -y install $(cat build-dependencies.txt)
-
-# Lint codebase
-env LINT=true ARCH="${ARCH}" BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-build
+if [ -e /etc/dnf/dnf.conf ]; then
+    # (SC2046) Word splitting is desired here
+    # shellcheck disable=SC2046
+    sudo dnf -y install $(tools/get-dependencies build-dependencies.json)
+else
+    sudo apt update
+    # (SC2046) Word splitting is desired here
+    # shellcheck disable=SC2046
+    sudo apt -y install $(tools/get-dependencies build-dependencies.json)
+fi
 
 # Build image
 sudo chown -R root:root .

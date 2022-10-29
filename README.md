@@ -16,7 +16,7 @@ Requirements:
         usually in sync with [live-build
         upstream](https://salsa.debian.org/live-team/live-build), but sometimes
         includes fixes/changes which have not (yet) been accepted upstream.
-  - See `build-dependencies.txt` for required host packages.
+  - See `build-dependencies.json` for required host packages.
 
 This can be built on dedicated hardware, in a virtual machine, or in a
 systemd-nspawn container. Building in a chroot within one of these environments

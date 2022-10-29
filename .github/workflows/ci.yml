@@ -1,6 +1,18 @@
 name: ci
 on: [push, pull_request]
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Dependency packages
+      run: |
+        sudo apt update
+        sudo apt -y install $(tools/get-dependencies build-dependencies.json)
+    - name: Lint codebase
+      run: env LINT=true ./finnix-live-build
   build:
     runs-on: ubuntu-latest
     steps:
@@ -15,9 +27,7 @@ jobs:
     - name: Dependency packages
       run: |
         sudo apt update
-        sudo apt -y install $(cat build-dependencies.txt)
-    - name: Lint codebase
-      run: env LINT=true ./finnix-live-build
+        sudo apt -y install $(tools/get-dependencies build-dependencies.json)
     - name: Build image
       run: |
         sudo chown -R root:root .
