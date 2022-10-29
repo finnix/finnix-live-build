@@ -267,7 +267,7 @@ do_lb_config() {
         --architectures "${ARCH}" \
         --archive-areas "main contrib non-free" \
         --binary-images "${BINARY_IMAGES}" \
-        --bootappend-live "boot=live quiet" \
+        --bootappend-live "quiet" \
         --bootloaders "${BOOTLOADERS}" \
         --cache-indices true \
         --chroot-squashfs-compression-type "${SQUASHFS_COMP}" \

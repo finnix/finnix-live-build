@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: initramfs chroot hook
+# SPDX-FileCopyrightText: Copyright (C) 2022 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+# Set default BOOT=live so "boot=live" does not need to be on the
+# kernel command line.
+
+set -e
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+install -D -m 0755 /hook-files/initramfs-conf "/etc/initramfs-tools/conf.d/{{ PRODUCT_ID }}"

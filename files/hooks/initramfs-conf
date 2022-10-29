@@ -1,0 +1,4 @@
+# /etc/initramfs-tools/conf.d/{{ PRODUCT_ID }}
+
+BOOT=live
+export BOOT
