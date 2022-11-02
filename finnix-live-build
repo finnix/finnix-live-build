@@ -400,12 +400,14 @@ elif [ "${UNSTABLE_PIN}" = "true" ]; then
 deb http://deb.debian.org/debian/ unstable main contrib non-free
 deb-src http://deb.debian.org/debian/ unstable main contrib non-free
 EOM
+    cp "${LB_DIR}/config/archives/unstable.list.chroot" "${LB_DIR}/config/archives/unstable.list.binary"
     cat >"${LB_DIR}/config/archives/unstable.pref.chroot" <<"EOM"
 Package: *
 Pin: release a=unstable
 Pin-Priority: 400
 EOM
 fi
+    cp "${LB_DIR}/config/archives/unstable.pref.chroot" "${LB_DIR}/config/archives/unstable.pref.binary"
 
 if [ "${LINT}" = "true" ]; then
     grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r shellcheck
