@@ -406,8 +406,8 @@ Package: *
 Pin: release a=unstable
 Pin-Priority: 400
 EOM
-fi
     cp "${LB_DIR}/config/archives/unstable.pref.chroot" "${LB_DIR}/config/archives/unstable.pref.binary"
+fi
 
 if [ "${LINT}" = "true" ]; then
     grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r shellcheck
