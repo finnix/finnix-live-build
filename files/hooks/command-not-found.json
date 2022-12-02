@@ -1,0 +1,31 @@
+[
+    {
+        "commands": ["ftp"],
+        "packages": ["ftp"],
+        "similar_commands": ["lftp"]
+    },
+    {
+        "commands": ["ftp-ssl"],
+        "packages": ["ftp-ssl"],
+        "similar_commands": ["lftp"]
+    },
+    {
+        "commands": ["lynx"],
+        "packages": ["lynx"],
+        "similar_commands": ["elinks", "w3m"]
+    },
+    {
+        "commands": ["links2"],
+        "packages": ["links2"],
+        "similar_commands": ["elinks", "w3m"]
+    },
+    {
+        "commands": ["strings"],
+        "packages": ["binutils"]
+    },
+    {
+        "commands": ["vim"],
+        "packages": ["vim", "neovim"],
+        "similar_commands": ["vim.tiny"]
+    }
+]

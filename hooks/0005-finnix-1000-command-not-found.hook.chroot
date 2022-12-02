@@ -10,6 +10,7 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0755 /hook-files/command-not-found "/usr/lib/${PRODUCT_ID}/command-not-found"
+install -D -m 0644 /hook-files/command-not-found.json "/etc/simple-cnf/handlers.d/${PRODUCT_ID}.json"
 
 # Diverts /usr/lib/command-not-found to /usr/lib/command-not-found.distrib
 # in package "command-not-found" if it is installed after boot.
