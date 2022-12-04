@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: python chroot hook
+# SPDX-FileCopyrightText: Copyright (C) 2022 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+echo "export PYTHONDONTWRITEBYTECODE=1" >> /etc/environment
+
+for fn in /etc/python3.*/sitecustomize.py; do
+    [ -e "${fn}" ] || continue
+    tmpfn="$(mktemp)"
+    cat <<"EOM" >"${tmpfn}"
+# Do not compile bytecode (pyc)
+import sys
+sys.dont_write_bytecode = True
+
+EOM
+    cat "${fn}" >>"${tmpfn}"
+    cat "${tmpfn}" >"${fn}"
+    rm -f "${tmpfn}"
+done
+
+# Verification
+python3 -c "import sys; assert(sys.dont_write_bytecode == True)"
