@@ -1,5 +1,9 @@
 [
     {
+        "commands": ["ar"],
+        "packages": ["binutils"]
+    },
+    {
         "commands": ["ftp"],
         "packages": ["ftp"],
         "similar_commands": ["lftp"]
