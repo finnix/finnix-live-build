@@ -14,3 +14,6 @@ apt -y --purge remove polkitd pkexec
 
 # Not used (and conflicts with interfaces-convert)
 apt -y --purge remove ifupdown
+
+# Remove any auto-installed dependencies
+apt -y --purge autoremove
