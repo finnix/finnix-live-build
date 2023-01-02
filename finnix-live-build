@@ -64,6 +64,14 @@ render_files() {
     done
 }
 
+lint_shfmt() {
+    fn="$1"
+    shift
+    bfn="$(basename "$fn")"
+    shfmt -ln=posix -i 4 "${fn}" >"$LINT_DIR/${bfn}"
+    diff -u "${fn}" "$LINT_DIR/${bfn}"
+}
+
 # PACKAGES USED:
 # Required: debootstrap (debootstrap): live-build initial bootstrap
 # Required: debian-archive-keyring: live-build initial bootstrap
@@ -74,6 +82,7 @@ render_files() {
 # Required: pandoc: Manpage builds
 # Optional: shellcheck (shellcheck): Lint, required for LINT=true
 # Optional: flake8 (${PYTHON} -mflake8): Lint, required for LINT=true
+# Optional: shfmt (shfmt): Lint, optional for LINT=true
 # Optional: git (git): Build IDs
 # Optional: file (file): Post-build file info
 
@@ -85,6 +94,8 @@ fi
 for c in ${host_commands}; do
     command -v "${c}" >/dev/null || missing_commands="${missing_commands} ${c}"
 done
+has_shfmt=true
+command -v "${c}" >/dev/null 2>/dev/null || has_shfmt=false
 if [ -n "${missing_commands}" ]; then
     echo "ERROR: Missing required commands:${missing_commands}" >&2
     exit 1
@@ -234,8 +245,15 @@ BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs
 
 if [ "${LINT}" = "true" ]; then
     shellcheck "${BASE_DIR}/finnix-live-build"
-    for script_dir in "${BASE_DIR}/tools" "${BASE_DIR}/files/hooks" "${BASE_DIR}/.rrpcid/jobs"/*; do
-        grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${script_dir}"/* | xargs -r shellcheck
+    [ "${has_shfmt}" = "true" ] && lint_shfmt "${BASE_DIR}/finnix-live-build"
+    for script_dir in "${BASE_DIR}/tools" "${BASE_DIR}/.rrpcid/jobs"/*; do
+        # Interpet output as words
+        # shellcheck disable=SC2013
+        for fn in $(grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${script_dir}"/*); do
+            [ -e "${fn}" ] || continue
+            shellcheck "${fn}"
+            [ "${has_shfmt}" = "true" ] && lint_shfmt "${fn}"
+        done
         grep -l -E '^#!/(usr/)?bin/(env )?python3' "${script_dir}"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
     done
 
@@ -245,7 +263,6 @@ if [ "${LINT}" = "true" ]; then
         render <"${fn}" >"${LINT_DIR}/${md_temp_in_fn}"
         pandoc -s -t gfm+smart --columns=80 -i "${LINT_DIR}/${md_temp_in_fn}" -o "${LINT_DIR}/${md_temp_out_fn}"
         diff -u "${LINT_DIR}/${md_temp_in_fn}" "${LINT_DIR}/${md_temp_out_fn}"
-        echo "${LINT_DIR}/${md_temp_in_fn}" "${LINT_DIR}/${md_temp_out_fn}"
     done
 fi
 
@@ -410,8 +427,17 @@ EOM
 fi
 
 if [ "${LINT}" = "true" ]; then
-    grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r shellcheck
-    grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r shellcheck
+    # Interpet output as words
+    # shellcheck disable=SC2013
+    for fn in $(
+        grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' \
+            "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot \
+            "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/*
+    ); do
+        [ -e "${fn}" ] || continue
+        shellcheck "${fn}"
+        [ "${has_shfmt}" = "true" ] && lint_shfmt "${fn}"
+    done
     grep -l -E '^#!/(usr/)?bin/(env )?python3' "${LB_DIR}/config/hooks/normal"/*-finnix-*.hook.chroot | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
     grep -l -E '^#!/(usr/)?bin/(env )?python3' "${LB_DIR}/config/includes.chroot_after_packages/hook-files"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
 fi
