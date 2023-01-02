@@ -18,8 +18,15 @@ there are a few custom utilities to know about:
 
 # OTHER INFORMATION
 
-DHCP is attemped on any found wired Ethernet interface. For a text-mode web
-browser, "elinks" and "w3m" are available.
+DHCP is attemped on any found wired Ethernet interface.
+
+For a text-mode web browser, "elinks" and "w3m" are available.
+
+By default, no attempt is made to modify the system clock. If you would like to
+sync against an NTP server (local NTP server if given by the DHCP server,
+otherwise Debian's pool), run:
+
+    timedatectl set-ntp true
 
 If you would like to update any dpkg alternatives, such as for the "editor"
 command perhaps, "rover" is a friendly curses-based alternatives selection
