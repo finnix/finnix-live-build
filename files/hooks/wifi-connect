@@ -10,16 +10,16 @@ set -e
 interface=""
 while getopts ":i:" opt; do
     case "${opt}" in
-        i)
-            interface="$OPTARG"
-            ;;
-        *)
-            echo "Usage: $0 [-i interface] \"access point\" \"passphrase\""
-            exit 1
-            ;;
-      esac
+    i)
+        interface="$OPTARG"
+        ;;
+    *)
+        echo "Usage: $0 [-i interface] \"access point\" \"passphrase\""
+        exit 1
+        ;;
+    esac
 done
-shift $((OPTIND -1))
+shift $((OPTIND - 1))
 ap="$1"
 passphrase="$2"
 
@@ -59,14 +59,14 @@ if [ -z "${ap}" ] || [ -z "${passphrase}" ]; then
     echo "Nearby access points:"
     echo
     ip link set dev "${interface}" up
-    iw dev "${interface}" scan | \
-        grep -E 'signal:|SSID:' | \
-        sed -E -e 's/\t(SSID|signal): //' | \
-        awk '{ORS = (NR % 2 == 0)? "\n" : " "; print}' | \
-        sort -n -r | \
-        sed -E -e 's/ dBm / /; s/^[-0-9\/\.]+ //' | \
-        awk '$1 && $1 !~ /\\x00/' | \
-        awk '!seen[$0]++' | \
+    iw dev "${interface}" scan |
+        grep -E 'signal:|SSID:' |
+        sed -E -e 's/\t(SSID|signal): //' |
+        awk '{ORS = (NR % 2 == 0)? "\n" : " "; print}' |
+        sort -n -r |
+        sed -E -e 's/ dBm / /; s/^[-0-9\/\.]+ //' |
+        awk '$1 && $1 !~ /\\x00/' |
+        awk '!seen[$0]++' |
         head -n 15
     echo
     exit 1

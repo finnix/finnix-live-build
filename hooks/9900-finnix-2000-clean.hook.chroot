@@ -10,14 +10,14 @@ set -e
 rm -rf /hook-files
 
 rm -f \
-  /etc/nvme/hostnqn \
-  /etc/nvme/hostid \
-  /etc/group- \
-  /etc/gshadow- \
-  /etc/passwd- \
-  /etc/shadow- \
-  /etc/subgid- \
-  /etc/subuid-
+    /etc/nvme/hostnqn \
+    /etc/nvme/hostid \
+    /etc/group- \
+    /etc/gshadow- \
+    /etc/passwd- \
+    /etc/shadow- \
+    /etc/subgid- \
+    /etc/subuid-
 
 # Remove remaining pycache
 rm -rf /usr/lib/python3.*/__pycache__

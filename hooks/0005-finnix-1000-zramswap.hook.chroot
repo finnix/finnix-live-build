@@ -11,5 +11,5 @@ set -e
 # https://fedoraproject.org/wiki/Changes/SwapOnZRAM
 
 sed -i -e 's/^\#PERCENT=.*/PERCENT=50/g;' /etc/default/zramswap
-grep -q '^PERCENT=50' /etc/default/zramswap  # Verification
+grep -q '^PERCENT=50' /etc/default/zramswap # Verification
 systemctl add-wants multi-user.target zramswap.service

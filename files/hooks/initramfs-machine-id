@@ -8,12 +8,12 @@
 set -e
 
 PREREQS=""
-rootmnt="${rootmnt:-}"  # Set by initrd environment
+rootmnt="${rootmnt:-}" # Set by initrd environment
 
 prereqs() { echo "$PREREQS"; }
 
 case "$1" in
-    prereqs)
+prereqs)
     prereqs
     exit 0
     ;;

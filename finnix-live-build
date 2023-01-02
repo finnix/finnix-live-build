@@ -50,11 +50,12 @@ render() {
         "GIT_DESC=${GIT_DESC}" \
         "LIVE_BUILD_GIT_DESC=${LIVE_BUILD_GIT_DESC}" \
         "BUILD_TAGS=${BUILD_TAGS}" \
-    "${BASE_DIR}/tools/jinja2-render"
+        "${BASE_DIR}/tools/jinja2-render"
 }
 
 render_files() {
-    destdir="$1"; shift
+    destdir="$1"
+    shift
     mkdir -p "${destdir}"
     for i in "$@"; do
         basefn="$(basename "$i")"
@@ -197,13 +198,13 @@ if [ -e /etc/os-release ]; then
         read -r "${i?}" || true
     done <<EOM
 $(
-    # (SC1091) Do not attempt to read os-release when linting
-    # shellcheck disable=SC1091
-    . /etc/os-release
-    echo "$ID"
-    echo "$VERSION_CODENAME"
-    echo "$VERSION_ID"
-)
+        # (SC1091) Do not attempt to read os-release when linting
+        # shellcheck disable=SC1091
+        . /etc/os-release
+        echo "$ID"
+        echo "$VERSION_CODENAME"
+        echo "$VERSION_ID"
+    )
 EOM
     if [ -n "${BUILD_OS_VERSION_CODENAME}" ]; then
         build_os_ver="${BUILD_OS_VERSION_CODENAME}"
@@ -233,7 +234,7 @@ BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs
 
 if [ "${LINT}" = "true" ]; then
     shellcheck "${BASE_DIR}/finnix-live-build"
-    for script_dir in "${BASE_DIR}/tools" .rrpcid/jobs/*; do
+    for script_dir in "${BASE_DIR}/tools" "${BASE_DIR}/files/hooks" "${BASE_DIR}/.rrpcid/jobs"/*; do
         grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${script_dir}"/* | xargs -r shellcheck
         grep -l -E '^#!/(usr/)?bin/(env )?python3' "${script_dir}"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
     done
@@ -350,8 +351,7 @@ if [ -z "${SQUASHFS_SORT_FILE}" ]; then
     for f in \
         "${FILES_DIR}/squashfs.${VERSION}.${ARCH}.sort" \
         "${FILES_DIR}/squashfs.${ARCH}.sort" \
-        "${FILES_DIR}/squashfs.sort"
-    do
+        "${FILES_DIR}/squashfs.sort"; do
         if [ -e "${f}" ]; then
             SQUASHFS_SORT_FILE="${f}"
             break
@@ -435,8 +435,8 @@ cp -a "${LB_DIR}"/*.files "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages.* "${BUILD_INFO_DIR}/${build_id}/"
 if [ "${is_dirty}" = "true" ]; then
-    git -C "${BASE_DIR}" status > "${BUILD_INFO_DIR}/${build_id}/dirty.patch"
-    git -C "${BASE_DIR}" diff >> "${BUILD_INFO_DIR}/${build_id}/dirty.patch"
+    git -C "${BASE_DIR}" status >"${BUILD_INFO_DIR}/${build_id}/dirty.patch"
+    git -C "${BASE_DIR}" diff >>"${BUILD_INFO_DIR}/${build_id}/dirty.patch"
 fi
 echo "${build_size}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
 if [ "${SAVE_ISO}" = "true" ]; then

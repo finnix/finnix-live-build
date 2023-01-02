@@ -19,7 +19,7 @@ PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 strace -v -qq -yy -s 65535 -p $$ -f -e open,openat,execve -z -o /var/log/strace-init.trace &
 sleep 3
 if [ -n "$1" ]; then
-  exec "$@"
+    exec "$@"
 else
-  exec /sbin/init
+    exec /sbin/init
 fi
