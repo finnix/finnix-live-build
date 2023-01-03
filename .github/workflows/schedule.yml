@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
     - name: Dependency packages
@@ -23,7 +23,7 @@ jobs:
         sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
         sudo chown -R "$(id -un):$(id -gn)" .
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}
         path: |
