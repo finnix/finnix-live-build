@@ -281,7 +281,7 @@ do_lb_config() {
         --apt-http-proxy "${APT_HTTP_PROXY}" \
         --apt-indices false \
         --apt-recommends false \
-        --apt-source-archives true \
+        --apt-source-archives "${SOURCE_ISO}" \
         --architectures "${ARCH}" \
         --archive-areas "main contrib non-free" \
         --binary-images "${BINARY_IMAGES}" \
@@ -424,6 +424,13 @@ Pin: release a=unstable
 Pin-Priority: 400
 EOM
     cp "${LB_DIR}/config/archives/unstable.pref.chroot" "${LB_DIR}/config/archives/unstable.pref.binary"
+fi
+cat >"${LB_DIR}/config/archives/80${PRODUCT_ID}.conf.binary" <<"EOM"
+Acquire::PDiffs "false";
+Acquire::Languages { "none"; };
+EOM
+if [ "${SOURCE_ISO}" = "false" ]; then
+    sed -i "s/^deb-src/#deb-src/g" "${LB_DIR}/config/archives"/*.list.chroot "${LB_DIR}/config/archives"/*.list.binary
 fi
 
 if [ "${LINT}" = "true" ]; then
