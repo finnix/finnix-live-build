@@ -1,0 +1,1173 @@
+[
+    {
+        "commands": [
+            "GET",
+            "HEAD",
+            "POST",
+            "lwp-download",
+            "lwp-dump",
+            "lwp-mirror",
+            "lwp-request"
+        ],
+        "packages": [
+            "libwww-perl"
+        ]
+    },
+    {
+        "commands": [
+            "X11"
+        ],
+        "packages": [
+            "x11-common"
+        ]
+    },
+    {
+        "commands": [
+            "add-apt-repository",
+            "apt-add-repository"
+        ],
+        "packages": [
+            "software-properties-common"
+        ]
+    },
+    {
+        "commands": [
+            "apt-listchanges"
+        ],
+        "packages": [
+            "apt-listchanges"
+        ]
+    },
+    {
+        "commands": [
+            "chardet",
+            "chardetect"
+        ],
+        "packages": [
+            "python3-chardet"
+        ]
+    },
+    {
+        "commands": [
+            "compose",
+            "edit",
+            "print",
+            "run-mailcap",
+            "see",
+            "update-mime"
+        ],
+        "packages": [
+            "mailcap"
+        ]
+    },
+    {
+        "commands": [
+            "debianbts"
+        ],
+        "packages": [
+            "python3-debianbts"
+        ]
+    },
+    {
+        "commands": [
+            "dh_installxmlcatalogs",
+            "update-xmlcatalog"
+        ],
+        "packages": [
+            "xml-core"
+        ]
+    },
+    {
+        "commands": [
+            "dpkg-architecture",
+            "dpkg-buildflags",
+            "dpkg-buildpackage",
+            "dpkg-checkbuilddeps",
+            "dpkg-distaddfile",
+            "dpkg-genbuildinfo",
+            "dpkg-genchanges",
+            "dpkg-gencontrol",
+            "dpkg-gensymbols",
+            "dpkg-mergechangelogs",
+            "dpkg-name",
+            "dpkg-parsechangelog",
+            "dpkg-scanpackages",
+            "dpkg-scansources",
+            "dpkg-shlibdeps",
+            "dpkg-source",
+            "dpkg-vendor"
+        ],
+        "packages": [
+            "dpkg-dev"
+        ]
+    },
+    {
+        "commands": [
+            "ispell-wrapper",
+            "select-default-iwrap",
+            "aspell-autobuildhash",
+            "ispell-autobuildhash",
+            "remove-default-ispell",
+            "remove-default-wordlist",
+            "select-default-ispell",
+            "select-default-wordlist",
+            "update-default-aspell",
+            "update-default-ispell",
+            "update-default-wordlist",
+            "update-dictcommon-aspell",
+            "update-dictcommon-hunspell"
+        ],
+        "packages": [
+            "dictionaries-common"
+        ]
+    },
+    {
+        "commands": [
+            "laptop-detect"
+        ],
+        "packages": [
+            "laptop-detect"
+        ]
+    },
+    {
+        "commands": [
+            "libreoffice",
+            "loffice",
+            "lofromtemplate",
+            "soffice",
+            "unopkg"
+        ],
+        "packages": [
+            "libreoffice-common"
+        ]
+    },
+    {
+        "commands": [
+            "mimeopen",
+            "mimetype"
+        ],
+        "packages": [
+            "libfile-mimeinfo-perl"
+        ]
+    },
+    {
+        "commands": [
+            "querybts",
+            "reportbug"
+        ],
+        "packages": [
+            "reportbug"
+        ]
+    },
+    {
+        "commands": [
+            "report-hw"
+        ],
+        "packages": [
+            "installation-report"
+        ]
+    },
+    {
+        "commands": [
+            "tasksel"
+        ],
+        "packages": [
+            "tasksel"
+        ]
+    },
+    {
+        "commands": [
+            "unattended-upgrade",
+            "unattended-upgrades"
+        ],
+        "packages": [
+            "unattended-upgrades"
+        ]
+    },
+    {
+        "commands": [
+            "vimtutor"
+        ],
+        "packages": [
+            "vim-runtime"
+        ]
+    },
+    {
+        "commands": [
+            "xdg-desktop-icon",
+            "xdg-desktop-menu",
+            "xdg-email",
+            "xdg-icon-resource",
+            "xdg-mime",
+            "xdg-open",
+            "xdg-screensaver",
+            "xdg-settings"
+        ],
+        "packages": [
+            "xdg-utils"
+        ]
+    },
+    {
+        "commands": [
+            "make-ssl-cert"
+        ],
+        "packages": [
+            "ssl-cert"
+        ]
+    },
+    {
+        "commands": [
+            "popcon-largest-unused",
+            "popularity-contest"
+        ],
+        "packages": [
+            "popularity-contest"
+        ]
+    },
+    {
+        "commands": [
+            "update-inetd"
+        ],
+        "packages": [
+            "update-inetd"
+        ]
+    },
+    {
+        "commands": [
+            "chacl",
+            "getfacl",
+            "setfacl"
+        ],
+        "packages": [
+            "acl"
+        ]
+    },
+    {
+        "commands": [
+            "nc.traditional"
+        ],
+        "packages": [
+            "netcat-traditional"
+        ]
+    },
+    {
+        "commands": [
+            "apparmor_parser",
+            "aa-enabled",
+            "aa-exec",
+            "aa-features-abi",
+            "aa-remove-unknown",
+            "aa-status",
+            "aa-teardown",
+            "apparmor_status"
+        ],
+        "packages": [
+            "apparmor"
+        ]
+    },
+    {
+        "commands": [
+            "discover",
+            "discover-modprobe",
+            "discover-pkginstall",
+            "discover-config"
+        ],
+        "packages": [
+            "discover"
+        ]
+    },
+    {
+        "commands": [
+            "ifdown",
+            "ifquery",
+            "ifup"
+        ],
+        "packages": [
+            "ifupdown"
+        ]
+    },
+    {
+        "commands": [
+            "7z",
+            "7za"
+        ],
+        "packages": [
+            "p7zip-full"
+        ]
+    },
+    {
+        "commands": [
+            "X",
+            "Xorg",
+            "gtf"
+        ],
+        "packages": [
+            "xserver-xorg-core"
+        ]
+    },
+    {
+        "commands": [
+            "aconnect",
+            "alsabat",
+            "alsaloop",
+            "alsamixer",
+            "alsatplg",
+            "alsaucm",
+            "amidi",
+            "amixer",
+            "aplay",
+            "aplaymidi",
+            "arecord",
+            "arecordmidi",
+            "aseqdump",
+            "aseqnet",
+            "axfer",
+            "iecset",
+            "speaker-test",
+            "alsa-info",
+            "alsabat-test",
+            "alsactl"
+        ],
+        "packages": [
+            "alsa-utils"
+        ]
+    },
+    {
+        "commands": [
+            "addr2line",
+            "ar",
+            "as",
+            "c++filt",
+            "dwp",
+            "elfedit",
+            "gold",
+            "gp-archive",
+            "gp-collect-app",
+            "gp-display-html",
+            "gp-display-src",
+            "gp-display-text",
+            "gprof",
+            "gprofng",
+            "ld",
+            "ld.bfd",
+            "ld.gold",
+            "nm",
+            "objcopy",
+            "objdump",
+            "ranlib",
+            "readelf",
+            "size",
+            "strings",
+            "strip"
+        ],
+        "packages": [
+            "binutils"
+        ]
+    },
+    {
+        "commands": [
+            "appres",
+            "editres",
+            "listres",
+            "luit",
+            "viewres",
+            "xdpyinfo",
+            "xdriinfo",
+            "xev",
+            "xfd",
+            "xfontsel",
+            "xkill",
+            "xlsatoms",
+            "xlsclients",
+            "xlsfonts",
+            "xmessage",
+            "xprop",
+            "xvinfo",
+            "xwininfo"
+        ],
+        "packages": [
+            "x11-utils"
+        ]
+    },
+    {
+        "commands": [
+            "aspell",
+            "aspell-import",
+            "precat",
+            "preunzip",
+            "prezip",
+            "prezip-bin",
+            "run-with-aspell",
+            "word-list-compress"
+        ],
+        "packages": [
+            "aspell"
+        ]
+    },
+    {
+        "commands": [
+            "atobm",
+            "bitmap",
+            "bmtoa",
+            "ico",
+            "oclock",
+            "rendercheck",
+            "transset",
+            "x11perf",
+            "x11perfcomp",
+            "xbiff",
+            "xcalc",
+            "xclipboard",
+            "xclock",
+            "xconsole",
+            "xcursorgen",
+            "xcutsel",
+            "xditview",
+            "xedit",
+            "xeyes",
+            "xgc",
+            "xload",
+            "xlogo",
+            "xmag",
+            "xman",
+            "xmore",
+            "xwd",
+            "xwud"
+        ],
+        "packages": [
+            "x11-apps"
+        ]
+    },
+    {
+        "commands": [
+            "bdftopcf",
+            "bdftruncate",
+            "fonttosfnt",
+            "mkfontdir",
+            "mkfontscale",
+            "ucs2any",
+            "update-fonts-alias",
+            "update-fonts-dir",
+            "update-fonts-scale"
+        ],
+        "packages": [
+            "xfonts-utils"
+        ]
+    },
+    {
+        "commands": [
+            "broadwayd",
+            "gtk-builder-tool",
+            "gtk-encode-symbolic-svg",
+            "gtk-launch",
+            "gtk-query-settings"
+        ],
+        "packages": [
+            "libgtk-3-bin"
+        ]
+    },
+    {
+        "commands": [
+            "buildhash",
+            "defmt-c",
+            "defmt-sh",
+            "findaffix",
+            "icombine",
+            "ijoin",
+            "ispell",
+            "munchlist",
+            "tryaffix"
+        ],
+        "packages": [
+            "ispell"
+        ]
+    },
+    {
+        "commands": [
+            "c89-gcc",
+            "c99-gcc",
+            "gcc",
+            "gcc-ar",
+            "gcc-nm",
+            "gcc-ranlib",
+            "gcov",
+            "gcov-dump",
+            "gcov-tool",
+            "lto-dump",
+            "x86_64-linux-gnu-gcc",
+            "x86_64-linux-gnu-gcc-ar",
+            "x86_64-linux-gnu-gcc-nm",
+            "x86_64-linux-gnu-gcc-ranlib",
+            "x86_64-linux-gnu-gcov",
+            "x86_64-linux-gnu-gcov-dump",
+            "x86_64-linux-gnu-gcov-tool",
+            "x86_64-linux-gnu-lto-dump"
+        ],
+        "packages": [
+            "gcc"
+        ]
+    },
+    {
+        "commands": [
+            "cancel",
+            "cupstestppd",
+            "lp",
+            "lpoptions",
+            "lpstat",
+            "cupsaccept",
+            "cupsctl",
+            "cupsdisable",
+            "cupsenable",
+            "cupsreject",
+            "lpadmin",
+            "lpinfo",
+            "lpmove"
+        ],
+        "packages": [
+            "cups-client"
+        ]
+    },
+    {
+        "commands": [
+            "cd-create-profile",
+            "cd-fix-profile",
+            "cd-iccdump",
+            "cd-it8",
+            "colormgr"
+        ],
+        "packages": [
+            "colord"
+        ]
+    },
+    {
+        "commands": [
+            "cpp",
+            "x86_64-linux-gnu-cpp"
+        ],
+        "packages": [
+            "cpp"
+        ]
+    },
+    {
+        "commands": [
+            "desktop-file-edit",
+            "desktop-file-install",
+            "desktop-file-validate",
+            "update-desktop-database"
+        ],
+        "packages": [
+            "desktop-file-utils"
+        ]
+    },
+    {
+        "commands": [
+            "dh_perl_openssl"
+        ],
+        "packages": [
+            "perl-openssl-defaults"
+        ]
+    },
+    {
+        "commands": [
+            "dotlockfile"
+        ],
+        "packages": [
+            "liblockfile-bin"
+        ]
+    },
+    {
+        "commands": [
+            "dvipdf",
+            "eps2eps",
+            "ghostscript",
+            "gs",
+            "gsbj",
+            "gsdj",
+            "gsdj500",
+            "gslj",
+            "gslp",
+            "gsnd",
+            "pdf2dsc",
+            "pdf2ps",
+            "pf2afm",
+            "pfbtopfa",
+            "pphs",
+            "printafm",
+            "ps2ascii",
+            "ps2epsi",
+            "ps2pdf",
+            "ps2pdf12",
+            "ps2pdf13",
+            "ps2pdf14",
+            "ps2pdfwr",
+            "ps2ps",
+            "ps2ps2",
+            "ps2txt",
+            "update-gsfontmap"
+        ],
+        "packages": [
+            "ghostscript"
+        ]
+    },
+    {
+        "commands": [
+            "envsubst",
+            "gettext",
+            "gettext.sh",
+            "ngettext"
+        ],
+        "packages": [
+            "gettext-base"
+        ]
+    },
+    {
+        "commands": [
+            "faked-sysv",
+            "faked-tcp",
+            "fakeroot-sysv",
+            "fakeroot-tcp"
+        ],
+        "packages": [
+            "fakeroot"
+        ]
+    },
+    {
+        "commands": [
+            "fc-cache",
+            "fc-cat",
+            "fc-conflist",
+            "fc-list",
+            "fc-match",
+            "fc-pattern",
+            "fc-query",
+            "fc-scan",
+            "fc-validate"
+        ],
+        "packages": [
+            "fontconfig"
+        ]
+    },
+    {
+        "commands": [
+            "firefox",
+            "firefox-esr"
+        ],
+        "packages": [
+            "firefox-esr"
+        ]
+    },
+    {
+        "commands": [
+            "g++",
+            "x86_64-linux-gnu-g++"
+        ],
+        "packages": [
+            "g++"
+        ]
+    },
+    {
+        "commands": [
+            "gamma4scanimage",
+            "sane-find-scanner",
+            "scanimage",
+            "umax_pp",
+            "saned"
+        ],
+        "packages": [
+            "sane-utils"
+        ]
+    },
+    {
+        "commands": [
+            "gapplication",
+            "gdbus",
+            "gio",
+            "gio-querymodules",
+            "glib-compile-schemas",
+            "gresource",
+            "gsettings"
+        ],
+        "packages": [
+            "libglib2.0-bin"
+        ]
+    },
+    {
+        "commands": [
+            "gcr-viewer"
+        ],
+        "packages": [
+            "gcr"
+        ]
+    },
+    {
+        "commands": [
+            "gdk-pixbuf-csource",
+            "gdk-pixbuf-pixdata",
+            "gdk-pixbuf-thumbnailer"
+        ],
+        "packages": [
+            "libgdk-pixbuf2.0-bin"
+        ]
+    },
+    {
+        "commands": [
+            "gencat"
+        ],
+        "packages": [
+            "libc-dev-bin"
+        ]
+    },
+    {
+        "commands": [
+            "gmake",
+            "make",
+            "make-first-existing-target"
+        ],
+        "packages": [
+            "make"
+        ]
+    },
+    {
+        "commands": [
+            "grub-editenv",
+            "grub-file",
+            "grub-fstest",
+            "grub-glue-efi",
+            "grub-kbdcomp",
+            "grub-menulst2cfg",
+            "grub-mkfont",
+            "grub-mkimage",
+            "grub-mklayout",
+            "grub-mknetdir",
+            "grub-mkpasswd-pbkdf2",
+            "grub-mkrelpath",
+            "grub-mkrescue",
+            "grub-mkstandalone",
+            "grub-mount",
+            "grub-render-label",
+            "grub-script-check",
+            "grub-syslinux2cfg",
+            "grub-macbless",
+            "grub-mkconfig",
+            "grub-mkdevicemap",
+            "grub-probe"
+        ],
+        "packages": [
+            "grub-common"
+        ]
+    },
+    {
+        "commands": [
+            "grub-ntldr-img",
+            "grub-bios-setup",
+            "upgrade-from-grub-legacy"
+        ],
+        "packages": [
+            "grub-pc"
+        ]
+    },
+    {
+        "commands": [
+            "gtk-update-icon-cache",
+            "update-icon-caches"
+        ],
+        "packages": [
+            "gtk-update-icon-cache"
+        ]
+    },
+    {
+        "commands": [
+            "iceauth",
+            "sessreg",
+            "showrgb",
+            "xcmsdb",
+            "xgamma",
+            "xhost",
+            "xkeystone",
+            "xmodmap",
+            "xrandr",
+            "xrdb",
+            "xrefresh",
+            "xset",
+            "xsetmode",
+            "xsetpointer",
+            "xsetroot",
+            "xstdcmap",
+            "xvidtune"
+        ],
+        "packages": [
+            "x11-xserver-utils"
+        ]
+    },
+    {
+        "commands": [
+            "intel-virtual-output"
+        ],
+        "packages": [
+            "xserver-xorg-video-intel"
+        ]
+    },
+    {
+        "commands": [
+            "isdv4-serial-debugger",
+            "isdv4-serial-inputattach",
+            "xsetwacom"
+        ],
+        "packages": [
+            "xserver-xorg-input-wacom"
+        ]
+    },
+    {
+        "commands": [
+            "libwacom-list-devices",
+            "libwacom-list-local-devices",
+            "libwacom-show-stylus",
+            "libwacom-update-db"
+        ],
+        "packages": [
+            "libwacom-bin"
+        ]
+    },
+    {
+        "commands": [
+            "linux-boot-prober",
+            "os-prober"
+        ],
+        "packages": [
+            "os-prober"
+        ]
+    },
+    {
+        "commands": [
+            "localc"
+        ],
+        "packages": [
+            "libreoffice-calc"
+        ]
+    },
+    {
+        "commands": [
+            "lodraw"
+        ],
+        "packages": [
+            "libreoffice-draw"
+        ]
+    },
+    {
+        "commands": [
+            "loimpress"
+        ],
+        "packages": [
+            "libreoffice-impress"
+        ]
+    },
+    {
+        "commands": [
+            "lomath"
+        ],
+        "packages": [
+            "libreoffice-math"
+        ]
+    },
+    {
+        "commands": [
+            "loweb",
+            "lowriter"
+        ],
+        "packages": [
+            "libreoffice-writer"
+        ]
+    },
+    {
+        "commands": [
+            "lp_solve"
+        ],
+        "packages": [
+            "lp-solve"
+        ]
+    },
+    {
+        "commands": [
+            "mmcli",
+            "ModemManager"
+        ],
+        "packages": [
+            "modemmanager"
+        ]
+    },
+    {
+        "commands": [
+            "nm-online",
+            "nmcli",
+            "nmtui",
+            "nmtui-connect",
+            "nmtui-edit",
+            "nmtui-hostname",
+            "NetworkManager"
+        ],
+        "packages": [
+            "network-manager"
+        ]
+    },
+    {
+        "commands": [
+            "pa-info",
+            "pacat",
+            "pacmd",
+            "pactl",
+            "padsp",
+            "pamon",
+            "paplay",
+            "parec",
+            "parecord",
+            "pasuspender",
+            "pax11publish"
+        ],
+        "packages": [
+            "pulseaudio-utils"
+        ]
+    },
+    {
+        "commands": [
+            "paperconf",
+            "paperconfig"
+        ],
+        "packages": [
+            "libpaper-utils"
+        ]
+    },
+    {
+        "commands": [
+            "pdfattach",
+            "pdfdetach",
+            "pdffonts",
+            "pdfimages",
+            "pdfinfo",
+            "pdfseparate",
+            "pdfsig",
+            "pdftocairo",
+            "pdftohtml",
+            "pdftoppm",
+            "pdftops",
+            "pdftotext",
+            "pdfunite"
+        ],
+        "packages": [
+            "poppler-utils"
+        ]
+    },
+    {
+        "commands": [
+            "pkcon",
+            "pkmon"
+        ],
+        "packages": [
+            "packagekit-tools"
+        ]
+    },
+    {
+        "commands": [
+            "ppdc",
+            "ppdhtml",
+            "ppdi",
+            "ppdmerge",
+            "ppdpo"
+        ],
+        "packages": [
+            "cups-ppdc"
+        ]
+    },
+    {
+        "commands": [
+            "pulseaudio",
+            "start-pulseaudio-x11"
+        ],
+        "packages": [
+            "pulseaudio"
+        ]
+    },
+    {
+        "commands": [
+            "rstart",
+            "rstartd",
+            "smproxy",
+            "xsm"
+        ],
+        "packages": [
+            "x11-session-utils"
+        ]
+    },
+    {
+        "commands": [
+            "setxkbmap",
+            "xkbbell",
+            "xkbcomp",
+            "xkbevd",
+            "xkbprint",
+            "xkbvleds",
+            "xkbwatch"
+        ],
+        "packages": [
+            "x11-xkb-utils"
+        ]
+    },
+    {
+        "commands": [
+            "startx",
+            "xinit"
+        ],
+        "packages": [
+            "xinit"
+        ]
+    },
+    {
+        "commands": [
+            "update-mime-database"
+        ],
+        "packages": [
+            "shared-mime-info"
+        ]
+    },
+    {
+        "commands": [
+            "upower"
+        ],
+        "packages": [
+            "upower"
+        ]
+    },
+    {
+        "commands": [
+            "vmwarectrl"
+        ],
+        "packages": [
+            "xserver-xorg-video-vmware"
+        ]
+    },
+    {
+        "commands": [
+            "x86_64-linux-gnu-addr2line",
+            "x86_64-linux-gnu-ar",
+            "x86_64-linux-gnu-as",
+            "x86_64-linux-gnu-c++filt",
+            "x86_64-linux-gnu-dwp",
+            "x86_64-linux-gnu-elfedit",
+            "x86_64-linux-gnu-gold",
+            "x86_64-linux-gnu-gp-archive",
+            "x86_64-linux-gnu-gp-collect-app",
+            "x86_64-linux-gnu-gp-display-html",
+            "x86_64-linux-gnu-gp-display-src",
+            "x86_64-linux-gnu-gp-display-text",
+            "x86_64-linux-gnu-gprof",
+            "x86_64-linux-gnu-gprofng",
+            "x86_64-linux-gnu-ld",
+            "x86_64-linux-gnu-ld.bfd",
+            "x86_64-linux-gnu-ld.gold",
+            "x86_64-linux-gnu-nm",
+            "x86_64-linux-gnu-objcopy",
+            "x86_64-linux-gnu-objdump",
+            "x86_64-linux-gnu-ranlib",
+            "x86_64-linux-gnu-readelf",
+            "x86_64-linux-gnu-size",
+            "x86_64-linux-gnu-strings",
+            "x86_64-linux-gnu-strip"
+        ],
+        "packages": [
+            "binutils-x86-64-linux-gnu"
+        ]
+    },
+    {
+        "commands": [
+            "xauth"
+        ],
+        "packages": [
+            "xauth"
+        ]
+    },
+    {
+        "commands": [
+            "xdg-user-dir",
+            "xdg-user-dirs-update"
+        ],
+        "packages": [
+            "xdg-user-dirs"
+        ]
+    },
+    {
+        "commands": [
+            "anacron"
+        ],
+        "packages": [
+            "anacron"
+        ]
+    },
+    {
+        "commands": [
+            "apache2"
+        ],
+        "packages": [
+            "apache2-bin"
+        ]
+    },
+    {
+        "commands": [
+            "avahi-daemon"
+        ],
+        "packages": [
+            "avahi-daemon"
+        ]
+    },
+    {
+        "commands": [
+            "dnsmasq"
+        ],
+        "packages": [
+            "dnsmasq-base"
+        ]
+    },
+    {
+        "commands": [
+            "grub-install",
+            "grub-reboot",
+            "grub-set-default",
+            "update-grub",
+            "update-grub2"
+        ],
+        "packages": [
+            "grub2-common"
+        ]
+    },
+    {
+        "commands": [
+            "rsyslogd"
+        ],
+        "packages": [
+            "rsyslog"
+        ]
+    },
+    {
+        "commands": [
+            "rtkitctl"
+        ],
+        "packages": [
+            "rtkit"
+        ]
+    },
+    {
+        "commands": [
+            "usb_modeswitch",
+            "usb_modeswitch_dispatcher"
+        ],
+        "packages": [
+            "usb-modeswitch"
+        ]
+    },
+    {
+        "commands": [
+            "usbmuxd"
+        ],
+        "packages": [
+            "usbmuxd"
+        ]
+    }
+]

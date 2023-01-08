@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: cnf-build-common
+# SPDX-FileCopyrightText: Copyright (C) 2023 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+# Builds a simple-cnf json config of all commands in the top 1000 (by
+# Debian popcon) packages which are not already installed.
+#
+# Usage: zcat Contents-all.gz Contents-amd64.gz | ./cnf-build-common >common.json
+#
+# Contents files: http://deb.debian.org/debian/dists/testing/main/
+# Popcon: https://popcon.debian.org/main/by_inst
+
+import argparse
+import logging
+import json
+import os
+import pathlib
+import re
+import sys
+
+
+class CNFBuildCommon:
+    re_contents_line = re.compile(r"^(.*) +(.*?)$")
+    re_bin_path = re.compile(r"^(?:usr/)?s?bin/(.*?)$")
+    re_popcorn_line = re.compile(r"^([0-9]+) +(.*?) +")
+    args = None
+    pkgassoc = {}
+
+    def main(self):
+        self.args = self.parse_args()
+        logging.basicConfig(
+            level=(logging.DEBUG if self.args.debug else logging.INFO),
+            format="%(levelname)s: %(message)s",
+        )
+        self.get_top_pkgs()
+        self.parse_contents()
+        self.print_json()
+
+    def parse_args(self, argv=None):
+        if argv is None:
+            argv = sys.argv
+
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+            prog=os.path.basename(argv[0]),
+        )
+        parser.add_argument(
+            "--debug", action="store_true", help="Print debugging information"
+        )
+        parser.add_argument(
+            "--contents-file",
+            action="append",
+            type=pathlib.Path,
+            help="Debian Contents file",
+        )
+        parser.add_argument(
+            "--top-packages",
+            type=int,
+            default=1000,
+            help="Top number of Popcon packages to consider",
+        )
+        parser.add_argument(
+            "--popcon-file",
+            type=pathlib.Path,
+            default="by_inst",
+            help="Popcon data file",
+        )
+        parser.add_argument(
+            "--skip-package-check",
+            action="store_true",
+            help="Skip checking if package is installed",
+        )
+        parser.add_argument(
+            "--path-base",
+            type=pathlib.Path,
+            default="/",
+            help="Path base for package checks",
+        )
+
+        return parser.parse_args(args=argv[1:])
+
+    def get_top_pkgs(self):
+        self.top_pkgs = []
+        with self.args.popcon_file.open() as f:
+            for line in f:
+                r = self.re_popcorn_line.search(line.rstrip())
+                if not r:
+                    continue
+                pos = int(r.group(1))
+                pkg = r.group(2)
+                self.top_pkgs.append(pkg)
+                if pos == self.args.top_packages:
+                    return
+
+    def parse_contents(self):
+        if self.args.contents_file:
+            for file in self.args.contents_file:
+                self.parse_contents_file(file.open())
+        else:
+            self.parse_contents_file(sys.stdin)
+
+    def parse_contents_file(self, fh):
+        for line in fh:
+            r = self.re_contents_line.search(line.rstrip())
+            if not r:
+                continue
+            fn = r.group(1).strip()
+            p = r.group(2)
+            for pkg in p.split(","):
+                pkg = pkg.split("/")[1]
+                if pkg not in self.top_pkgs:
+                    continue
+                if not self.args.skip_package_check:
+                    if (
+                        pathlib.Path(self.args.path_base)
+                        .joinpath("var/lib/dpkg/info/{}.list".format(pkg))
+                        .exists()
+                    ):
+                        continue
+                barefn = self.re_bin_path.findall(fn)
+                if not barefn:
+                    continue
+                barefn = barefn[0]
+                logging.info("{}: {}".format(pkg, barefn))
+                if pkg not in self.pkgassoc:
+                    self.pkgassoc[pkg] = []
+                self.pkgassoc[pkg].append(barefn)
+
+    def print_json(self):
+        out = []
+        for pkg in self.pkgassoc:
+            out.append(
+                {
+                    "commands": self.pkgassoc[pkg],
+                    "packages": [pkg],
+                }
+            )
+
+        json.dump(out, sys.stdout, sort_keys=True, indent=4)
+
+
+if __name__ == "__main__":
+    sys.exit(CNFBuildCommon().main())

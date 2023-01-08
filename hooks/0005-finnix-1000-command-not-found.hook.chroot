@@ -10,7 +10,10 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0755 /hook-files/command-not-found "/usr/lib/${PRODUCT_ID}/command-not-found"
-install -D -m 0644 /hook-files/command-not-found.json "/etc/simple-cnf/handlers.d/${PRODUCT_ID}.json"
+install -D -m 0644 /hook-files/command-not-found.json "/etc/simple-cnf/handlers.d/20-${PRODUCT_ID}.json"
+# Commands from the top 1000 packages (by Debian popcon) which are not
+# installed in Finnix.
+install -D -m 0644 /hook-files/command-not-found-common.json "/etc/simple-cnf/handlers.d/50-common.json"
 
 # Diverts /usr/lib/command-not-found to /usr/lib/command-not-found.distrib
 # in package "command-not-found" if it is installed after boot.

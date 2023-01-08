@@ -17,6 +17,34 @@ def eprint(*args, **kwargs):
     return print(*args, **kwargs)
 
 
+def do_handler(handler):
+    if handler.get("packages"):
+        if os.getuid() == 0:
+            apt_command = "apt"
+        else:
+            apt_command = "sudo apt"
+        eprint()
+        eprint("It can be installed with:")
+        eprint("    {} update".format(apt_command))
+        for i, package in enumerate(handler["packages"], 1):
+            eprint(
+                "    {} install {}{}".format(
+                    apt_command,
+                    package,
+                    ("  # or" if i < len(handler["packages"]) else ""),
+                )
+            )
+    if handler.get("similar_commands"):
+        eprint()
+        eprint("Other installed programs provide similar functionality:")
+        for similar_command in handler["similar_commands"]:
+            eprint("    {}".format(similar_command))
+        eprint()
+    if handler.get("note"):
+        eprint()
+        eprint(handler["note"])
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("command")
@@ -24,41 +52,13 @@ def main():
 
     eprint("{}: command not found".format(args.command))
 
-    handlers = []
     for fn in pathlib.Path("/etc/simple-cnf/handlers.d").glob("*.json"):
         with fn.open() as f:
-            handlers.extend(json.load(f))
-
-    for handler in handlers:
-        if args.command not in handler["commands"]:
-            continue
-        if handler.get("packages"):
-            if os.getuid() == 0:
-                apt_command = "apt"
-            else:
-                apt_command = "sudo apt"
-            eprint()
-            eprint("It can be installed with:")
-            eprint("    {} update".format(apt_command))
-            for i, package in enumerate(handler["packages"], 1):
-                eprint(
-                    "    {} install {}{}".format(
-                        apt_command,
-                        package,
-                        ("  # or" if i < len(handler["packages"]) else ""),
-                    )
-                )
-        if handler.get("similar_commands"):
-            eprint()
-            eprint("Other installed programs provide similar functionality:")
-            for similar_command in handler["similar_commands"]:
-                eprint("    {}".format(similar_command))
-            eprint()
-        if handler.get("note"):
-            eprint()
-            eprint(handler["note"])
-        break
-
+            for handler in json.load(f):
+                if args.command not in handler["commands"]:
+                    continue
+                do_handler(handler)
+                return 127
     return 127
 
 
