@@ -94,12 +94,12 @@ fi
 for c in ${host_commands}; do
     command -v "${c}" >/dev/null || missing_commands="${missing_commands} ${c}"
 done
-has_shfmt=true
-command -v "${c}" >/dev/null 2>/dev/null || has_shfmt=false
 if [ -n "${missing_commands}" ]; then
     echo "ERROR: Missing required commands:${missing_commands}" >&2
     exit 1
 fi
+has_shfmt=true
+command -v shfmt >/dev/null 2>/dev/null || has_shfmt=false
 if command -v dpkg >/dev/null 2>/dev/null; then
     if ! dpkg --compare-versions "$(debootstrap --version | cut -d' ' -f2)" ge 1.0.107; then
         echo "ERROR: debootstrap 1.0.107 or later is required"
