@@ -9,6 +9,5 @@
     {"debian": "pandoc"},
     {"debian": "python3"},
     {"debian": "python3-jinja2"},
-    {"debian": "shfmt"},
     {"debian": "shellcheck"}
 ]
