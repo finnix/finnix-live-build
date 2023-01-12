@@ -430,7 +430,7 @@ Acquire::PDiffs "false";
 Acquire::Languages { "none"; };
 EOM
 if [ "${SOURCE_ISO}" = "false" ]; then
-    sed -i "s/^deb-src/#deb-src/g" "${LB_DIR}/config/archives"/*.list.chroot "${LB_DIR}/config/archives"/*.list.binary
+    sed -i "s/^deb-src/#deb-src/g" "${LB_DIR}/config/archives"/*.list.*
 fi
 
 if [ "${LINT}" = "true" ]; then
