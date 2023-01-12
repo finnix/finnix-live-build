@@ -9,8 +9,12 @@
 
 set -e
 
-for keytype in $(perl -ne 'm,^\#?HostKey .*/ssh_host_(.*?)_key, && print "$1\n"' /etc/ssh/sshd_config); do
-    if [ ! -e "/etc/ssh/ssh_host_${keytype}_key" ]; then
-        ssh-keygen -q -f "/etc/ssh/ssh_host_${keytype}_key" -N "" -t "${keytype}"
-    fi
+for fn in /etc/ssh/sshd_config /etc/ssh/sshd_config.d/*.conf; do
+    [ -e "${fn}" ] || continue
+    keytypes="$(sed -E 's,^#?HostKey .*/ssh_host_(.*?)_key,\1,;t;d' "${fn}")"
+    for keytype in ${keytypes}; do
+        if [ ! -e "/etc/ssh/ssh_host_${keytype}_key" ]; then
+            ssh-keygen -q -f "/etc/ssh/ssh_host_${keytype}_key" -N "" -t "${keytype}"
+        fi
+    done
 done
