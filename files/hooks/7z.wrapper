@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# SPDX-FileComment: Wrapper for preferring p7zip-full for 7z
+# SPDX-FileCopyrightText: Copyright (C) 2023 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+if command -v 7z.distrib >/dev/null; then
+    exec 7z.distrib "$@"
+else
+    exec 7zr "$@"
+fi

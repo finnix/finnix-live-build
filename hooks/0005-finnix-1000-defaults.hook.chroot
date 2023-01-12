@@ -8,6 +8,10 @@
 set -e
 
 update-alternatives --set editor /bin/nano
+update-alternatives --set nc /bin/nc.openbsd
 update-alternatives --set pager /usr/bin/less
 update-alternatives --set vi /usr/bin/vim.tiny
 update-alternatives --set www-browser /usr/bin/elinks
+
+dpkg-divert --rename --add /usr/bin/7z
+install -D -m 0755 /hook-files/7z.wrapper /usr/bin/7z
