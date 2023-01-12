@@ -5,17 +5,44 @@
 # SPDX-FileCopyrightText: Copyright (C) 2022 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
+import argparse
 import json
 import os
+import pathlib
 import sys
 
-# TODO: make this more accurate (dnf tool installed in Debian?)
-IS_RH = os.path.exists("/etc/dnf/dnf.conf")
+
+def parse_args(argv=None):
+    if argv is None:
+        argv = sys.argv
+
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prog=os.path.basename(argv[0]),
+    )
+
+    parser.add_argument(
+        "--manager",
+        choices=["apt", "dnf"],
+        default=("dnf" if os.path.exists("/etc/dnf/dnf.conf") else "apt"),
+    )
+    parser.add_argument("--only", choices=["required", "optional"])
+    parser.add_argument("--file", type=pathlib.Path, default="build-dependencies.json")
+
+    return parser.parse_args(args=argv[1:])
+
 
 if __name__ == "__main__":
-    with open(sys.argv[1]) as f:
+    args = parse_args()
+    with args.file.open() as f:
         for d in json.load(f):
-            if IS_RH:
-                print(d.get("rh", d["debian"]))
-            else:
-                print(d["debian"])
+            d["rh"] = d.get("rh", d["debian"])
+            d["optional"] = d.get("optional", False)
+            if args.only:
+                if (args.only == "required" and d["optional"]) or (
+                    args.only == "optional" and (not d["optional"])
+                ):
+                    continue
+            k = "rh" if args.manager == "dnf" else "debian"
+            if d[k]:
+                print(d[k])

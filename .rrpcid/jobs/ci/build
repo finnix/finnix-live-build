@@ -6,12 +6,18 @@ set -x
 if [ -e /etc/dnf/dnf.conf ]; then
     # (SC2046) Word splitting is desired here
     # shellcheck disable=SC2046
-    sudo dnf -y install $(tools/get-dependencies build-dependencies.json)
+    sudo dnf -y install $(tools/get-dependencies --only required)
+    for pkg in $(tools/get-dependencies --only optional); do
+        sudo dnf -y install "${pkg}" || true
+    done
 else
     sudo apt update
     # (SC2046) Word splitting is desired here
     # shellcheck disable=SC2046
-    sudo apt -y install $(tools/get-dependencies build-dependencies.json)
+    sudo apt -y install $(tools/get-dependencies --only required)
+    for pkg in $(tools/get-dependencies --only optional); do
+        sudo apt -y install "${pkg}" || true
+    done
 fi
 
 # Build image
