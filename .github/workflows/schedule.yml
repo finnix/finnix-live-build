@@ -13,7 +13,10 @@ jobs:
     - name: Dependency packages
       run: |
         sudo apt update
-        sudo apt -y install $(tools/get-dependencies build-dependencies.json)
+        sudo apt -y install $(tools/get-dependencies --only required)
+        for pkg in $(tools/get-dependencies --only optional); do
+          sudo apt -y install "${pkg}" || true
+        done
     - name: Build image
       run: |
         sudo chown -R root:root .
