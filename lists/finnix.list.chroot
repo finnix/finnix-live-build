@@ -1,3 +1,4 @@
+2048
 2ping
 #if ARCHITECTURES amd64 i386
 acpi
@@ -51,13 +52,13 @@ dselect
 dump
 ed
 edid-decode
-#if ARCHITECTURES amd64 arm64 armhf i386
+#if ARCHITECTURES amd64 arm64 armhf i386 riscv64
 efibootmgr
 #endif
 #if ARCHITECTURES amd64 arm64 armhf i386 riscv64
 efivar
 #endif
-#if ARCHITECTURES amd64 arm64 armhf i386
+#if ARCHITECTURES amd64 arm64 armhf i386 riscv64
 efitools
 #endif
 eject
@@ -67,9 +68,7 @@ ethtool
 exfat-fuse
 exfatprogs
 f2fs-tools
-#if ARCHITECTURES amd64 i386 riscv64
 fdutils
-#endif
 fetchmail
 file
 finger
@@ -154,6 +153,7 @@ netcat-openbsd
 netcat-traditional
 net-tools
 nicstat
+ninvaders
 nmap
 ntfs-3g
 ntpsec-ntpdate
@@ -231,6 +231,7 @@ unzip
 usbutils
 user-setup
 uuid-runtime
+vitetris
 vlan
 w3m
 wakeonlan
