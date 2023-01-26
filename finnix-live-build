@@ -283,7 +283,7 @@ do_lb_config() {
         --apt-recommends false \
         --apt-source-archives "${SOURCE_ISO}" \
         --architectures "${ARCH}" \
-        --archive-areas "main contrib non-free" \
+        --archive-areas "main contrib non-free non-free-firmware" \
         --binary-images "${BINARY_IMAGES}" \
         --bootappend-live "quiet" \
         --bootloaders "${BOOTLOADERS}" \
@@ -408,14 +408,14 @@ if [ "${ARCH}" = "riscv64" ]; then
     mkdir -p "${LB_DIR}/config/archives"
     cp "${FILES_DIR}/keyrings/debian-ports-archive.gpg" "${LB_DIR}/config/archives/ports.key.chroot"
     cat >"${LB_DIR}/config/archives/ports.list.chroot" <<"EOM"
-deb http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free
-deb-src http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free
+deb http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free non-free-firmware
+deb-src http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free non-free-firmware
 EOM
 elif [ "${UNSTABLE_PIN}" = "true" ]; then
     mkdir -p "${LB_DIR}/config/archives"
     cat >"${LB_DIR}/config/archives/unstable.list.chroot" <<"EOM"
-deb http://deb.debian.org/debian/ unstable main contrib non-free
-deb-src http://deb.debian.org/debian/ unstable main contrib non-free
+deb http://deb.debian.org/debian/ unstable main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian/ unstable main contrib non-free non-free-firmware
 EOM
     cp "${LB_DIR}/config/archives/unstable.list.chroot" "${LB_DIR}/config/archives/unstable.list.binary"
     cat >"${LB_DIR}/config/archives/unstable.pref.chroot" <<"EOM"
