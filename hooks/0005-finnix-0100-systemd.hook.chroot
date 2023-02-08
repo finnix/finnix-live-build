@@ -29,6 +29,7 @@ cat <<"EOM" >"/etc/systemd/system.conf.d/${PRODUCT_ID}.conf"
 [Manager]
 DefaultEnvironment=PYTHONDONTWRITEBYTECODE=1
 ShowStatus=yes
+StatusUnitFormat=description
 EOM
 
 # live-tools pseudo-service should be installed
