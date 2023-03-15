@@ -5,9 +5,10 @@
 # SPDX-FileCopyrightText: Copyright (C) 2020-2022 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
+# Upstream depends: 8070-remove-temporary-files.hook.chroot
+
 set -e
 
 # Regenerate man cache after live-build hook
-# 0190-remove-temporary-files.hook.chroot
 # https://github.com/finnix/finnix/issues/9
 mandb -qpc

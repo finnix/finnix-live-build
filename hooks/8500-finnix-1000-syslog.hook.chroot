@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2020-2022 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
-# Must be run after 0140-remove-log-files.hook.chroot
+# Upstream depends: 8030-remove-log-files.hook.chroot
 
 set -e
 
