@@ -214,7 +214,7 @@ systemd-resolved
 systemd-timesyncd
 tcpdump
 testdisk
-tftp
+tftp-hpa
 thin-provisioning-tools
 time
 tmux
