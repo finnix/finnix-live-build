@@ -14,7 +14,10 @@
 # Note that htoprc is not externally-modified friendly, and
 # pretty much any manual modification will cause the config to
 # reset back to default. The current hook-files file is based
-# on an htop 3.0.5 config, and should be periodically checked.
+# on an htop 3.2.2 config; as of this version it does appear
+# to support a subset against implicit defaults, so the file
+# only contains changed fields. But this is not guaranteed,
+# and should be periodically checked.
 
 set -e
 
