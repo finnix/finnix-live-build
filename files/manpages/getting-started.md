@@ -36,6 +36,11 @@ If you need to work with ZFS disks, run the following beforehand:
 
     service zfs-fuse start
 
+The running ramdisk is limited to 50% of the system's RAM by default. If you
+need more working disk space, run:
+
+    mount -o remount,size=80% /run/live/overlay
+
 {% if PRODUCT_ID == 'finnix' %}# DOCUMENTATION
 
 More Finnix documentation is available at [the finnix-docs repository on
