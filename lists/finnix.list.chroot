@@ -116,8 +116,6 @@ keyutils
 kpartx
 less
 lftp
-libblockdev-crypto2
-libblockdev-mdraid2
 lldpd
 lm-sensors
 locales
