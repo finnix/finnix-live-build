@@ -356,6 +356,9 @@ for i in "${FILES_DIR}/manpages"/*.md; do
         render <"${i}"
     ) | pandoc -s -f markdown_github-smart+yaml_metadata_block -t man -o "${HOOK_FILES_DIR}/${basefn}.1"
 done
+# pandoc 2.13 supports gfm+yaml_metadata_block input, but generates identical output to markdown_github-smart+yaml_metadata_block.
+# It should be safe to migrate this eventually when markdown_github-smart is hard deprecated,
+# but until then we can keep it for maximum build compatibility.
 
 render_files "${LB_DIR}/config/bootloaders/syslinux_common" "${FILES_DIR}/syslinux"/*.cfg
 render <"${FILES_DIR}/syslinux/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/syslinux_common/splash.png"
