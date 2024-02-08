@@ -73,6 +73,7 @@ lint_shfmt() {
 }
 
 # PACKAGES USED:
+# Required: cpio: live-build
 # Required: debootstrap (debootstrap): live-build initial bootstrap
 # Required: debian-archive-keyring: live-build initial bootstrap
 # Required: python3 (${PYTHON}): Templating
@@ -86,7 +87,7 @@ lint_shfmt() {
 # Optional: git (git): Build IDs
 # Optional: file (file): Post-build file info
 
-host_commands="debootstrap ${PYTHON} rsvg-convert pandoc"
+host_commands="debootstrap ${PYTHON} rsvg-convert pandoc cpio"
 missing_commands=""
 if [ "${LINT}" = "true" ]; then
     host_commands="${host_commands} shellcheck"

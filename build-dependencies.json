@@ -1,4 +1,5 @@
 [
+    {"debian": "cpio"},
     {"debian": "debian-archive-keyring", "rh": "debian-keyring"},
     {"debian": "debootstrap"},
     {"debian": "file"},
