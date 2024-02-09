@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: zram chroot hook
+# SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+install -D -m 0644 /hook-files/zram-generator.conf "/etc/systemd/zram-generator.conf.d/${PRODUCT_ID}.conf"
