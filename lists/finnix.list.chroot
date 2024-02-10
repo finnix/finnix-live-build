@@ -40,9 +40,6 @@ cron
 cryptsetup-bin
 curl
 dbus
-#if ARCHITECTURES riscv64
-debian-ports-archive-keyring
-#endif
 debootstrap
 #if ARCHITECTURES amd64 arm64 armhf i386 riscv64
 dmidecode
@@ -95,9 +92,7 @@ iftop
 inetutils-telnet
 inxi
 iotop
-#if ARCHITECTURES amd64 arm64 armhf i386 ppc64el s390x
 iozone3
-#endif
 ipcalc
 iperf3
 ipmitool
@@ -214,7 +209,9 @@ systemd-zram-generator
 tcpdump
 testdisk
 tftp-hpa
+#if ARCHITECTURES amd64 arm64 armhf i386 ppc64el s390x
 thin-provisioning-tools
+#endif
 time
 tmux
 tofrodos

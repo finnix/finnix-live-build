@@ -307,13 +307,11 @@ do_lb_config() {
 }
 
 if [ "${ARCH}" = "riscv64" ]; then
+    # Avoid configuring unstable twice (apt gives a warning)
+    UNSTABLE_PIN=false
     do_lb_config \
         --distribution unstable \
-        --mirror-bootstrap http://ftp.ports.debian.org/debian-ports/ \
-        --mirror-binary http://ftp.ports.debian.org/debian-ports/ \
-        --keyring-packages "debian-archive-keyring debian-ports-archive-keyring" \
-        --security false \
-        --debootstrap-options --keyring="${FILES_DIR}/keyrings/debian-ports-archive.gpg"
+        --security false
 else
     do_lb_config
 fi
@@ -408,14 +406,7 @@ cat <<"EOM" >config/preseed/firmware-nonfree.cfg.chroot
 firmware-ipw2x00 firmware-ipw2x00/license/accepted boolean true
 EOM
 
-if [ "${ARCH}" = "riscv64" ]; then
-    mkdir -p "${LB_DIR}/config/archives"
-    cp "${FILES_DIR}/keyrings/debian-ports-archive.gpg" "${LB_DIR}/config/archives/ports.key.chroot"
-    cat >"${LB_DIR}/config/archives/ports.list.chroot" <<"EOM"
-deb http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free non-free-firmware
-deb-src http://ftp.ports.debian.org/debian-ports/ unreleased main contrib non-free non-free-firmware
-EOM
-elif [ "${UNSTABLE_PIN}" = "true" ]; then
+if [ "${UNSTABLE_PIN}" = "true" ]; then
     mkdir -p "${LB_DIR}/config/archives"
     cat >"${LB_DIR}/config/archives/unstable.list.chroot" <<"EOM"
 deb http://deb.debian.org/debian/ unstable main contrib non-free non-free-firmware
@@ -434,7 +425,10 @@ Acquire::PDiffs "false";
 Acquire::Languages { "none"; };
 EOM
 if [ "${SOURCE_ISO}" = "false" ]; then
-    sed -i "s/^deb-src/#deb-src/g" "${LB_DIR}/config/archives"/*.list.*
+    for fn in "${LB_DIR}/config/archives"/*.list.*; do
+        [ -e "${fn}" ] || continue
+        sed -i "s/^deb-src/#deb-src/g" "${fn}"
+    done
 fi
 
 if [ "${LINT}" = "true" ]; then
