@@ -107,6 +107,9 @@ keyutils
 kpartx
 less
 lftp
+{%- if ARCH == "amd64" %}
+libc6-i386
+{%- endif %}
 lldpd
 lm-sensors
 locales
