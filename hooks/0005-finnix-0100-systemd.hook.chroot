@@ -39,3 +39,10 @@ systemctl add-wants multi-user.target live-tools.service
 # which wants to install to graphical.target.  Override it to instead
 # use multi-user.target.
 install -D -m 0644 /hook-files/udisks2.service "/etc/systemd/system/udisks2.service.d/${PRODUCT_ID}.conf"
+
+# systemd-resolved apt postinst will break resolv.conf in a chroot,
+# but luckily it makes a backup of the original resolv.conf.
+if [ -e /etc/.resolv.conf.systemd-resolved.bak ]; then
+    rm -f /etc/resolv.conf
+    mv /etc/.resolv.conf.systemd-resolved.bak /etc/resolv.conf
+fi
