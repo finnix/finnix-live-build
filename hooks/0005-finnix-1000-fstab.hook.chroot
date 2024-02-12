@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: fstab chroot hook
+# SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+grep -q 'UNCONFIGURED FSTAB FOR BASE SYSTEM' /etc/fstab >/dev/null
+sed -i -e 's/UNCONFIGURED FSTAB FOR BASE SYSTEM/Live environment/' /etc/fstab
