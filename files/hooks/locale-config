@@ -17,3 +17,5 @@ dpkg-reconfigure keyboard-configuration
 setupcon -k
 udevadm trigger --subsystem-match=input --action=change
 dpkg-reconfigure locales
+echo
+echo "Be sure to exit active shells to use new locale settings."

@@ -22,3 +22,6 @@ ln -sf locale-config.1 /usr/share/man/man1/0.1
 echo 'Etc/UTC' >/etc/timezone
 rm -f /etc/localtime
 dpkg-reconfigure -f noninteractive -p critical tzdata
+
+install -D -m 0644 /hook-files/cmdline-locale-config.service /etc/systemd/system/cmdline-locale-config.service
+systemctl add-wants multi-user.target cmdline-locale-config.service

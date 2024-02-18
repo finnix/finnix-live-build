@@ -1,0 +1,16 @@
+[Unit]
+Description=Kernel command line locale configuration
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=systemd-remount-fs.service
+Before=systemd-sysusers.service systemd-vconsole-setup.service sysinit.target shutdown.target
+ConditionKernelCommandLine=|locale-config
+ConditionKernelCommandLine=|0
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=locale-config
+StandardOutput=tty
+StandardInput=tty
+StandardError=tty
