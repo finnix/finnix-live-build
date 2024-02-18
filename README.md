@@ -96,7 +96,7 @@ Please see the top of `finnix-live-build` for branding-related variables.
 
 finnix-live-build
 
-Copyright (C) 2020-2022 [Ryan Finnie](https://www.finnie.org/)
+Copyright (C) 2020-2024 [Ryan Finnie](https://www.finnie.org/)
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v.
 2.0. If a copy of the MPL was not distributed with this file, You can obtain one
