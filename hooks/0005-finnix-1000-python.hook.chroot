@@ -7,7 +7,7 @@
 
 set -e
 
-echo "export PYTHONDONTWRITEBYTECODE=1" >>/etc/environment
+echo "PYTHONDONTWRITEBYTECODE=1" >>/etc/environment
 
 for fn in /etc/python3.*/sitecustomize.py; do
     [ -e "${fn}" ] || continue
