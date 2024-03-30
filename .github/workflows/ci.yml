@@ -1,5 +1,8 @@
 name: ci
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -34,10 +37,13 @@ jobs:
         for pkg in $(tools/get-dependencies --only optional); do
           sudo apt -y install "${pkg}" || true
         done
-    - name: Build image
+    - name: Pre-build prepare
       run: |
         sudo chown -R root:root .
-        sudo env BUILD_TAGS="github ci" ./finnix-live-build
+        env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
+    - name: Build image
+      run: |
+        sudo env BUILD_TAGS="ci" ./finnix-live-build
     - name: Post-build cleanup
       run: |
         sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap

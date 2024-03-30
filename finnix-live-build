@@ -16,6 +16,7 @@ CACHE_FROZEN="${CACHE_FROZEN:-false}"
 SAVE_ISO="${SAVE_ISO:-false}"
 LINT="${LINT:-false}"
 BUILD_TAGS="${BUILD_TAGS:-}"
+BUILD_URL="${BUILD_URL:-}"
 PYTHON="${PYTHON:-python3}"
 UNSTABLE_PIN="${UNSTABLE_PIN:-true}"
 
@@ -47,9 +48,12 @@ render() {
         "DATETIME=${DATETIME}" \
         "DATE=${DATE}" \
         "YEAR=${YEAR}" \
+        "GIT_COMMIT=${GIT_COMMIT}" \
         "GIT_DESC=${GIT_DESC}" \
+        "LIVE_BUILD_GIT_COMMIT=${LIVE_BUILD_GIT_COMMIT}" \
         "LIVE_BUILD_GIT_DESC=${LIVE_BUILD_GIT_DESC}" \
         "BUILD_TAGS=${BUILD_TAGS}" \
+        "BUILD_URL=${BUILD_URL}" \
         "${BASE_DIR}/tools/jinja2-render"
 }
 
@@ -163,6 +167,7 @@ LB_CACHE_DIR="${LB_CACHE_DIR:-${CACHE_DIR}/lb}"
 LIVE_BUILD="${LIVE_BUILD:-${BASE_DIR}/live-build}"
 
 is_dirty=false
+GIT_COMMIT="$(git -C "${BASE_DIR}" log --format="%H" -n 1 2>/dev/null || true)"
 GIT_DESC="$(git -C "${BASE_DIR}" describe --always --dirty 2>/dev/null || true)"
 if [ -n "${GIT_DESC}" ]; then
     if ! git -C "${BASE_DIR}" diff --quiet 2>/dev/null; then
@@ -170,6 +175,7 @@ if [ -n "${GIT_DESC}" ]; then
         BUILD_TAGS="${BUILD_TAGS} dirty"
     fi
 fi
+LIVE_BUILD_GIT_COMMIT=""
 LIVE_BUILD_GIT_DESC=""
 
 if [ "${LIVE_BUILD}" = "-" ]; then
@@ -185,6 +191,7 @@ if [ -n "${LIVE_BUILD}" ]; then
         exit 1
     fi
     export PATH="${LIVE_BUILD}/frontend:${PATH}"
+    LIVE_BUILD_GIT_COMMIT="$(git -C "${LIVE_BUILD}" log --format="%H" -n 1 2>/dev/null || true)"
     LIVE_BUILD_GIT_DESC="$(git -C "${LIVE_BUILD}" describe --always --dirty 2>/dev/null || true)"
 fi
 
@@ -241,8 +248,15 @@ elif grep -q DataSourceAzure /run/cloud-init/status.json 2>/dev/null; then
     # hardware/etc way to determine if running on Azure.
     BUILD_TAGS="${BUILD_TAGS} azure"
 fi
+if [ -n "${GITHUB_RUN_ID}" ]; then
+    BUILD_TAGS="${BUILD_TAGS} gha"
+fi
 
 BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs)"
+
+if [ -z "${BUILD_URL}" ] && [ -n "${GITHUB_RUN_ID}" ]; then
+    BUILD_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+fi
 
 if [ "${LINT}" = "true" ]; then
     shellcheck "${BASE_DIR}/finnix-live-build"
@@ -478,22 +492,12 @@ if [ "${SAVE_ISO}" = "true" ]; then
 fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
+sha512sum "${LB_DIR}/${ISO_FILENAME}"
 if command -v file >/dev/null; then
     file "${LB_DIR}/${ISO_FILENAME}"
 fi
 echo "Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
 echo
-
-if [ -n "${INFINIDASH_COHORT}" ] && command -v aws >/dev/null; then
-    # Instantiate completed build on AWS Infinidash
-    aws infinidash instantiate \
-        --cohort "${INFINIDASH_COHORT}" \
-        --filename "${ISO_FILENAME}" \
-        --build-id "${DATETIME} ${GIT_DESC} ${BUILD_TAGS}" \
-        "${LB_DIR}/${ISO_FILENAME}"
-    echo "Build instantiated on AWS Infinidash ${INFINIDASH_COHORT} cohort"
-    echo
-fi
 
 current_tmp_fn="$(mktemp)"
 compare_tmp_fn="$(mktemp)"

@@ -1,7 +1,5 @@
-name: schedule
+name: release
 on:
-  schedule:
-  - cron: '34 5 * * 1'
   workflow_dispatch:
 jobs:
   build:
@@ -23,10 +21,17 @@ jobs:
         env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
     - name: Build image
       run: |
-        sudo env BUILD_TAGS="schedule" ./finnix-live-build
+        sudo env BUILD_TAGS="release" ./finnix-live-build
+    - name: Build source image
+      run: |
+        TEMP_DATA_DIR="$(sudo mktemp -d -p "$(pwd)/build")"
+        sudo env SOURCE_ISO=true DATA_DIR="${TEMP_DATA_DIR?}" ./finnix-live-build
+        sudo mv "${TEMP_DATA_DIR}/lb/finnix-source.iso" build/lb/
+        sudo rm -rf "${TEMP_DATA_DIR?}"
+        echo "Note: The build information listed above is not used; only the source ISO is saved."
+        echo "See the 'Build image' step for actual build information."
     - name: Post-build cleanup
       run: |
-        sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
         sudo chown -R "$(id -un):$(id -gn)" .
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
