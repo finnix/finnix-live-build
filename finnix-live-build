@@ -492,12 +492,29 @@ if [ "${SAVE_ISO}" = "true" ]; then
 fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
-sha512sum "${LB_DIR}/${ISO_FILENAME}"
+sha512="$(sha512sum "${LB_DIR}/${ISO_FILENAME}" | cut -f1 -d" ")"
+echo "SHA512: ${sha512}"
+fileoutput=""
 if command -v file >/dev/null; then
-    file "${LB_DIR}/${ISO_FILENAME}"
+    fileoutput="$(file -b "${LB_DIR}/${ISO_FILENAME}")"
+    echo "${fileoutput}"
 fi
 echo "Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
 echo
+
+if [ -n "${GITHUB_STEP_SUMMARY}" ]; then
+    {
+        echo "### Build information"
+        echo ""
+        echo "- Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
+        echo "- Size: $((build_size / 1048576)) MiB (${build_size})"
+        echo "- SHA512: \`${sha512}\`"
+        if [ -n "${fileoutput}" ]; then
+            echo "- File: ${fileoutput}"
+        fi
+        echo "- Packages: $(wc -l "${LB_DIR}/chroot.packages.live" | cut -f1 -d" ")"
+    } >>"${GITHUB_STEP_SUMMARY}"
+fi
 
 current_tmp_fn="$(mktemp)"
 compare_tmp_fn="$(mktemp)"
