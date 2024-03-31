@@ -15,23 +15,24 @@ jobs:
         for pkg in $(tools/get-dependencies --only optional); do
           sudo apt -y install "${pkg}" || true
         done
-    - name: Pre-build prepare
-      run: |
-        sudo chown -R root:root .
-        env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
     - name: Build image
       run: |
+        # Prepare
+        env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
+        sudo chown -R root:root .
+
+        # Main ISO image
         sudo env BUILD_TAGS="release" ./finnix-live-build
-    - name: Build source image
-      run: |
+
+        # Source ISO
         TEMP_DATA_DIR="$(sudo mktemp -d -p "$(pwd)/build")"
         sudo env SOURCE_ISO=true DATA_DIR="${TEMP_DATA_DIR?}" ./finnix-live-build
         sudo mv "${TEMP_DATA_DIR}/lb/finnix-source.iso" build/lb/
         sudo rm -rf "${TEMP_DATA_DIR?}"
         echo "Note: The build information listed above is not used; only the source ISO is saved."
         echo "See the 'Build image' step for actual build information."
-    - name: Post-build cleanup
-      run: |
+
+        # Cleanup
         sudo chown -R "$(id -un):$(id -gn)" .
     - name: Upload artifacts
       uses: actions/upload-artifact@v3

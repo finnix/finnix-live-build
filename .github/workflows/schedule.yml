@@ -17,15 +17,11 @@ jobs:
         for pkg in $(tools/get-dependencies --only optional); do
           sudo apt -y install "${pkg}" || true
         done
-    - name: Pre-build prepare
-      run: |
-        sudo chown -R root:root .
-        env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
     - name: Build image
       run: |
+        env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
+        sudo chown -R root:root .
         sudo env BUILD_TAGS="schedule" ./finnix-live-build
-    - name: Post-build cleanup
-      run: |
         sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
         sudo chown -R "$(id -un):$(id -gn)" .
     - name: Upload artifacts
