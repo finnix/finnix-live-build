@@ -23,6 +23,8 @@ jobs:
         done
     - name: Lint codebase
       run: env LINT=true ./finnix-live-build
+    - name: Lint licenses
+      run: pipx run reuse lint
   build:
     runs-on: ubuntu-latest
     steps:
