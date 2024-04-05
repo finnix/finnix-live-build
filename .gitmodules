@@ -1,3 +1,7 @@
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
 [submodule "live-build"]
 	path = live-build
 	url = https://github.com/finnix/live-build.git

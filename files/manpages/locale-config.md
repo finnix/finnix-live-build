@@ -28,3 +28,10 @@ None.
 # BUGS
 
 None known, many assumed.
+
+# LICENSE
+
+This document is provided under the following license:
+
+    SPDX-FileCopyrightText: Copyright (C) 2021-2024 Ryan Finnie
+    SPDX-License-Identifier: CC-BY-SA-4.0

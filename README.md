@@ -94,10 +94,11 @@ Please see the top of `finnix-live-build` for branding-related variables.
 
 ## License
 
-finnix-live-build
+The finnix-live-build package is mostly licensed under the terms of the Mozilla
+Public License v2.0, but please check individual files for license terms.
 
-Copyright (C) 2020-2024 [Ryan Finnie](https://www.finnie.org/)
+This document is provided under the following license:
 
-This Source Code Form is subject to the terms of the Mozilla Public License, v.
-2.0. If a copy of the MPL was not distributed with this file, You can obtain one
-at http://mozilla.org/MPL/2.0/.
+    SPDX-PackageSummary: finnix-live-build
+    SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
+    SPDX-License-Identifier: CC-BY-SA-4.0

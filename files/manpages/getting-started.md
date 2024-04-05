@@ -45,3 +45,10 @@ need more working disk space, run:
 
 More Finnix documentation is available at [the finnix-docs repository on
 GitHub](https://github.com/finnix/finnix-docs).{% endif %}
+
+# LICENSE
+
+This document is provided under the following license:
+
+    SPDX-FileCopyrightText: Copyright (C) 2021-2024 Ryan Finnie
+    SPDX-License-Identifier: CC-BY-SA-4.0

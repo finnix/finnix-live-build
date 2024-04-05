@@ -1,3 +1,6 @@
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
 2048
 2ping
 {%- if ARCH == "amd64" or ARCH == "i386" %}

@@ -1,2 +1,6 @@
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileCopyrightText: Copyright (C) 2021-2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
 [Unit]
 ConditionPathExists=/dev/input/mice
