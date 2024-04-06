@@ -10,7 +10,5 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0755 /hook-files/strace-init "/usr/lib/${PRODUCT_ID}/strace-init"
-
-# systemd-binfmt will freeze if running with strace attached to pid 1,
-# so allow for passing "strace-init" kernel command line to disable
+install -D -m 0755 /hook-files/initramfs-strace-init /etc/initramfs-tools/scripts/init-top/strace-init
 install -D -m 0644 /hook-files/systemd-binfmt.service "/etc/systemd/system/systemd-binfmt.service.d/${PRODUCT_ID}.conf"
