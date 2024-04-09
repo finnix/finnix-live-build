@@ -5,21 +5,25 @@
 # SPDX-FileCopyrightText: Copyright (C) 2012-2024 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
-# Called as:
-#     strace-init init=/usr/lib/{{ PRODUCT_ID }}/strace-init
+# Called as: init.strace=1
 # Once booted, wait about 10 seconds before running `killall strace`.
 # Use the `tools/strace-reorder` program in finnix-live-build to
 # convert to a sort format usable by mksquashfs:
-#     tools/strace-reorder <strace-init.trace >squashfs.sort
+#     tools/strace-reorder </var/log/strace-init.trace >squashfs.sort
 
 set -e
 
 PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 
-strace -v -qq -yy -s 65535 -p $$ -f -e open,openat,execve -z -o /var/log/strace-init.trace &
-sleep 3
-if [ -n "$1" ]; then
-    exec "$@"
-else
-    exec /sbin/init
-fi
+exec strace \
+    --daemonize=session \
+    --no-abbrev \
+    --quiet=all \
+    --decode-fds=all \
+    --string-limit=65535 \
+    --follow-forks \
+    --successful-only \
+    --interruptible=anywhere \
+    --output=/var/log/strace-init.trace \
+    --trace=open,openat,execve \
+    /sbin/init "$@"
