@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
     steps:
     - uses: actions/checkout@v4
       with:
@@ -38,6 +41,10 @@ jobs:
 
         # Cleanup
         sudo chown -R "$(id -un):$(id -gn)" .
+    - name: Attest
+      uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: '${{ github.workspace }}/build/lb/finnix-*.iso'
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:

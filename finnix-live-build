@@ -492,8 +492,8 @@ if [ "${SAVE_ISO}" = "true" ]; then
 fi
 
 ls -lsa "${LB_DIR}/${ISO_FILENAME}"
-sha512="$(sha512sum "${LB_DIR}/${ISO_FILENAME}" | cut -f1 -d" ")"
-echo "SHA512: ${sha512}"
+sha256="$(sha256sum "${LB_DIR}/${ISO_FILENAME}" | cut -f1 -d" ")"
+echo "SHA256: ${sha256}"
 fileoutput=""
 if command -v file >/dev/null; then
     fileoutput="$(file -b "${LB_DIR}/${ISO_FILENAME}")"
@@ -508,7 +508,7 @@ if [ -n "${GITHUB_STEP_SUMMARY}" ]; then
         echo ""
         echo "- Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
         echo "- Size: $((build_size / 1048576)) MiB (${build_size})"
-        echo "- SHA512: \`${sha512}\`"
+        echo "- SHA256: \`${sha256}\`"
         if [ -n "${fileoutput}" ]; then
             echo "- File: ${fileoutput}"
         fi
