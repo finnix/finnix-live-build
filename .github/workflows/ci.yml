@@ -58,7 +58,11 @@ jobs:
       uses: anchore/sbom-action@v0
       with:
         path: '${{ github.workspace }}/build/lb/'
-        artifact-name: '${{ github.workspace }}/sbom.spdx'
+        artifact-name: 'sbom.spdx'
+    - run: |
+        cat /tmp/sbom-action-*/sbom.spdx* || true
+        cat sbom.spdx* || true
+        false
     - name: Attest artifact
       uses: actions/attest-build-provenance@v1
       with:
