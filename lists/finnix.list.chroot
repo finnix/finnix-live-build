@@ -210,9 +210,6 @@ systemd-zram-generator
 tcpdump
 testdisk
 tftp-hpa
-{%- if ARCH != "riscv64" %}
-thin-provisioning-tools
-{%- endif %}
 time
 tmux
 tofrodos
