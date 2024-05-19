@@ -36,10 +36,12 @@ jobs:
       with:
         subject-path: '${{ github.workspace }}/build/lb/finnix-*.iso'
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}
         path: |
           build/lb/finnix-*
           build/lb/chroot.files
           build/lb/chroot.packages.*
+        # Faster uploads as ISOs are already heavily compressed
+        compression-level: 0
