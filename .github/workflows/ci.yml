@@ -29,6 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+      contents: read
       attestations: write
     steps:
     - uses: actions/checkout@v4
@@ -53,10 +54,20 @@ jobs:
         sudo env BUILD_TAGS="ci" ./finnix-live-build
         sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
         sudo chown -R "$(id -un):$(id -gn)" .
-    - name: Attest
+    - name: Build SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        path: '${{ github.workspace }}/build/lb/'
+        artifact-name: '${{ github.workspace }}/sbom.spdx'
+    - name: Attest artifact
       uses: actions/attest-build-provenance@v1
       with:
         subject-path: '${{ github.workspace }}/build/lb/finnix-*.iso'
+    - name: Generate SBOM attestation
+      uses: actions/attest-sbom@v1
+      with:
+        subject-path: '${{ github.workspace }}/build/lb/finnix-*.iso'
+        sbom-path: '${{ github.workspace }}/sbom.spdx'
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
