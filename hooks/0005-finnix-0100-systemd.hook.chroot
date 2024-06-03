@@ -32,9 +32,6 @@ ShowStatus=yes
 StatusUnitFormat=description
 EOM
 
-# live-tools pseudo-service should be installed
-systemctl add-wants multi-user.target live-tools.service
-
 # udisks2.service is (currently) the only service in an installed package
 # which wants to install to graphical.target.  Override it to instead
 # use multi-user.target.
