@@ -304,6 +304,7 @@ do_lb_config() {
         --bootloaders "${BOOTLOADERS}" \
         --cache-indices true \
         --chroot-squashfs-compression-type "${SQUASHFS_COMP}" \
+        --debootstrap-options "--no-merged-usr" \
         --distribution testing \
         --firmware-chroot false \
         --hdd-label "$(echo "${PRODUCT_ID}" | tr '[:lower:]' '[:upper:]')" \
