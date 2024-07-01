@@ -429,6 +429,19 @@ deb-src http://deb.debian.org/debian/ unstable main contrib non-free non-free-fi
 EOM
     cp "${LB_DIR}/config/archives/unstable.list.chroot" "${LB_DIR}/config/archives/unstable.list.binary"
     cat >"${LB_DIR}/config/archives/unstable.pref.chroot" <<"EOM"
+# Pull openssh-server 9.7p1-7 from unstable to mitigate CVE-2024-6387
+Package: openssh-server
+Pin: release a=unstable
+Pin-Priority: 900
+
+Package: openssh-sftp-server
+Pin: release a=unstable
+Pin-Priority: 900
+
+Package: openssh-client
+Pin: release a=unstable
+Pin-Priority: 900
+
 Package: *
 Pin: release a=unstable
 Pin-Priority: 400
