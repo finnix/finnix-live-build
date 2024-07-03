@@ -1,0 +1,42 @@
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileCopyrightText: Copyright (C) 2023-2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+# https://pre-commit.com/hooks.html
+# pre-commit install --install-hooks
+# pre-commit autoupdate
+# pre-commit run -a
+
+---
+fail_fast: false
+
+repos:
+  - repo: "https://github.com/pre-commit/pre-commit-hooks"
+    rev: "v4.6.0"
+    hooks:
+      - id: "check-added-large-files"
+      - id: "check-case-conflict"
+      - id: "check-executables-have-shebangs"
+      - id: "check-json"
+      - id: "check-merge-conflict"
+      - id: "check-yaml"
+      - id: "check-shebang-scripts-are-executable"
+        exclude: |
+          (?x)^(
+            hooks/.*\.hook\.(chroot|binary)
+          )$
+      - id: "detect-private-key"
+      - id: "end-of-file-fixer"
+      - id: "fix-byte-order-marker"
+      - id: "mixed-line-ending"
+      - id: "trailing-whitespace"
+
+  - repo: "https://github.com/adrienverge/yamllint"
+    rev: "v1.35.1"
+    hooks:
+      - id: "yamllint"
+
+  - repo: "https://github.com/fsfe/reuse-tool"
+    rev: "v3.0.2"
+    hooks:
+      - id: "reuse"

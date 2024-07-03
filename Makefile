@@ -10,4 +10,3 @@ test: lint
 
 lint:
 	env LINT=true ./finnix-live-build
-

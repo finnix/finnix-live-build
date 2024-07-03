@@ -1,47 +1,47 @@
 # SPDX-PackageSummary: finnix-live-build
 # SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
-
-name: schedule
-on:
+---
+name: "schedule"
+"on":
   schedule:
-  - cron: '34 5 * * 1'
+    - cron: "34 5 * * 1"
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     permissions:
-      id-token: write
-      attestations: write
+      id-token: "write"
+      attestations: "write"
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: true
-    - name: Dependency packages
-      run: |
-        sudo apt update
-        sudo apt -y install $(tools/get-dependencies --only required)
-        for pkg in $(tools/get-dependencies --only optional); do
-          sudo apt -y install "${pkg}" || true
-        done
-    - name: Build image
-      run: |
-        env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
-        sudo chown -R root:root .
-        sudo env BUILD_TAGS="schedule" ./finnix-live-build
-        sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
-        sudo chown -R "$(id -un):$(id -gn)" .
-    - name: Attest
-      uses: actions/attest-build-provenance@v1
-      with:
-        subject-path: '${{ github.workspace }}/build/lb/finnix-*.iso'
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}
-        path: |
-          build/lb/finnix-*
-          build/lb/chroot.files
-          build/lb/chroot.packages.*
-        # Faster uploads as ISOs are already heavily compressed
-        compression-level: 0
+      - uses: "actions/checkout@v4"
+        with:
+          submodules: true
+      - name: "Dependency packages"
+        run: |
+          sudo apt update
+          sudo apt -y install $(tools/get-dependencies --only required)
+          for pkg in $(tools/get-dependencies --only optional); do
+            sudo apt -y install "${pkg}" || true
+          done
+      - name: "Build image"
+        run: |
+          env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
+          sudo chown -R root:root .
+          sudo env BUILD_TAGS="schedule" ./finnix-live-build
+          sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
+          sudo chown -R "$(id -un):$(id -gn)" .
+      - name: "Attest"
+        uses: "actions/attest-build-provenance@v1"
+        with:
+          subject-path: "${{ github.workspace }}/build/lb/finnix-*.iso"
+      - name: "Upload artifacts"
+        uses: "actions/upload-artifact@v4"
+        with:
+          name: "finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}"
+          path: |
+            build/lb/finnix-*
+            build/lb/chroot.files
+            build/lb/chroot.packages.*
+          # Faster uploads as ISOs are already heavily compressed
+          compression-level: 0

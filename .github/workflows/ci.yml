@@ -1,71 +1,76 @@
 # SPDX-PackageSummary: finnix-live-build
 # SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
-
-name: ci
-on:
+---
+name: "ci"
+"on":
   push:
   pull_request:
   workflow_dispatch:
 jobs:
+  pre-commit:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+      - uses: "pre-commit/action@v3.0.1"
   lint:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: true
-    - name: Dependency packages
-      run: |
-        sudo apt update
-        sudo apt -y install $(tools/get-dependencies --only required)
-        for pkg in $(tools/get-dependencies --only optional); do
-          sudo apt -y install "${pkg}" || true
-        done
-    - name: Lint codebase
-      run: env LINT=true ./finnix-live-build
-    - name: Lint licenses
-      run: pipx run reuse lint
+      - uses: "actions/checkout@v4"
+        with:
+          submodules: true
+      - name: "Dependency packages"
+        run: |
+          sudo apt update
+          sudo apt -y install $(tools/get-dependencies --only required)
+          for pkg in $(tools/get-dependencies --only optional); do
+            sudo apt -y install "${pkg}" || true
+          done
+      - name: "Lint codebase"
+        env:
+          LINT: "true"
+        run: "./finnix-live-build"
   build:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     permissions:
-      id-token: write
-      attestations: write
+      id-token: "write"
+      attestations: "write"
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: true
-    - name: Cache live-build
-      uses: actions/cache@v4
-      with:
-        path: build/cache
-        key: finnix-live-build-1
-    - name: Dependency packages
-      run: |
-        sudo apt update
-        sudo apt -y install $(tools/get-dependencies --only required)
-        for pkg in $(tools/get-dependencies --only optional); do
-          sudo apt -y install "${pkg}" || true
-        done
-    - name: Build image
-      run: |
-        env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
-        sudo chown -R root:root .
-        sudo env BUILD_TAGS="ci" ./finnix-live-build
-        sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
-        sudo chown -R "$(id -un):$(id -gn)" .
-    - name: Attest
-      uses: actions/attest-build-provenance@v1
-      with:
-        subject-path: '${{ github.workspace }}/build/lb/finnix-*.iso'
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}
-        path: |
-          build/lb/finnix-*
-          build/lb/chroot.files
-          build/lb/chroot.packages.*
-        # Faster uploads as ISOs are already heavily compressed
-        compression-level: 0
-        # Reduced retention for CI builds
-        retention-days: 5
+      - uses: "actions/checkout@v4"
+        with:
+          submodules: true
+      - name: "Cache live-build"
+        uses: "actions/cache@v4"
+        with:
+          path: "build/cache"
+          key: "finnix-live-build-1"
+      - name: "Dependency packages"
+        run: |
+          sudo apt update
+          sudo apt -y install $(tools/get-dependencies --only required)
+          for pkg in $(tools/get-dependencies --only optional); do
+            sudo apt -y install "${pkg}" || true
+          done
+      - name: "Build image"
+        run: |
+          env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
+          sudo chown -R root:root .
+          sudo env BUILD_TAGS="ci" ./finnix-live-build
+          sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
+          sudo chown -R "$(id -un):$(id -gn)" .
+      - name: "Attest"
+        uses: "actions/attest-build-provenance@v1"
+        with:
+          subject-path: "${{ github.workspace }}/build/lb/finnix-*.iso"
+      - name: "Upload artifacts"
+        uses: "actions/upload-artifact@v4"
+        with:
+          name: "finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}"
+          path: |
+            build/lb/finnix-*
+            build/lb/chroot.files
+            build/lb/chroot.packages.*
+          # Faster uploads as ISOs are already heavily compressed
+          compression-level: 0
+          # Reduced retention for CI builds
+          retention-days: 5

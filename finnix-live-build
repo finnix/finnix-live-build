@@ -364,7 +364,6 @@ render_files "${HOOK_FILES_DIR}" "${FILES_DIR}/hooks"/*
 for i in "${FILES_DIR}/manpages"/*.md; do
     basefn="$(basename "$i" .md)"
     (
-        echo "---"
         render <"${FILES_DIR}/manpages/${basefn}.metadata.yaml"
         echo "---"
         render <"${i}"
