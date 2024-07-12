@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2021-2025 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 #
+{%- if DOCKER_BUILD == "false" %}
 {%- if ARCH == "amd64" %}
 amd64-microcode
 {%- endif %}
@@ -16,4 +17,5 @@ firmware-iwlwifi
 firmware-realtek
 {%- if ARCH == "amd64" %}
 intel-microcode
+{%- endif %}
 {%- endif %}

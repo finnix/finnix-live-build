@@ -20,6 +20,7 @@ BUILD_URL="${BUILD_URL:-}"
 PYTHON="${PYTHON:-python3}"
 UNSTABLE_PIN="${UNSTABLE_PIN:-true}"
 BUILD_UUID="${BUILD_UUID:-$(uuidgen -r)}"
+DOCKER_BUILD="${DOCKER_BUILD:-false}"
 
 lock() {
     _file=$1
@@ -56,6 +57,7 @@ render() {
         "BUILD_TAGS=${BUILD_TAGS}" \
         "BUILD_URL=${BUILD_URL}" \
         "BUILD_UUID=${BUILD_UUID}" \
+        "DOCKER_BUILD=${DOCKER_BUILD}" \
         "${BASE_DIR}/tools/jinja2-render"
 }
 
@@ -294,6 +296,7 @@ lock "${LOCK_DIR}/${LOCK_NAME}.lock"
 rm -rf "${RENDER_DIR}"
 render_files "${RENDER_DIR}/hooks" "${BASE_DIR}/hooks"/*.hook.*
 render_files "${RENDER_DIR}/hook-files" "${FILES_DIR}/hooks"/*
+render_files "${RENDER_DIR}/docker-files" "${FILES_DIR}/docker"/*
 render_files "${RENDER_DIR}/package-lists" "${BASE_DIR}/lists"/*.list.chroot
 for i in "${FILES_DIR}/manpages"/*.md; do
     basefn="$(basename "$i" .md)"
@@ -331,6 +334,24 @@ if [ "${SOURCE_ISO}" = "false" ]; then
         [ -e "${fn}" ] || continue
         sed -i "s/^deb-src/#deb-src/g" "${fn}"
     done
+fi
+
+if [ "${DOCKER_BUILD}" = "true" ]; then
+    DOCKER_DIR="${BUILD_DIR}/docker"
+    rm -rf "${DOCKER_DIR}"
+    mkdir -p "${DOCKER_DIR}"
+    cp -a "${RENDER_DIR}/docker-files/." "${DOCKER_DIR}/"
+    render_files "${DOCKER_DIR}/hooks" "${LIVE_BUILD}/share/hooks/normal"/*.hook.chroot
+    cp -a "${RENDER_DIR}/hooks"/*.hook.chroot "${DOCKER_DIR}/hooks/"
+    mkdir -p "${DOCKER_DIR}/hook-files"
+    cp -a "${RENDER_DIR}/hook-files/." "${DOCKER_DIR}/hook-files/"
+    chmod 0755 "${DOCKER_DIR}/container-build" "${DOCKER_DIR}/hooks"/*.hook.chroot
+    mkdir -p "${DOCKER_DIR}/package-lists"
+    cp -a "${RENDER_DIR}/package-lists"/*.chroot "${DOCKER_DIR}/package-lists/"
+    mkdir -p "${DOCKER_DIR}/archives"
+    cp -a "${RENDER_DIR}/archives"/*.chroot "${DOCKER_DIR}/archives/"
+
+    exit 0
 fi
 
 cd /
