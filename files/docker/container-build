@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileCopyrightText: Copyright (C) 2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+export DEBIAN_FRONTEND=noninteractive
+
+ln -s /build/hook-files /hook-files
+mkdir -p /live-build/config
+touch /live-build/config/binary
+
+for fn in /build/archives/*.list.chroot; do
+    [ -e "${fn}" ] || continue
+    base="$(basename "${fn}" .chroot)"
+    cp "${fn}" "/etc/apt/sources.list.d/${base}"
+done
+for fn in /build/archives/*.pref.chroot; do
+    [ -e "${fn}" ] || continue
+    base="$(basename "${fn}" .chroot)"
+    cp "${fn}" "/etc/apt/preferences.d/${base}"
+done
+for fn in /build/archives/*.conf.chroot; do
+    [ -e "${fn}" ] || continue
+    base="$(basename "${fn}" .chroot)"
+    cp "${fn}" "/etc/apt/apt.conf.d/${base}"
+done
+
+cat >"/etc/apt/apt.conf.d/99${PRODUCT_ID}" <<"EOM"
+APT::Install-Recommends "false";
+EOM
+
+
+apt-get update
+apt-get -y install $(grep -h '^[a-z0-9]' /build/package-lists/*.list.chroot)
+
+install -D -m 0755 /build/container-entrypoint /usr/bin/container-entrypoint
+
+export GZIP_RECOMPRESS=no
+for fn in /build/hooks/*.hook.chroot; do
+    [ -x "${fn}" ] || continue
+    echo "Running: ${fn}"
+    "${fn}"
+done
+
+rm -rf /var/lib/apt/lists
+mkdir -p /var/lib/apt/lists/partial
+rm -rf /hook-files /live-build
+
+# /tmp/_defaultcwd is the Dockerfile default; unless overridden, use the user's home directory
+# (but it should still be usable if it somehow doesn't get changed, so a+t)
+mkdir -p /tmp/_defaultcwd
+chmod 1777 /tmp/_defaultcwd
