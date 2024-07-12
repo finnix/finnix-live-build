@@ -512,21 +512,46 @@ if command -v file >/dev/null; then
     fileoutput="$(file -b "${LB_DIR}/${ISO_FILENAME}")"
     echo "${fileoutput}"
 fi
+if [ "${SOURCE_ISO}" = "true" ]; then
+    source_iso_filename="${PRODUCT_ID}-source.iso"
+    ls -lsa "${LB_DIR}/${source_iso_filename}"
+    source_sha256="$(sha256sum "${LB_DIR}/${source_iso_filename}" | cut -f1 -d" ")"
+    echo "Source SHA256: ${sha256}"
+    source_fileoutput=""
+    if command -v file >/dev/null; then
+        source_fileoutput="$(file -b "${LB_DIR}/${source_iso_filename}")"
+        echo "${source_fileoutput}"
+    fi
+    source_build_size="$(stat -c "%s" "${LB_DIR}/${source_iso_filename}")"
+fi
 echo "Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
 echo
 
 if [ -n "${GITHUB_STEP_SUMMARY}" ]; then
-    {
-        echo "### Build information"
-        echo ""
-        echo "- Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
-        echo "- Size: $((build_size / 1048576)) MiB (${build_size})"
-        echo "- SHA256: \`${sha256}\`"
-        if [ -n "${fileoutput}" ]; then
-            echo "- File: ${fileoutput}"
-        fi
-        echo "- Packages: $(wc -l "${LB_DIR}/chroot.packages.live" | cut -f1 -d" ")"
-    } >>"${GITHUB_STEP_SUMMARY}"
+    if [ "${SOURCE_ISO}" = "true" ]; then
+        {
+            echo "### Source build information"
+            echo ""
+            echo "- Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
+            echo "- Size: $((source_build_size / 1048576)) MiB (${source_build_size})"
+            echo "- SHA256: \`${source_sha256}\`"
+            if [ -n "${source_fileoutput}" ]; then
+                echo "- File: ${source_fileoutput}"
+            fi
+        } >>"${GITHUB_STEP_SUMMARY}"
+    else
+        {
+            echo "### Build information"
+            echo ""
+            echo "- Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
+            echo "- Size: $((build_size / 1048576)) MiB (${build_size})"
+            echo "- SHA256: \`${sha256}\`"
+            if [ -n "${fileoutput}" ]; then
+                echo "- File: ${fileoutput}"
+            fi
+            echo "- Packages: $(wc -l "${LB_DIR}/chroot.packages.live" | cut -f1 -d" ")"
+        } >>"${GITHUB_STEP_SUMMARY}"
+    fi
 fi
 
 current_tmp_fn="$(mktemp)"
