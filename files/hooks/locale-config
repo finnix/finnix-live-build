@@ -15,7 +15,8 @@ set -e
 
 dpkg-reconfigure keyboard-configuration
 setupcon -k
-udevadm trigger --subsystem-match=input --action=change
+# udevadm will not work in a container
+udevadm trigger --subsystem-match=input --action=change || true
 dpkg-reconfigure locales
 echo
 echo "Be sure to exit active shells to use new locale settings."
