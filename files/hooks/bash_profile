@@ -5,7 +5,7 @@
 __sh_exitcode() { ret=$?; if [[ $ret != 0 ]]; then echo "$ret "; fi }
 
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;31m\]$(__sh_exitcode)\[\033[1;37m\]\u\[\033[0;39m\]@\[\033[1;37m\]\l\[\033[0;39m\]:\[\033[1;37m\]\w\[\033[1;34m\]\$\[\033[0;39m\] '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[1;31m\]$(__sh_exitcode)\[\033[1;37m\]\u\[\033[0;39m\]@\[\033[1;37m\]\h(\l)\[\033[0;39m\]:\[\033[1;37m\]\w\[\033[1;34m\]\$\[\033[0;39m\] '
 else
     PS1='${debian_chroot:+($debian_chroot)}$(__sh_exitcode)\u@\h:\w\$ '
 fi
