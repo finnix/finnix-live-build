@@ -11,6 +11,7 @@
 import argparse
 import gzip
 import hashlib
+import os
 import logging
 import pathlib
 import shutil
@@ -218,4 +219,6 @@ class RecompressGz:
 
 
 if __name__ == "__main__":
+    if os.environ.get("GZIP_RECOMPRESS", "yes") != "yes":
+        sys.exit(0)
     sys.exit(RecompressGz().main())
