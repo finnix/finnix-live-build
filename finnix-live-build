@@ -315,10 +315,11 @@ Pin-Priority: 400
 EOM
     cp "${RENDER_DIR}/archives/unstable.pref.chroot" "${RENDER_DIR}/archives/unstable.pref.binary"
 fi
-cat >"${RENDER_DIR}/archives/80${PRODUCT_ID}.conf.binary" <<"EOM"
+cat >"${RENDER_DIR}/archives/80${PRODUCT_ID}.conf.chroot" <<"EOM"
 Acquire::PDiffs "false";
 Acquire::Languages { "none"; };
 EOM
+cp "${RENDER_DIR}/archives/80${PRODUCT_ID}.conf.chroot" "${RENDER_DIR}/archives/80${PRODUCT_ID}.conf.binary"
 if [ "${SOURCE_ISO}" = "false" ]; then
     for fn in "${RENDER_DIR}/archives"/*.list.*; do
         [ -e "${fn}" ] || continue
