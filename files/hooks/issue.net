@@ -1,0 +1,1 @@
+{{ PRODUCT }} {{ VERSION }}{% if VERSION == 'dev' %} ({{ DATETIME }}{% if GIT_DESC %} {{ GIT_DESC }}{% endif %}){% endif %}
