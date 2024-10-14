@@ -19,6 +19,7 @@ BUILD_TAGS="${BUILD_TAGS:-}"
 BUILD_URL="${BUILD_URL:-}"
 PYTHON="${PYTHON:-python3}"
 UNSTABLE_PIN="${UNSTABLE_PIN:-true}"
+BUILD_UUID="${BUILD_UUID:-$(uuidgen -r)}"
 
 lock() {
     _file=$1
@@ -54,6 +55,7 @@ render() {
         "LIVE_BUILD_GIT_DESC=${LIVE_BUILD_GIT_DESC}" \
         "BUILD_TAGS=${BUILD_TAGS}" \
         "BUILD_URL=${BUILD_URL}" \
+        "BUILD_UUID=${BUILD_UUID}" \
         "${BASE_DIR}/tools/jinja2-render"
 }
 

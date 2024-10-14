@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: live-uuid binary hook
+# SPDX-FileCopyrightText: Copyright (C) 2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+BUILD_UUID="{{ BUILD_UUID }}"
+
+echo "${BUILD_UUID}" >.disk/live-uuid

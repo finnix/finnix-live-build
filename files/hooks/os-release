@@ -4,6 +4,7 @@ VERSION="{{ VERSION }}{% if VERSION == 'dev' %} ({{ DATETIME }}{% if GIT_DESC %}
 VERSION_ID="{{ VERSION }}"
 VERSION_CODENAME="{{ CODENAME }}"
 BUILD_ID="{{ DATETIME }}{% if GIT_DESC %} {{ GIT_DESC }}{% endif %}{% if BUILD_TAGS %} {{ BUILD_TAGS }}{% endif %}"
+BUILD_UUID="{{ BUILD_UUID }}"
 BUILD_TAGS="{{ BUILD_TAGS }}"
 {%- if BUILD_URL %}
 BUILD_URL="{{ BUILD_URL }}"
