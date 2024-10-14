@@ -10,6 +10,13 @@ set -e
 dpkg-divert --add --rename --divert /usr/lib/os-release.debian /usr/lib/os-release
 install -D -m 0644 /hook-files/os-release /usr/lib/os-release
 
+if ! [ -L /etc/os-release ]; then
+    # Revert debian-live's os-release modification
+    dpkg-divert --local --remove --no-rename --divert /etc/os-release.debootstrap /etc/os-release
+    rm -f /etc/os-release
+    ln -s ../usr/lib/os-release /etc/os-release
+fi
+
 dpkg-divert --add --rename --divert /etc/issue.debian /etc/issue
 install -D -m 0644 /hook-files/issue /etc/issue
 # We need a trailing newline in /etc/issue (but not /etc/issue.net), but linters tend to hate
