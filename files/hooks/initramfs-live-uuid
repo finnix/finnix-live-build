@@ -7,9 +7,13 @@
 
 set -e
 
+# (SC1091) Do not attempt to read file when linting
+# shellcheck disable=SC1091
 . /usr/share/initramfs-tools/hook-functions
 
 if [ -e /etc/os-release ]; then
+    # (SC2043) Remove if multiple vars are pulled in
+    # shellcheck disable=SC2043
     for i in BUILD_UUID; do
         read -r "${i?}" || true
     done <<EOM
