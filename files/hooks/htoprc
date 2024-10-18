@@ -1,5 +1,5 @@
 config_reader_min_version=3
-column_meters_0=AllCPUs Memory Swap Zram DiskIO
+column_meters_0=LeftCPUs2 Memory Swap Zram DiskIO
 column_meter_modes_0=1 1 1 1 1
-column_meters_1=Tasks LoadAverage Uptime NetworkIO Battery
-column_meter_modes_1=2 2 2 2 2
+column_meters_1=RightCPUs2 Tasks LoadAverage Uptime NetworkIO Battery
+column_meter_modes_1=1 2 2 2 2 2
