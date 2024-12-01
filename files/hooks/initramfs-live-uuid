@@ -24,6 +24,8 @@ $(
         echo "$BUILD_UUID"
     )
 EOM
+    # 9990-misc-helpers.sh from live-boot on the initramfs will verify /conf/uuid.conf
+    # on the initramfs against /.disk/live-uuid on the live image
     if [ -n "${BUILD_UUID}" ]; then
         echo "${BUILD_UUID}" >"${DESTDIR}/conf/uuid.conf"
     fi

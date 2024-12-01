@@ -9,4 +9,6 @@ set -e
 
 BUILD_UUID="{{ BUILD_UUID }}"
 
+# 9990-misc-helpers.sh from live-boot on the initramfs will verify /conf/uuid.conf
+# on the initramfs against /.disk/live-uuid on the live image
 echo "${BUILD_UUID}" >.disk/live-uuid
