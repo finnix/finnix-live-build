@@ -220,6 +220,7 @@ unp
 unzip
 usbutils
 user-setup
+util-linux-extra
 uuid-runtime
 vim-tiny
 vitetris
