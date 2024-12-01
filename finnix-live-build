@@ -409,6 +409,12 @@ cp -a "${RENDER_DIR}/hook-files/." "${LB_DIR}/config/includes.chroot_after_packa
 mkdir -p "${LB_DIR}/config/package-lists"
 cp -a "${RENDER_DIR}/package-lists/." "${LB_DIR}/config/package-lists/"
 
+if [ "${is_dirty}" = "true" ]; then
+    mkdir -p "${LB_DIR}/config/includes.binary/.disk"
+    git -C "${BASE_DIR}" status >"${LB_DIR}/config/includes.binary/.disk/build-dirty.patch"
+    git -C "${BASE_DIR}" diff >>"${LB_DIR}/config/includes.binary/.disk/build-dirty.patch"
+fi
+
 render_files "${LB_DIR}/config/bootloaders/syslinux_common" "${FILES_DIR}/syslinux"/*.cfg
 render <"${FILES_DIR}/syslinux/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/syslinux_common/splash.png"
 render_files "${LB_DIR}/config/bootloaders/grub-pc" "${FILES_DIR}/grub"/*.cfg
@@ -493,8 +499,7 @@ cp -a "${LB_DIR}"/*.files "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages "${BUILD_INFO_DIR}/${build_id}/"
 cp -a "${LB_DIR}"/*.packages.* "${BUILD_INFO_DIR}/${build_id}/"
 if [ "${is_dirty}" = "true" ]; then
-    git -C "${BASE_DIR}" status >"${BUILD_INFO_DIR}/${build_id}/dirty.patch"
-    git -C "${BASE_DIR}" diff >>"${BUILD_INFO_DIR}/${build_id}/dirty.patch"
+    cp "${LB_DIR}/config/includes.binary/.disk/build-dirty.patch" "${BUILD_INFO_DIR}/${build_id}/dirty.patch"
 fi
 echo "${build_size}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
 if [ "${SAVE_ISO}" = "true" ]; then
