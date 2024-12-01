@@ -28,8 +28,10 @@
             "arecordmidi",
             "aseqdump",
             "aseqnet",
+            "aseqsend",
             "axfer",
             "iecset",
+            "nhlt-dmic-info",
             "speaker-test"
         ],
         "packages": [
@@ -164,6 +166,40 @@
     },
     {
         "commands": [
+            "bluemoon",
+            "bluetoothctl",
+            "bluetoothd",
+            "btattach",
+            "btmgmt",
+            "btmon",
+            "ciptool",
+            "gatttool",
+            "hciattach",
+            "hciconfig",
+            "hcitool",
+            "hex2hcd",
+            "l2ping",
+            "l2test",
+            "mpris-proxy",
+            "obexctl",
+            "rctest",
+            "rfcomm",
+            "sdptool"
+        ],
+        "packages": [
+            "bluez"
+        ]
+    },
+    {
+        "commands": [
+            "bwrap"
+        ],
+        "packages": [
+            "bubblewrap"
+        ]
+    },
+    {
+        "commands": [
             "cd-create-profile",
             "cd-fix-profile",
             "cd-iccdump",
@@ -176,11 +212,27 @@
     },
     {
         "commands": [
-            "cpp",
-            "x86_64-linux-gnu-cpp"
+            "cpp"
         ],
         "packages": [
             "cpp"
+        ]
+    },
+    {
+        "commands": [
+            "cpp-12",
+            "x86_64-linux-gnu-cpp-12"
+        ],
+        "packages": [
+            "cpp-12"
+        ]
+    },
+    {
+        "commands": [
+            "cupsfilter"
+        ],
+        "packages": [
+            "cups"
         ]
     },
     {
@@ -201,6 +253,31 @@
         ],
         "packages": [
             "cups-client"
+        ]
+    },
+    {
+        "commands": [
+            "cupsd"
+        ],
+        "packages": [
+            "cups-daemon"
+        ]
+    },
+    {
+        "commands": [
+            "driverless-fax",
+            "foomatic-rip"
+        ],
+        "packages": [
+            "cups-filters"
+        ]
+    },
+    {
+        "commands": [
+            "driverless"
+        ],
+        "packages": [
+            "cups-filters-core-drivers"
         ]
     },
     {
@@ -268,8 +345,10 @@
     {
         "commands": [
             "dpkg-architecture",
+            "dpkg-buildapi",
             "dpkg-buildflags",
             "dpkg-buildpackage",
+            "dpkg-buildtree",
             "dpkg-checkbuilddeps",
             "dpkg-distaddfile",
             "dpkg-genbuildinfo",
@@ -302,15 +381,6 @@
     },
     {
         "commands": [
-            "firefox",
-            "firefox-esr"
-        ],
-        "packages": [
-            "firefox-esr"
-        ]
-    },
-    {
-        "commands": [
             "fc-cache",
             "fc-cat",
             "fc-conflist",
@@ -327,8 +397,7 @@
     },
     {
         "commands": [
-            "g++",
-            "x86_64-linux-gnu-g++"
+            "g++"
         ],
         "packages": [
             "g++"
@@ -345,15 +414,7 @@
             "gcov",
             "gcov-dump",
             "gcov-tool",
-            "lto-dump",
-            "x86_64-linux-gnu-gcc",
-            "x86_64-linux-gnu-gcc-ar",
-            "x86_64-linux-gnu-gcc-nm",
-            "x86_64-linux-gnu-gcc-ranlib",
-            "x86_64-linux-gnu-gcov",
-            "x86_64-linux-gnu-gcov-dump",
-            "x86_64-linux-gnu-gcov-tool",
-            "x86_64-linux-gnu-lto-dump"
+            "lto-dump"
         ],
         "packages": [
             "gcc"
@@ -414,6 +475,42 @@
     },
     {
         "commands": [
+            "gnome-keyring",
+            "gnome-keyring-3",
+            "gnome-keyring-daemon"
+        ],
+        "packages": [
+            "gnome-keyring"
+        ]
+    },
+    {
+        "commands": [
+            "addgnupghome",
+            "applygnupgdefaults",
+            "gpg-zip",
+            "gpgcompose",
+            "gpgparsemail",
+            "gpgsplit",
+            "gpgtar",
+            "kbxutil",
+            "lspgpot",
+            "migrate-pubring-from-classic-gpg",
+            "watchgnupg"
+        ],
+        "packages": [
+            "gnupg-utils"
+        ]
+    },
+    {
+        "commands": [
+            "gpg-wks-server"
+        ],
+        "packages": [
+            "gpg-wks-server"
+        ]
+    },
+    {
+        "commands": [
             "grub-editenv",
             "grub-file",
             "grub-fstest",
@@ -466,6 +563,7 @@
     {
         "commands": [
             "gtk-update-icon-cache",
+            "gtk4-update-icon-cache",
             "update-icon-caches"
         ],
         "packages": [
@@ -488,6 +586,15 @@
         ],
         "packages": [
             "installation-report"
+        ]
+    },
+    {
+        "commands": [
+            "dhclient",
+            "dhclient-script"
+        ],
+        "packages": [
+            "isc-dhcp-client"
         ]
     },
     {
@@ -569,6 +676,15 @@
     },
     {
         "commands": [
+            "JxrDecApp",
+            "JxrEncApp"
+        ],
+        "packages": [
+            "libjxr-tools"
+        ]
+    },
+    {
+        "commands": [
             "dotlockfile"
         ],
         "packages": [
@@ -586,14 +702,6 @@
     },
     {
         "commands": [
-            "localc"
-        ],
-        "packages": [
-            "libreoffice-calc"
-        ]
-    },
-    {
-        "commands": [
             "libreoffice",
             "loffice",
             "lofromtemplate",
@@ -602,50 +710,6 @@
         ],
         "packages": [
             "libreoffice-common"
-        ]
-    },
-    {
-        "commands": [
-            "lodraw"
-        ],
-        "packages": [
-            "libreoffice-draw"
-        ]
-    },
-    {
-        "commands": [
-            "loimpress"
-        ],
-        "packages": [
-            "libreoffice-impress"
-        ]
-    },
-    {
-        "commands": [
-            "lomath"
-        ],
-        "packages": [
-            "libreoffice-math"
-        ]
-    },
-    {
-        "commands": [
-            "loweb",
-            "lowriter"
-        ],
-        "packages": [
-            "libreoffice-writer"
-        ]
-    },
-    {
-        "commands": [
-            "libwacom-list-devices",
-            "libwacom-list-local-devices",
-            "libwacom-show-stylus",
-            "libwacom-update-db"
-        ],
-        "packages": [
-            "libwacom-bin"
         ]
     },
     {
@@ -695,19 +759,19 @@
     },
     {
         "commands": [
+            "mesa-overlay-control.py"
+        ],
+        "packages": [
+            "mesa-vulkan-drivers"
+        ]
+    },
+    {
+        "commands": [
             "ModemManager",
             "mmcli"
         ],
         "packages": [
             "modemmanager"
-        ]
-    },
-    {
-        "commands": [
-            "nc.traditional"
-        ],
-        "packages": [
-            "netcat-traditional"
         ]
     },
     {
@@ -735,11 +799,11 @@
     },
     {
         "commands": [
-            "7z",
-            "7za"
+            "p11-kit",
+            "trust"
         ],
         "packages": [
-            "p7zip-full"
+            "p11-kit"
         ]
     },
     {
@@ -757,6 +821,24 @@
         ],
         "packages": [
             "perl-openssl-defaults"
+        ]
+    },
+    {
+        "commands": [
+            "pinentry-gnome3"
+        ],
+        "packages": [
+            "pinentry-gnome3"
+        ]
+    },
+    {
+        "commands": [
+            "plymouth",
+            "plymouth-set-default-theme",
+            "plymouthd"
+        ],
+        "packages": [
+            "plymouth"
         ]
     },
     {
@@ -790,38 +872,19 @@
     },
     {
         "commands": [
-            "pulseaudio",
-            "start-pulseaudio-x11"
-        ],
-        "packages": [
-            "pulseaudio"
-        ]
-    },
-    {
-        "commands": [
-            "pa-info",
-            "pacat",
-            "pacmd",
-            "pactl",
-            "padsp",
-            "pamon",
-            "paplay",
-            "parec",
-            "parecord",
-            "pasuspender",
-            "pax11publish"
-        ],
-        "packages": [
-            "pulseaudio-utils"
-        ]
-    },
-    {
-        "commands": [
             "chardet",
             "chardetect"
         ],
         "packages": [
             "python3-chardet"
+        ]
+    },
+    {
+        "commands": [
+            "normalizer"
+        ],
+        "packages": [
+            "python3-charset-normalizer"
         ]
     },
     {
@@ -871,19 +934,19 @@
     },
     {
         "commands": [
-            "update-mime-database"
+            "install-sgmlcatalog",
+            "update-catalog"
         ],
         "packages": [
-            "shared-mime-info"
+            "sgml-base"
         ]
     },
     {
         "commands": [
-            "add-apt-repository",
-            "apt-add-repository"
+            "update-mime-database"
         ],
         "packages": [
-            "software-properties-common"
+            "shared-mime-info"
         ]
     },
     {
@@ -900,15 +963,6 @@
         ],
         "packages": [
             "tasksel"
-        ]
-    },
-    {
-        "commands": [
-            "unattended-upgrade",
-            "unattended-upgrades"
-        ],
-        "packages": [
-            "unattended-upgrades"
         ]
     },
     {
@@ -942,14 +996,6 @@
         ],
         "packages": [
             "usbmuxd"
-        ]
-    },
-    {
-        "commands": [
-            "vimtutor"
-        ],
-        "packages": [
-            "vim-runtime"
         ]
     },
     {
@@ -1010,7 +1056,6 @@
             "appres",
             "editres",
             "listres",
-            "luit",
             "viewres",
             "xdpyinfo",
             "xdriinfo",
