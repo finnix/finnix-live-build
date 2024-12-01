@@ -131,15 +131,15 @@ class CNFBuildCommon:
 
     def print_json(self):
         out = []
-        for pkg in self.pkgassoc:
+        for pkg in sorted(self.pkgassoc):
             out.append(
                 {
-                    "commands": self.pkgassoc[pkg],
+                    "commands": sorted(self.pkgassoc[pkg]),
                     "packages": [pkg],
                 }
             )
 
-        json.dump(out, sys.stdout, sort_keys=True, indent=4)
+        print(json.dumps(out, sort_keys=True, indent=4))
 
 
 if __name__ == "__main__":
