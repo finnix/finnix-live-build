@@ -31,7 +31,16 @@ jobs:
           LINT: "true"
         run: "./finnix-live-build"
   build:
-    runs-on: "ubuntu-latest"
+    name: "Build image (${{ matrix.arch }})"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: "amd64"
+            runs-on: "ubuntu-latest"
+          - arch: "arm64"
+            runs-on: "ubuntu-24.04-arm"
+    runs-on: "${{ matrix.runs-on }}"
     permissions:
       id-token: "write"
       attestations: "write"
@@ -65,7 +74,7 @@ jobs:
       - name: "Upload artifacts"
         uses: "actions/upload-artifact@v4"
         with:
-          name: "finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ github.run_number }}.${{ github.run_id }}"
+          name: "finnix-live-build.${{ github.workflow }}.${{ github.job }}.${{ matrix.arch }}.${{ github.run_number }}.${{ github.run_id }}"
           path: |
             build/lb/finnix-*
             build/lb/chroot.files
