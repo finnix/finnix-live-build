@@ -275,13 +275,15 @@ if [ "${LINT}" = "true" ]; then
         grep -l -E '^#!/(usr/)?bin/(env )?python3' "${script_dir}"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
     done
 
+    mkdir -p "${LINT_DIR}/md/in" "${LINT_DIR}/md/out"
     for fn in "${BASE_DIR}"/*.md "${BASE_DIR}/.rrpcid"/*.md "${BASE_DIR}/files/manpages"/*.md; do
-        md_temp_in_fn="in_$(basename "${fn}")"
-        md_temp_out_fn="out_$(basename "${fn}")"
-        render <"${fn}" >"${LINT_DIR}/${md_temp_in_fn}"
-        pandoc -s -t gfm+smart --columns=80 -i "${LINT_DIR}/${md_temp_in_fn}" -o "${LINT_DIR}/${md_temp_out_fn}"
-        diff -u "${LINT_DIR}/${md_temp_in_fn}" "${LINT_DIR}/${md_temp_out_fn}"
+        md_full_path="${fn#"${BASE_DIR}/"}"
+        md_dir="$(dirname "${md_full_path}")"
+        mkdir -p "${LINT_DIR}/md/in/${md_dir}" "${LINT_DIR}/md/out/${md_dir}"
+        render <"${fn}" >"${LINT_DIR}/md/in/${md_full_path}"
+        pandoc -s -t gfm+smart --columns=80 -i "${LINT_DIR}/md/in/${md_full_path}" -o "${LINT_DIR}/md/out/${md_full_path}"
     done
+    diff -ru "${LINT_DIR}/md/in" "${LINT_DIR}/md/out"
 fi
 
 mkdir -p "${LOCK_DIR}"
