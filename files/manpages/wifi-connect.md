@@ -17,7 +17,7 @@ encountered, and is not meant to be exhaustive.
 
 # OPTIONS
 
-\-i *interface*
+-i *interface*
 
 > Interface name to configure. If not specified, the interface name will be
 > selected automatically, if the system has one wireless interface. If more than

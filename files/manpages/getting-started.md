@@ -1,18 +1,18 @@
 # WELCOME
 
-Welcome to {{ PRODUCT }}\!
+Welcome to {{ PRODUCT }}!
 
 # CUSTOM COMMANDS
 
 This is mostly a fully-featured Debian-based text utility distribution, but
 there are a few custom utilities to know about:
 
-  - 0
+- 0
 
 > Easy (and mostly keyboard-agnostic) way to change your locale and keyboard
 > information.
 
-  - wifi-connect "Access Point" "Passphrase"
+- wifi-connect "Access Point" "Passphrase"
 
 > Set up a standard WPA wireless connection.
 
