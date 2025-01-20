@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: Copyright (C) 2021-2024 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 #
-{%- if ARCH == "amd64" or ARCH == "i386" %}
+{%- if ARCH == "amd64" %}
 amd64-microcode
 {%- endif %}
 atmel-firmware
@@ -14,6 +14,6 @@ firmware-brcm80211
 firmware-ipw2x00
 firmware-iwlwifi
 firmware-realtek
-{%- if ARCH == "amd64" or ARCH == "i386" %}
+{%- if ARCH == "amd64" %}
 intel-microcode
 {%- endif %}

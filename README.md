@@ -56,7 +56,6 @@ Built images are tested often. Build failures are a blocker and fixed ASAP.
 ### Tier 2
 
 - arm64
-- i386
 
 While ISOs are not officially released, these are still considered important
 architectures. Built images are tested often. Build failures are a blocker and
