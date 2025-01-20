@@ -87,6 +87,7 @@ lint_shfmt() {
 # Required: librsvg2-bin (rsvg-convert): splash.png
 # Required: fonts-liberation2: splash.png
 # Required: pandoc: Manpage builds
+# Required: uuid-runtime (uuidgen): UUID generation
 # Optional: shellcheck (shellcheck): Lint, required for LINT=true
 # Optional: flake8 (${PYTHON} -mflake8): Lint, required for LINT=true
 # Optional: shfmt (shfmt): Lint, optional for LINT=true

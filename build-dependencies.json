@@ -11,5 +11,6 @@
     {"debian": "python3"},
     {"debian": "python3-jinja2"},
     {"debian": "shfmt", "optional": true},
-    {"debian": "shellcheck"}
+    {"debian": "shellcheck"},
+    {"debian": "uuid-runtime"}
 ]
