@@ -63,7 +63,6 @@ fixed soon.
 
 ### Tier 3
 
-- armhf
 - ppc64el
 - riscv64
 - s390x

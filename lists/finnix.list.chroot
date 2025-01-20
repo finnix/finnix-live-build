@@ -239,7 +239,7 @@ xxd
 xxhash
 xz-utils
 zerofree
-{%- if ARCH == "amd64" or ARCH == "armhf" or ARCH == "ppc64el" %}
+{%- if ARCH == "amd64" or ARCH == "ppc64el" %}
 {#- Weird combination; correct as of 2024-02-09 #}
 zfs-fuse
 {%- endif %}
