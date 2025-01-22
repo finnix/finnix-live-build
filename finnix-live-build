@@ -257,17 +257,18 @@ if [ -z "${BUILD_URL}" ] && [ -n "${GITHUB_RUN_ID}" ]; then
 fi
 
 if [ "${LINT}" = "true" ]; then
-    shellcheck "${BASE_DIR}/finnix-live-build"
-    [ "${has_shfmt}" = "true" ] && lint_shfmt "${BASE_DIR}/finnix-live-build"
-    for script_dir in "${BASE_DIR}/tools" "${BASE_DIR}/.rrpcid/jobs"/*; do
+    failed_lint=false
+    shellcheck "${BASE_DIR}/finnix-live-build" || failed_lint=true
+    if [ "${has_shfmt}" = "true" ]; then lint_shfmt "${BASE_DIR}/finnix-live-build" || failed_lint=true; fi
+    for script_dir in "${BASE_DIR}/tools" "${BASE_DIR}/.rrpcid/jobs"/* "${BASE_DIR}/hooks"; do
         # Interpet output as words
         # shellcheck disable=SC2013
         for fn in $(grep -l -E '^#!/(usr/)?bin/(env )?(ba)?sh' "${script_dir}"/*); do
             [ -e "${fn}" ] || continue
-            shellcheck "${fn}"
-            [ "${has_shfmt}" = "true" ] && lint_shfmt "${fn}"
+            shellcheck "${fn}" || failed_lint=true
+            if [ "${has_shfmt}" = "true" ]; then lint_shfmt "${fn}" || failed_lint=true; fi
         done
-        grep -l -E '^#!/(usr/)?bin/(env )?python3' "${script_dir}"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120
+        grep -l -E '^#!/(usr/)?bin/(env )?python3' "${script_dir}"/* | xargs -r "${PYTHON}" -mflake8 --config=/dev/null --max-line-length=120 || failed_lint=true
     done
 
     mkdir -p "${LINT_DIR}/md/in" "${LINT_DIR}/md/out"
@@ -278,7 +279,13 @@ if [ "${LINT}" = "true" ]; then
         render <"${fn}" >"${LINT_DIR}/md/in/${md_full_path}"
         pandoc -s -t gfm+smart --columns=80 -i "${LINT_DIR}/md/in/${md_full_path}" -o "${LINT_DIR}/md/out/${md_full_path}"
     done
-    diff -ru "${LINT_DIR}/md/in" "${LINT_DIR}/md/out"
+    diff -ru "${LINT_DIR}/md/in" "${LINT_DIR}/md/out" || failed_lint=true
+
+    if [ "${failed_lint}" = "true" ]; then
+        echo
+        echo "Failed lint checks"
+        exit 1
+    fi
 fi
 
 mkdir -p "${LOCK_DIR}"
