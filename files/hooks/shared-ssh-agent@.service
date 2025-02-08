@@ -3,15 +3,13 @@
 # SPDX-License-Identifier: MPL-2.0
 
 [Unit]
-Description=Shared SSH agent init
+Description=Shared SSH agent init (%i)
 Before=getty.target
+After=nss-user-lookup.target
 
 [Service]
-Type=forking
-ExecStart=/usr/lib/{{ PRODUCT_ID }}/ssh-agent
-PIDFile=/root/.ssh/ssh-agent.pid
-Environment="USER=root"
-Environment="HOME=/root"
+ExecStart=/usr/lib/{{ PRODUCT_ID }}/shared-ssh-agent
+User=%i
 
 [Install]
 WantedBy=multi-user.target

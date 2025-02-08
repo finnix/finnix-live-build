@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# SPDX-PackageSummary: finnix-live-build
+# SPDX-FileComment: shared-ssh-agent
+# SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
+# SPDX-License-Identifier: MPL-2.0
+
+# systemd service
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+[ -n "${USER}" ] || exit 1
+HOME="$(getent passwd "${USER}" | cut -d: -f6)"
+export HOME
+
+# shellcheck source=/dev/null
+. "/usr/lib/${PRODUCT_ID}/ssh-agent"
+exec waitpid "${SSH_AGENT_PID?}"

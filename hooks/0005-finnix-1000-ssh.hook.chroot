@@ -20,9 +20,10 @@ PermitRootLogin yes
 EOM
 
 # Shared per-user SSH agent
+install -D -m 0755 /hook-files/shared-ssh-agent "/usr/lib/${PRODUCT_ID}/shared-ssh-agent"
 install -D -m 0755 /hook-files/ssh-agent "/usr/lib/${PRODUCT_ID}/ssh-agent"
-install -D -m 0644 /hook-files/shared-ssh-agent.service /etc/systemd/system/shared-ssh-agent.service
-systemctl add-wants multi-user.target shared-ssh-agent.service
+install -D -m 0644 /hook-files/shared-ssh-agent@.service /etc/systemd/system/shared-ssh-agent@.service
+systemctl add-wants multi-user.target shared-ssh-agent@root.service
 
 install -D -m 0644 /hook-files/cmdline-sshd.service /etc/systemd/system/cmdline-sshd.service
 systemctl add-wants multi-user.target cmdline-sshd.service
