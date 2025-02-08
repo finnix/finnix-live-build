@@ -8,7 +8,11 @@
 # Meant to be run from .profile or equivalent, to provide a per-user
 # shared SSH agent environment
 
-[ -n "${HOME}" ] || exit 1
+[ -n "${HOME}" ] || return 1
+
+if [ -n "${SSH_AUTH_SOCK}" ]; then
+    return
+fi
 
 if [ ! -e "${HOME}/.ssh/ssh-agent.sh" ]; then
     mkdir -p "${HOME}/.ssh"
