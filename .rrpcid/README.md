@@ -10,5 +10,5 @@ specification, a CI-agnostic in-repository specification for basic CI workflows.
 This document is provided under the following license:
 
     SPDX-PackageSummary: finnix-live-build
-    SPDX-FileCopyrightText: Copyright (C) 2021-2024 Ryan Finnie
+    SPDX-FileCopyrightText: Copyright (C) 2021-2025 Ryan Finnie
     SPDX-License-Identifier: CC-BY-SA-4.0

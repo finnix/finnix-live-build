@@ -98,5 +98,5 @@ Public License v2.0, but please check individual files for license terms.
 This document is provided under the following license:
 
     SPDX-PackageSummary: finnix-live-build
-    SPDX-FileCopyrightText: Copyright (C) 2020-2024 Ryan Finnie
+    SPDX-FileCopyrightText: Copyright (C) 2020-2025 Ryan Finnie
     SPDX-License-Identifier: CC-BY-SA-4.0

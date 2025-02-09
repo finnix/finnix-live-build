@@ -2,7 +2,7 @@
 
 # SPDX-PackageSummary: finnix-live-build
 # SPDX-FileComment: cnf-build-common
-# SPDX-FileCopyrightText: Copyright (C) 2023-2024 Ryan Finnie
+# SPDX-FileCopyrightText: Copyright (C) 2023-2025 Ryan Finnie
 # SPDX-License-Identifier: MPL-2.0
 
 # Builds a simple-cnf json config of all commands in the top 1000 (by
