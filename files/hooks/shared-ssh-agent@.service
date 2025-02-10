@@ -9,6 +9,8 @@ After=nss-user-lookup.target
 
 [Service]
 ExecStart=/usr/lib/{{ PRODUCT_ID }}/shared-ssh-agent
+Type=notify
+NotifyAccess=all
 User=%i
 
 [Install]

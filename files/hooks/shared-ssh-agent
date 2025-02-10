@@ -15,4 +15,4 @@ export HOME
 
 # shellcheck source=/dev/null
 . "/usr/lib/${PRODUCT_ID}/ssh-agent"
-exec waitpid "${SSH_AGENT_PID?}"
+systemd-notify --ready --pid="${SSH_AGENT_PID?}"
