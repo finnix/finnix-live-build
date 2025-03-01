@@ -18,8 +18,8 @@ jobs:
       - name: "Dependency packages"
         run: |
           sudo apt update
-          sudo apt -y install $(tools/get-dependencies --only required)
-          for pkg in $(tools/get-dependencies --only optional); do
+          tools/get-dependencies --only required -0 | xargs -0 sudo apt -y install
+          tools/get-dependencies --only optional | while IFS='' read -r pkg; do
             sudo apt -y install "${pkg}" || true
           done
       - name: "Build image"

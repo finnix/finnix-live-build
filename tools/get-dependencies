@@ -28,12 +28,14 @@ def parse_args(argv=None):
     )
     parser.add_argument("--only", choices=["required", "optional"])
     parser.add_argument("--file", type=pathlib.Path, default="build-dependencies.json")
+    parser.add_argument("--null", "-0", action="store_true")
 
     return parser.parse_args(args=argv[1:])
 
 
 if __name__ == "__main__":
     args = parse_args()
+    out = []
     with args.file.open() as f:
         for d in json.load(f):
             d["rh"] = d.get("rh", d["debian"])
@@ -45,4 +47,9 @@ if __name__ == "__main__":
                     continue
             k = "rh" if args.manager == "dnf" else "debian"
             if d[k]:
-                print(d[k])
+                out.append(d[k])
+    if args.null:
+        print("\x00".join(out), end="")
+    else:
+        for v in out:
+            print(v)

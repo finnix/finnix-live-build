@@ -12,7 +12,7 @@ fail_fast: false
 
 repos:
   - repo: "https://github.com/pre-commit/pre-commit-hooks"
-    rev: "v4.6.0"
+    rev: "v5.0.0"
     hooks:
       - id: "check-added-large-files"
       - id: "check-case-conflict"
@@ -37,6 +37,11 @@ repos:
       - id: "yamllint"
 
   - repo: "https://github.com/fsfe/reuse-tool"
-    rev: "v3.0.2"
+    rev: "v5.0.2"
     hooks:
       - id: "reuse"
+
+  - repo: "https://github.com/rhysd/actionlint"
+    rev: "v1.7.7"
+    hooks:
+      - id: "actionlint"
