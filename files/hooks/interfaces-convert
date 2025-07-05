@@ -39,9 +39,7 @@ class InterfacesConvert:
         if self.udev_context is None:
             return
         try:
-            device = pyudev.Devices.from_path(
-                self.udev_context, "/sys/class/net/{}".format(interface_name)
-            )
+            device = pyudev.Devices.from_path(self.udev_context, "/sys/class/net/{}".format(interface_name))
         except pyudev.DeviceNotFoundAtPathError:
             return
         if "ID_PATH" not in device.properties or "ID_PATH_TAG" not in device.properties:
@@ -80,9 +78,7 @@ class InterfacesConvert:
             interface_fn_id = device_properties["ID_PATH_TAG"]
 
         filename = "/etc/systemd/network/10-{}.network".format(interface_fn_id)
-        if (section["iface"][1] != "inet") or (
-            section["iface"][2] not in ("dhcp", "static")
-        ):
+        if (section["iface"][1] != "inet") or (section["iface"][2] not in ("dhcp", "static")):
             output = self.systemd_config()
             if id_path is None:
                 output["Match"] = {"Name": interface_name}
@@ -126,9 +122,7 @@ class InterfacesConvert:
                 if line == "" and section:
                     ret = self.process_section(section)
                     if ret:
-                        rewritten_interfaces += "# Interface {} migrated to {}\n".format(
-                            ret[0], ret[1]
-                        )
+                        rewritten_interfaces += "# Interface {} migrated to {}\n".format(ret[0], ret[1])
                         rewritten_interfaces += section_text_commented + "\n"
                     else:
                         rewritten_interfaces += section_text + "\n"
@@ -145,9 +139,7 @@ class InterfacesConvert:
         if section:
             ret = self.process_section(section)
             if ret:
-                rewritten_interfaces += "# Interface {} migrated to {}\n".format(
-                    ret[0], ret[1]
-                )
+                rewritten_interfaces += "# Interface {} migrated to {}\n".format(ret[0], ret[1])
                 rewritten_interfaces += section_text_commented + "\n"
             else:
                 rewritten_interfaces += section_text + "\n"

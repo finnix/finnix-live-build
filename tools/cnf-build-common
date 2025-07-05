@@ -47,9 +47,7 @@ class CNFBuildCommon:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
             prog=os.path.basename(argv[0]),
         )
-        parser.add_argument(
-            "--debug", action="store_true", help="Print debugging information"
-        )
+        parser.add_argument("--debug", action="store_true", help="Print debugging information")
         parser.add_argument(
             "--contents-file",
             action="append",
@@ -114,11 +112,7 @@ class CNFBuildCommon:
                 if pkg not in self.top_pkgs:
                     continue
                 if not self.args.skip_package_check:
-                    if (
-                        pathlib.Path(self.args.path_base)
-                        .joinpath("var/lib/dpkg/info/{}.list".format(pkg))
-                        .exists()
-                    ):
+                    if pathlib.Path(self.args.path_base).joinpath("var/lib/dpkg/info/{}.list".format(pkg)).exists():
                         continue
                 barefn = self.re_bin_path.findall(fn)
                 if not barefn:

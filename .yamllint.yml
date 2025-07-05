@@ -30,6 +30,9 @@ rules:
     require-starting-space: true
   comments-indentation:
     level: "error"
+  document-start:
+    present: true
+    level: "error"
   empty-lines:
     max: 2
     level: "error"
@@ -45,7 +48,7 @@ rules:
   new-lines:
     type: "unix"
   quoted-strings:
-    quote-type: "double"
+    quote-type: "any"
     required: true
   truthy:
     allowed-values:

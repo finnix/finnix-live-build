@@ -41,9 +41,7 @@ if __name__ == "__main__":
             d["rh"] = d.get("rh", d["debian"])
             d["optional"] = d.get("optional", False)
             if args.only:
-                if (args.only == "required" and d["optional"]) or (
-                    args.only == "optional" and (not d["optional"])
-                ):
+                if (args.only == "required" and d["optional"]) or (args.only == "optional" and (not d["optional"])):
                     continue
             k = "rh" if args.manager == "dnf" else "debian"
             if d[k]:

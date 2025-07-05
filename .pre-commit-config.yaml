@@ -45,3 +45,14 @@ repos:
     rev: "v1.7.7"
     hooks:
       - id: "actionlint"
+
+  - repo: "https://github.com/psf/black"
+    rev: "25.1.0"
+    hooks:
+      - id: "black"
+
+  - repo: "https://github.com/pycqa/flake8"
+    rev: "7.2.0"
+    hooks:
+      - id: "flake8"
+        additional_dependencies: ["Flake8-pyproject"]

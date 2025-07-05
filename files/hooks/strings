@@ -11,9 +11,7 @@ import sys
 
 
 def readiter(fh, size=1024):
-    return itertools.takewhile(
-        lambda t: t, map(lambda chunk: fh.read(size), itertools.count(0))
-    )
+    return itertools.takewhile(lambda t: t, map(lambda chunk: fh.read(size), itertools.count(0)))
 
 
 class Strings:
@@ -21,9 +19,7 @@ class Strings:
         if argv is None:
             argv = sys.argv
 
-        parser = argparse.ArgumentParser(
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter
-        )
+        parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
         parser.add_argument(
             "files",

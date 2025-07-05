@@ -77,29 +77,19 @@ def numfmt(
 
 class StraceReorder:
     regexps = (
-        re.compile(
-            r"^[0-9]+ +(?P<syscall>(open|openat))\(.*?\) = [0-9]+<(?P<filename>.*?)(<char [0-9]+:[0-9]+>)?>$"
-        ),
-        re.compile(
-            r"^[0-9]+ +(?P<syscall>(execve))\(\"(?P<filename>.*?)\".*?\) = [0-9]+$"
-        ),
+        re.compile(r"^[0-9]+ +(?P<syscall>(open|openat))\(.*?\) = [0-9]+<(?P<filename>.*?)(<char [0-9]+:[0-9]+>)?>$"),
+        re.compile(r"^[0-9]+ +(?P<syscall>(execve))\(\"(?P<filename>.*?)\".*?\) = [0-9]+$"),
     )
 
     def parse_args(self, argv=None):
         if argv is None:
             argv = sys.argv
 
-        parser = argparse.ArgumentParser(
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter
-        )
+        parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-        parser.add_argument(
-            "trace_file", nargs="?", type=argparse.FileType("r"), default=sys.stdin
-        )
+        parser.add_argument("trace_file", nargs="?", type=argparse.FileType("r"), default=sys.stdin)
 
-        parser.add_argument(
-            "--debug", action="store_true", help="Print debugging information"
-        )
+        parser.add_argument("--debug", action="store_true", help="Print debugging information")
         parser.add_argument(
             "--layout",
             default="end",

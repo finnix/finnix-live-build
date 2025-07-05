@@ -42,9 +42,7 @@ def main():
 
     userpasses = []
     userpasses_encrypted = []
-    for userpass in [
-        v for k, v in cmdline if k in ("passwd", "sshd_password") and v is not None
-    ]:
+    for userpass in [v for k, v in cmdline if k in ("passwd", "sshd_password") and v is not None]:
         if ":" not in userpass:
             userpass = "root:" + userpass
         username, password = userpass.split(":", 1)
