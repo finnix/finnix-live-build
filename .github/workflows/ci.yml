@@ -118,4 +118,6 @@ jobs:
           IMAGE_ID=$(echo "$IMAGE_ID" | tr '[:upper:]' '[:lower:]')
           env BUILD_TAGS="ci" DOCKER_BUILD="true" ./finnix-live-build
           docker image build -t "${IMAGE_ID}" build/docker
+          docker image history "${IMAGE_ID}"
+          docker image inspect "${IMAGE_ID}"
           docker image push "${IMAGE_ID}"
