@@ -11,7 +11,12 @@ set -e
 # at runtime.  (Just "systemd-coredump" as of this writing.)
 systemd-sysusers
 
+mkdir -p /usr/lib/systemd/diverted-generators
+
 # systemd-gpt-auto-generator is unneeded on a live system, and produces
 # a warning on EFI systems.
-mkdir -p /usr/lib/systemd/diverted-generators
 dpkg-divert --add --rename --divert /usr/lib/systemd/diverted-generators/systemd-gpt-auto-generator /usr/lib/systemd/system-generators/systemd-gpt-auto-generator
+
+# sshd does not start on boot by default, and systemd-ssh-generator has
+# started spamming login issue.
+dpkg-divert --add --rename --divert /usr/lib/systemd/diverted-generators/systemd-ssh-generator /usr/lib/systemd/system-generators/systemd-ssh-generator
