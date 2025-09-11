@@ -50,5 +50,5 @@ GitHub](https://github.com/finnix/finnix-docs).{% endif %}
 
 This document is provided under the following license:
 
-    SPDX-FileCopyrightText: Copyright (C) 2021-2025 Ryan Finnie
+    SPDX-FileCopyrightText: © 2021 Ryan Finnie <ryan@finnie.org>
     SPDX-License-Identifier: CC-BY-SA-4.0

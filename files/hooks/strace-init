@@ -2,7 +2,7 @@
 
 # SPDX-PackageSummary: finnix-live-build
 # SPDX-FileComment: strace-init
-# SPDX-FileCopyrightText: Copyright (C) 2012-2025 Ryan Finnie
+# SPDX-FileCopyrightText: © 2012 Ryan Finnie <ryan@finnie.org>
 # SPDX-License-Identifier: MPL-2.0
 
 # Called as: init.strace=1

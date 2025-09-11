@@ -1,5 +1,5 @@
 # SPDX-PackageSummary: finnix-live-build
-# SPDX-FileCopyrightText: Copyright (C) 2022-2025 Ryan Finnie
+# SPDX-FileCopyrightText: © 2022 Ryan Finnie <ryan@finnie.org>
 # SPDX-License-Identifier: MPL-2.0
 
 # /etc/initramfs-tools/conf.d/{{ PRODUCT_ID }}

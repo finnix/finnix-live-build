@@ -1,5 +1,5 @@
 # SPDX-PackageSummary: finnix-live-build
-# SPDX-FileCopyrightText: Copyright (C) 2024 Ryan Finnie
+# SPDX-FileCopyrightText: © 2024 Ryan Finnie <ryan@finnie.org>
 # SPDX-License-Identifier: MPL-2.0
 
 FROM debian:testing
