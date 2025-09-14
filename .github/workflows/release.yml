@@ -20,6 +20,8 @@ jobs:
     permissions:
       id-token: "write"
       attestations: "write"
+    env:
+      BUILD_WORKFLOW_TAG: "release"
     steps:
       - uses: "actions/checkout@v4"
         with:
@@ -38,7 +40,7 @@ jobs:
           sudo chown -R root:root .
 
           # Main ISO image
-          sudo env BUILD_TAGS="release" ./finnix-live-build
+          sudo env BUILD_TAGS="${BUILD_WORKFLOW_TAG}" ./finnix-live-build
 
           # Source ISO
           TEMP_BUILD_DIR="$(sudo mktemp -d -p "$(pwd)/build")"
@@ -51,7 +53,7 @@ jobs:
           # Cleanup
           sudo chown -R "$(id -un):$(id -gn)" .
       - name: "Attest"
-        uses: "actions/attest-build-provenance@v1"
+        uses: "actions/attest-build-provenance@v3"
         with:
           subject-path: "${{ github.workspace }}/build/lb/finnix-*.iso"
       - name: "Upload artifacts"
@@ -79,6 +81,9 @@ jobs:
       id-token: "write"
       contents: "read"
       packages: "write"
+      attestations: "write"
+    env:
+      BUILD_WORKFLOW_TAG: "release"
     steps:
       - uses: "actions/checkout@v4"
         with:
@@ -93,12 +98,25 @@ jobs:
           tools/get-dependencies --only optional | while IFS='' read -r pkg; do
             sudo apt -y install "${pkg}" || true
           done
+      - name: "Set environment variables"
+        run: |
+          IMAGE_NAME="$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')"
+          IMAGE_TAG="${BUILD_WORKFLOW_TAG}-${{ matrix.arch }}"
+          echo "IMAGE_NAME=${IMAGE_NAME}" >>"${GITHUB_ENV}"
+          echo "IMAGE_TAG=${IMAGE_TAG}" >>"${GITHUB_ENV}"
       - name: "Build image"
         run: |
-          IMAGE_ID="ghcr.io/${{ github.repository }}:release-${{ matrix.arch }}"
-          IMAGE_ID=$(echo "$IMAGE_ID" | tr '[:upper:]' '[:lower:]')
-          env BUILD_TAGS="release" DOCKER_BUILD="true" ./finnix-live-build
+          IMAGE_ID="ghcr.io/${IMAGE_NAME}:${IMAGE_TAG}"
+          env BUILD_TAGS="${BUILD_WORKFLOW_TAG}" DOCKER_BUILD="true" ./finnix-live-build
           docker image build -t "${IMAGE_ID}" build/docker
           docker image history "${IMAGE_ID}"
           docker image inspect "${IMAGE_ID}"
           docker image push "${IMAGE_ID}"
+          IMAGE_DIGEST="sha256:$(docker buildx imagetools inspect "${IMAGE_ID}" --raw | sha256sum | awk '{print $1}')"
+          echo "IMAGE_DIGEST=${IMAGE_DIGEST}" >>"${GITHUB_ENV}"
+      - name: "Attest"
+        uses: "actions/attest-build-provenance@v3"
+        with:
+          subject-name: "ghcr.io/${{ env.IMAGE_NAME }}"
+          subject-digest: "${{ env.IMAGE_DIGEST }}"
+          push-to-registry: true
