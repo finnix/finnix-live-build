@@ -8,11 +8,6 @@ name: "ci"
   pull_request:
   workflow_dispatch:
 jobs:
-  pre-commit:
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: "actions/checkout@v4"
-      - uses: "pre-commit/action@v3.0.1"
   lint:
     runs-on: "ubuntu-latest"
     steps:
