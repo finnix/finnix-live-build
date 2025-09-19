@@ -211,6 +211,10 @@ fi
 if [ "${container}" = "systemd-nspawn" ]; then
     BUILD_TAGS="${BUILD_TAGS} systemd-nspawn"
 fi
+# shellcheck disable=SC2154
+if [ "${container}" = "podman" ]; then
+    BUILD_TAGS="${BUILD_TAGS} podman"
+fi
 
 if [ -e /etc/os-release ]; then
     for i in BUILD_OS_ID BUILD_OS_VERSION_CODENAME BUILD_OS_VERSION_ID; do

@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: © 2024 Ryan Finnie <ryan@finnie.org>
 # SPDX-License-Identifier: MPL-2.0
 
-FROM debian:testing
+FROM docker.io/library/debian:testing
 COPY . /build
 RUN /build/container-build && rm -rf /build
 
