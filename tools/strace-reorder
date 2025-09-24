@@ -139,7 +139,7 @@ class StraceReorder:
             seen_size += root_file.stat().st_size
 
         # The position numbers work with SquashFS order files as follows:
-        #     <beginning> 65535 65534 [...] 3 2 1 0 -1 -2 -3 [...] -65534 -65535 <end>
+        #     <beginning> 32767 32766 [...] 3 2 1 0 -1 -2 -3 [...] -32767 -32768 <end>
         # All files not in the order file default to 0.
         # Beginning or end doesn't matter for flash devices, but end is
         # preferred for CDs since the highest speeds are at the end of
@@ -154,13 +154,15 @@ class StraceReorder:
                     pos = ((len(seen) - idx) / 2) + 1
             elif self.args.layout == "random":
                 # Again, please don't use this.
-                pos = random.randint(-65535, 65535)
+                pos = random.randint(-32768, 32767)
             elif self.args.layout == "beginning":
                 # Files move forward from the beginning of the CD
                 pos = len(seen) - idx
             else:
                 # Files move forward to the end of the CD
                 pos = -1 - idx
+            if pos < -32768 or pos > 32767:
+                continue
             print("{}\t{}".format(str(file)[1:], int(pos)))
         logging.info(
             "{files} files arranged at {layout}, {size.real:0.02f} {size.prefix}B".format(
