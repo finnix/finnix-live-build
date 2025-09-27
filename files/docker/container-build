@@ -35,8 +35,8 @@ APT::Install-Recommends "false";
 EOM
 
 
-apt-get update
-apt-get -y install $(grep -h '^[a-z0-9]' /build/package-lists/*.list.chroot)
+apt update
+apt -y install $(grep -h '^[a-z0-9]' /build/package-lists/*.list.chroot)
 
 install -D -m 0755 /build/container-entrypoint /usr/bin/container-entrypoint
 
