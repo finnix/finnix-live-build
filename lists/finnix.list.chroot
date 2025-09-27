@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0
 2048
 2ping
+7zip
 {%- if ARCH == "amd64" %}
 acpi
 {%- endif %}
@@ -159,7 +160,6 @@ oathtool
 openssh-client
 openssh-server
 openvpn
-p7zip
 partclone
 parted
 patch
