@@ -201,7 +201,6 @@ stress
 stunnel4
 sunxi-tools
 sudo
-systemd-resolved
 systemd-timesyncd
 systemd-zram-generator
 tcpdump

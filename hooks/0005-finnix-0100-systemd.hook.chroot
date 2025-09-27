@@ -39,7 +39,10 @@ install -D -m 0644 /hook-files/udisks2.service "/etc/systemd/system/udisks2.serv
 
 # systemd-resolved apt postinst will break resolv.conf in a chroot,
 # but luckily it makes a backup of the original resolv.conf.
+# (#1032937, WONTFIX, by design)
+apt -y install systemd-resolved
 if [ -e /etc/.resolv.conf.systemd-resolved.bak ]; then
+    echo "https://bugs.debian.org/1032937 is still present"
     rm -f /etc/resolv.conf
     mv /etc/.resolv.conf.systemd-resolved.bak /etc/resolv.conf
 fi
