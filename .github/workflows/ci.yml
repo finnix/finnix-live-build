@@ -105,13 +105,6 @@ jobs:
       - name: "Authentication"
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-      - name: "Dependency packages"
-        run: |
-          sudo apt update
-          tools/get-dependencies --only required -0 | xargs -0 sudo apt -y install
-          tools/get-dependencies --only optional | while IFS='' read -r pkg; do
-            sudo apt -y install "${pkg}" || true
-          done
       - name: "Set environment variables"
         run: |
           IMAGE_NAME="$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')"
@@ -121,8 +114,12 @@ jobs:
       - name: "Build image"
         run: |
           IMAGE_ID="ghcr.io/${IMAGE_NAME}:${IMAGE_TAG}"
-          env BUILD_TAGS="${BUILD_WORKFLOW_TAG}" DOCKER_BUILD="true" ./finnix-live-build
-          docker image build -t "${IMAGE_ID}" build/docker
+          docker image build -t "${IMAGE_ID}" \
+              --build-arg BUILD_TAGS="docker ${BUILD_WORKFLOW_TAG}" \
+              --build-arg GITHUB_SERVER_URL \
+              --build-arg GITHUB_REPOSITORY \
+              --build-arg GITHUB_RUN_ID \
+              .
           docker image history "${IMAGE_ID}"
           docker image inspect "${IMAGE_ID}"
           docker image push "${IMAGE_ID}"
