@@ -363,6 +363,8 @@ rm -rf "${LB_DIR}"
 mkdir -p "${LB_DIR}"
 cd "${LB_DIR}"
 
+# do_lb_config references arguments, but none are ever passed.
+# shellcheck disable=SC2120
 do_lb_config() {
     # Note that --source true also requires --apt-source-archives true
 
