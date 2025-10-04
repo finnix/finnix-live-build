@@ -395,15 +395,7 @@ do_lb_config() {
         "$@"
 }
 
-if [ "${ARCH}" = "riscv64" ]; then
-    # Avoid configuring unstable twice (apt gives a warning)
-    UNSTABLE_PIN=false
-    do_lb_config \
-        --distribution unstable \
-        --security false
-else
-    do_lb_config
-fi
+do_lb_config
 
 mkdir -p "${LB_CACHE_DIR}"
 if [ "${CACHE_FROZEN}" = "false" ]; then
