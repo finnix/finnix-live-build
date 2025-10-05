@@ -17,41 +17,40 @@ jobs:
           - arch: "arm64"
             runs-on: "ubuntu-24.04-arm"
     runs-on: "${{ matrix.runs-on }}"
+    container:
+      image: "docker.io/library/debian:testing"
     permissions:
       id-token: "write"
       attestations: "write"
     env:
       BUILD_WORKFLOW_TAG: "release"
     steps:
+      - name: "Container prep"
+        run: |
+          apt update
+          apt -y install git python3
       - uses: "actions/checkout@v4"
         with:
           submodules: true
       - name: "Dependency packages"
         run: |
-          sudo apt update
-          tools/get-dependencies --only required -0 | xargs -0 sudo apt -y install
+          apt update
+          tools/get-dependencies --only required -0 | xargs -0 apt -y install
           tools/get-dependencies --only optional | while IFS='' read -r pkg; do
-            sudo apt -y install "${pkg}" || true
+            apt -y install "${pkg}" || true
           done
       - name: "Build image"
         run: |
-          # Prepare
-          env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
-          sudo chown -R root:root .
-
           # Main ISO image
-          sudo env BUILD_TAGS="${BUILD_WORKFLOW_TAG}" ./finnix-live-build
+          env BUILD_TAGS="${BUILD_WORKFLOW_TAG}" ./finnix-live-build
 
           # Source ISO
-          TEMP_BUILD_DIR="$(sudo mktemp -d -p "$(pwd)/build")"
-          sudo env SOURCE_ISO=true BUILD_DIR="${TEMP_BUILD_DIR?}" ./finnix-live-build
-          sudo mv "${TEMP_BUILD_DIR}/lb/finnix-source.iso" build/lb/
-          sudo rm -rf "${TEMP_BUILD_DIR?}"
+          TEMP_BUILD_DIR="$(mktemp -d -p "$(pwd)/build")"
+          env SOURCE_ISO=true BUILD_DIR="${TEMP_BUILD_DIR?}" ./finnix-live-build
+          mv "${TEMP_BUILD_DIR}/lb/finnix-source.iso" build/lb/
+          rm -rf "${TEMP_BUILD_DIR?}"
           echo "Note: The build information listed above is not used; only the source ISO is saved."
           echo "See the 'Build image' step for actual build information."
-
-          # Cleanup
-          sudo chown -R "$(id -un):$(id -gn)" .
       - name: "Attest"
         uses: "actions/attest-build-provenance@v3"
         with:
