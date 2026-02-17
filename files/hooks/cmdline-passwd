@@ -20,7 +20,6 @@ import shlex
 import subprocess
 import sys
 
-
 RE_ENCRYPTED = re.compile(r"\$.{1,2}\$")
 
 

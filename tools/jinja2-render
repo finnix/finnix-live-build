@@ -12,7 +12,6 @@ import sys
 
 from jinja2 import Template
 
-
 if __name__ == "__main__":
     tmpl = Template(sys.stdin.read())
     vars = dict(os.environ)
