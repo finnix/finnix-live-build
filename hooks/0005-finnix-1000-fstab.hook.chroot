@@ -1,6 +1,8 @@
 #!/bin/sh
 
-# SPDX-PackageSummary: finnix-live-build
+# SPDX-PackageName: finnix-live-build
+# SPDX-PackageSupplier: Ryan Finnie <ryan@finnie.org>
+# SPDX-PackageDownloadLocation: https://github.com/rfinnie/finnix-live-build
 # SPDX-FileComment: fstab chroot hook
 # SPDX-FileCopyrightText: © 2020 Ryan Finnie <ryan@finnie.org>
 # SPDX-License-Identifier: MPL-2.0

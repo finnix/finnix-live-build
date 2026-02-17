@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# SPDX-PackageName: finnix-live-build
+# SPDX-PackageSupplier: Ryan Finnie <ryan@finnie.org>
+# SPDX-PackageDownloadLocation: https://github.com/rfinnie/finnix-live-build
 # SPDX-FileComment: Wrapper for preferring GNU strings
 # SPDX-FileCopyrightText: © 2021 Ryan Finnie <ryan@finnie.org>
 # SPDX-License-Identifier: MPL-2.0
