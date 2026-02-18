@@ -19,10 +19,6 @@ repos:
           - "--unsafe"
       - id: "check-json"
       - id: "check-shebang-scripts-are-executable"
-        exclude: |
-          (?x)^(
-            hooks/.*\.hook\.(chroot|binary)
-          )$
       - id: "detect-private-key"
       - id: "end-of-file-fixer"
       - id: "fix-byte-order-marker"
@@ -56,3 +52,16 @@ repos:
     rev: "v6.2.0"
     hooks:
       - id: "reuse"
+
+  - repo: "https://github.com/koalaman/shellcheck-precommit"
+    rev: "v0.11.0"
+    hooks:
+      - id: "shellcheck"
+
+  - repo: "https://github.com/scop/pre-commit-shfmt"
+    rev: "v3.12.0-2"
+    hooks:
+      - id: "shfmt-docker"
+        args:
+          - "-i"
+          - "4"

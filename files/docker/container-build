@@ -36,8 +36,9 @@ cat >"/etc/apt/apt.conf.d/99${PRODUCT_ID}" <<"EOM"
 APT::Install-Recommends "false";
 EOM
 
-
 apt update
+# (SC2046) Word splitting is desired here
+# shellcheck disable=SC2046
 apt -y install $(grep -h '^[a-z0-9]' /build/package-lists/*.list.chroot)
 
 install -D -m 0755 /build/container-entrypoint /usr/bin/container-entrypoint

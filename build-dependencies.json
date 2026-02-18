@@ -3,14 +3,11 @@
     {"debian": "debian-archive-keyring", "rh": "debian-keyring"},
     {"debian": "debootstrap"},
     {"debian": "file"},
-    {"debian": "flake8", "rh": "python3-flake8"},
     {"debian": "fonts-liberation2", "rh": "liberation-fonts"},
     {"debian": "git"},
     {"debian": "librsvg2-bin", "rh": "librsvg2-tools"},
     {"debian": "pandoc"},
     {"debian": "python3"},
     {"debian": "python3-jinja2"},
-    {"debian": "shfmt", "optional": true},
-    {"debian": "shellcheck"},
     {"debian": "uuid-runtime"}
 ]

@@ -10,23 +10,6 @@ name: "ci"
   pull_request:
   workflow_dispatch:
 jobs:
-  lint:
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: "actions/checkout@v4"
-        with:
-          submodules: true
-      - name: "Dependency packages"
-        run: |
-          sudo apt update
-          tools/get-dependencies --only required -0 | xargs -0 sudo apt -y install
-          tools/get-dependencies --only optional | while IFS='' read -r pkg; do
-            sudo apt -y install "${pkg}" || true
-          done
-      - name: "Lint codebase"
-        env:
-          LINT: "true"
-        run: "./finnix-live-build"
   build:
     name: "Build image (${{ matrix.arch }})"
     strategy:

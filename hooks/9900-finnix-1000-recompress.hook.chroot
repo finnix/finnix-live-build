@@ -96,13 +96,9 @@ class RecompressGz:
         if argv is None:
             argv = sys.argv
 
-        parser = argparse.ArgumentParser(
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter
-        )
+        parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-        parser.add_argument(
-            "--debug", action="store_true", help="Print debugging information"
-        )
+        parser.add_argument("--debug", action="store_true", help="Print debugging information")
         parser.add_argument(
             "--base-dir",
             type=pathlib.Path,
@@ -129,9 +125,7 @@ class RecompressGz:
         file_size_pre = file.stat().st_size
         with gzip.open(file, "rb") as fsrc, file_mod.open("wb") as fdst:
             # Explicitly do not set filename and mtime in resulting .gz
-            with gzip.GzipFile(
-                filename="", mode="wb", compresslevel=0, mtime=0, fileobj=fdst
-            ) as fdstgz:
+            with gzip.GzipFile(filename="", mode="wb", compresslevel=0, mtime=0, fileobj=fdst) as fdstgz:
                 shutil.copyfileobj(fsrc, fdstgz)
         shutil.copystat(file, file_mod)
         file = file_mod.replace(file)
@@ -154,11 +148,7 @@ class RecompressGz:
 
         file = pathlib.Path("/").joinpath(dpkg_filename)
         if file in self.diversions:
-            logging.debug(
-                "{} was diverted to {} - using that instead".format(
-                    file, self.diversions[file]
-                )
-            )
+            logging.debug("{} was diverted to {} - using that instead".format(file, self.diversions[file]))
             file = self.diversions[file]
 
         file = self.args.base_dir.joinpath(*file.parts[1:])
@@ -167,17 +157,11 @@ class RecompressGz:
             return orig_md5
         fstat = file.stat()
         if fstat.st_nlink > 1:
-            logging.warning(
-                "File has {} hard links, skipping: {}".format(fstat.st_nlink, file)
-            )
+            logging.warning("File has {} hard links, skipping: {}".format(fstat.st_nlink, file))
             return orig_md5
         found_md5 = hashlib.md5(file.read_bytes()).hexdigest()
         if orig_md5 != found_md5:
-            logging.error(
-                "MD5 mismatch (expected {}, got {}), skipping: {}".format(
-                    orig_md5, found_md5, file
-                )
-            )
+            logging.error("MD5 mismatch (expected {}, got {}), skipping: {}".format(orig_md5, found_md5, file))
             return orig_md5
 
         return self.recompress(file)
@@ -201,14 +185,10 @@ class RecompressGz:
             shutil.copystat(file, file_mod)
             file = file_mod.replace(file)
 
-        logging.info(
-            '{} files re-"compressed" at gzip level 0.'.format(self.file_count)
-        )
+        logging.info('{} files re-"compressed" at gzip level 0.'.format(self.file_count))
         logging.info(
             "{pre.real:0.02f} {pre.prefix}B (previous gzip total) expanded to "
-            "{post.real:0.02f} {post.prefix}B (gzip level 0).".format(
-                pre=numfmt(self.pre_size), post=numfmt(self.post_size)
-            )
+            "{post.real:0.02f} {post.prefix}B (gzip level 0).".format(pre=numfmt(self.pre_size), post=numfmt(self.post_size))
         )
         ballpark_xz = int(self.post_size * 0.15)
         logging.info(
