@@ -117,6 +117,11 @@ elif [ "${ARCH}" = "arm64" ]; then
     BOOTLOADERS="grub-efi"
     ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
     MEMTEST=""
+elif [ "${ARCH}" = "riscv64" ]; then
+    BINARY_IMAGES="iso-hybrid"
+    BOOTLOADERS="grub-efi"
+    ISO_FILENAME="${PRODUCT_ID}-${ARCH}.hybrid.iso"
+    MEMTEST=""
 else
     BINARY_IMAGES="iso"
     BOOTLOADERS=""
@@ -512,21 +517,25 @@ for compare_link in "${BUILD_INFO_DIR}"/*; do
     compare_name="$(basename "${compare_link}")"
     compare_build_id="$(basename "$(readlink -f "${compare_link}")")"
 
-    compare_build_size="$(cat "${compare_link}/${ISO_FILENAME}.size")"
-    build_size_delta=$((build_size - compare_build_size))
-    if [ "${build_size_delta}" -ge 1048576 ] || [ "${build_size_delta}" -le -1048576 ]; then
-        echo "NOTE: Build size changed from build \"${compare_name}\" (${compare_build_id}):"
-        echo "    - $((compare_build_size / 1048576)) MiB - ${compare_build_id}"
-        echo "    + $((build_size / 1048576)) MiB - ${build_id}"
-        echo
+    if [ -e "${compare_link}/${ISO_FILENAME}.size" ]; then
+        compare_build_size="$(cat "${compare_link}/${ISO_FILENAME}.size")"
+        build_size_delta=$((build_size - compare_build_size))
+        if [ "${build_size_delta}" -ge 1048576 ] || [ "${build_size_delta}" -le -1048576 ]; then
+            echo "NOTE: Build size changed from build \"${compare_name}\" (${compare_build_id}):"
+            echo "    - $((compare_build_size / 1048576)) MiB - ${compare_build_id}"
+            echo "    + $((build_size / 1048576)) MiB - ${build_id}"
+            echo
+        fi
     fi
 
-    cut -f1 <"${compare_link}/chroot.packages.live" | sort >"${compare_tmp_fn}"
-    (diff "${compare_tmp_fn}" "${current_tmp_fn}" | grep -e '^[<>]') >"${diff_tmp_fn}" || true
-    if [ -s "${diff_tmp_fn}" ]; then
-        echo "NOTE: Packages names changed from build \"${compare_name}\" (${compare_build_id}):"
-        cat "${diff_tmp_fn}"
-        echo
+    if [ -e "${compare_link}/chroot.packages.live" ]; then
+        cut -f1 <"${compare_link}/chroot.packages.live" | sort >"${compare_tmp_fn}"
+        (diff "${compare_tmp_fn}" "${current_tmp_fn}" | grep -e '^[<>]') >"${diff_tmp_fn}" || true
+        if [ -s "${diff_tmp_fn}" ]; then
+            echo "NOTE: Packages names changed from build \"${compare_name}\" (${compare_build_id}):"
+            cat "${diff_tmp_fn}"
+            echo
+        fi
     fi
 done
 
