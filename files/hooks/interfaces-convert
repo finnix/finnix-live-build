@@ -8,8 +8,8 @@
 # SPDX-License-Identifier: MPL-2.0
 
 # This program converts sections in /etc/network/interfaces to files in
-# /etc/systemd/network/, and (if needed) from /etc/resolv.conf to
-# /etc/systemd/resolved.conf, putting the systemd-resolved stub in its
+# /run/systemd/network/, and (if needed) from /etc/resolv.conf to
+# /run/systemd/resolved.conf, putting the systemd-resolved stub in its
 # place.
 #
 # Note that this was built to translate entries built by live-boot, and
@@ -26,6 +26,11 @@ try:
     import pyudev
 except ImportError as e:
     pyudev = e
+
+
+PRODUCT_ID = "{{ PRODUCT_ID }}"
+if "{" in PRODUCT_ID:
+    PRODUCT_ID = "local"
 
 
 class InterfacesConvert:
@@ -79,7 +84,7 @@ class InterfacesConvert:
             id_path = device_properties["ID_PATH"]
             interface_fn_id = device_properties["ID_PATH_TAG"]
 
-        filename = "/etc/systemd/network/10-{}.network".format(interface_fn_id)
+        filename = "/run/systemd/network/10-{}.network".format(interface_fn_id)
         if (section["iface"][1] != "inet") or (section["iface"][2] not in ("dhcp", "static")):
             output = self.systemd_config()
             if id_path is None:
@@ -149,8 +154,6 @@ class InterfacesConvert:
         self.files["/etc/network/interfaces"] = rewritten_interfaces
 
     def convert_resolv(self):
-        if not os.path.exists("/etc/systemd/resolved.conf"):
-            return
         if not os.path.exists("/etc/resolv.conf"):
             self.replace_resolvconf = True
             return
@@ -173,19 +176,20 @@ class InterfacesConvert:
 
         if nameservers or domains:
             resolved = self.systemd_config()
-            resolved.read("/etc/systemd/resolved.conf")
-            if "Resolve" not in resolved:
-                resolved["Resolve"] = {}
+            resolved["Resolve"] = {}
             if nameservers:
                 resolved["Resolve"]["DNS"] = " ".join(nameservers)
             if domains:
                 resolved["Resolve"]["Domains"] = " ".join(domains)
-            self.generate_systemd_conf(resolved, "/etc/systemd/resolved.conf")
+            self.generate_systemd_conf(resolved, "/run/systemd/resolved.conf.d/10-{}.conf".format(PRODUCT_ID))
 
         self.replace_resolvconf = True
 
     def write_files(self):
         for fn in self.files:
+            fn_dir = os.path.dirname(fn)
+            if not os.path.exists(fn_dir):
+                os.makedirs(fn_dir)
             with open(fn, "w") as f:
                 f.write(self.files[fn])
 

@@ -86,9 +86,9 @@ update_config=1
 ${wpa_passphrase_block}
 EOM
 
-mkdir -p /etc/systemd/network
-rm -f "/etc/systemd/network/10-${interface}.network"
-cat <<EOM >"/etc/systemd/network/10-${interface}.network"
+mkdir -p /run/systemd/network
+rm -f "/run/systemd/network/10-${interface}.network"
+cat <<EOM >"/run/systemd/network/10-${interface}.network"
 [Match]
 Name=${interface}
 

@@ -19,6 +19,6 @@ PRODUCT_ID="{{ PRODUCT_ID }}"
 mkdir -p /usr/lib/systemd/diverted-generators
 dpkg-divert --add --rename --divert /usr/lib/systemd/diverted-generators/live-config-getty-generator /usr/lib/systemd/system-generators/live-config-getty-generator
 
-install -D -m 0644 /hook-files/getty.service "/etc/systemd/system/getty@.service.d/${PRODUCT_ID}.conf"
-install -D -m 0644 /hook-files/serial-getty.service "/etc/systemd/system/serial-getty@.service.d/${PRODUCT_ID}.conf"
-install -D -m 0644 /hook-files/container-getty.service "/etc/systemd/system/container-getty@.service.d/${PRODUCT_ID}.conf"
+install -D -m 0644 /hook-files/getty.service "/usr/lib/systemd/system/getty@.service.d/10-${PRODUCT_ID}.conf"
+install -D -m 0644 /hook-files/serial-getty.service "/usr/lib/systemd/system/serial-getty@.service.d/10-${PRODUCT_ID}.conf"
+install -D -m 0644 /hook-files/container-getty.service "/usr/lib/systemd/system/container-getty@.service.d/10-${PRODUCT_ID}.conf"

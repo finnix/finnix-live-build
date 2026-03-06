@@ -12,9 +12,9 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0755 /hook-files/sshd-keygen "/usr/lib/${PRODUCT_ID}/sshd-keygen"
-install -D -m 0644 /hook-files/ssh.service "/etc/systemd/system/ssh.service.d/${PRODUCT_ID}.conf"
+install -D -m 0644 /hook-files/ssh.service "/usr/lib/systemd/system/ssh.service.d/10-${PRODUCT_ID}.conf"
 
-cat <<"EOM" >"/etc/ssh/sshd_config.d/${PRODUCT_ID}.conf"
+cat <<"EOM" >"/etc/ssh/sshd_config.d/10-${PRODUCT_ID}.conf"
 # "Safe" for maintenance use since by default, the user needs to set a
 # root password and start ssh.service.
 PasswordAuthentication yes
@@ -24,8 +24,8 @@ EOM
 # Shared per-user SSH agent
 install -D -m 0755 /hook-files/shared-ssh-agent "/usr/lib/${PRODUCT_ID}/shared-ssh-agent"
 install -D -m 0755 /hook-files/ssh-agent "/usr/lib/${PRODUCT_ID}/ssh-agent"
-install -D -m 0644 /hook-files/shared-ssh-agent@.service /etc/systemd/system/shared-ssh-agent@.service
+install -D -m 0644 /hook-files/shared-ssh-agent@.service /usr/lib/systemd/system/shared-ssh-agent@.service
 systemctl add-wants multi-user.target shared-ssh-agent@root.service
 
-install -D -m 0644 /hook-files/cmdline-sshd.service /etc/systemd/system/cmdline-sshd.service
+install -D -m 0644 /hook-files/cmdline-sshd.service /usr/lib/systemd/system/cmdline-sshd.service
 systemctl add-wants multi-user.target cmdline-sshd.service

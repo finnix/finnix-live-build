@@ -25,5 +25,5 @@ echo 'Etc/UTC' >/etc/timezone
 rm -f /etc/localtime
 dpkg-reconfigure -f noninteractive -p critical tzdata
 
-install -D -m 0644 /hook-files/cmdline-locale-config.service /etc/systemd/system/cmdline-locale-config.service
+install -D -m 0644 /hook-files/cmdline-locale-config.service /usr/lib/systemd/system/cmdline-locale-config.service
 systemctl add-wants multi-user.target cmdline-locale-config.service

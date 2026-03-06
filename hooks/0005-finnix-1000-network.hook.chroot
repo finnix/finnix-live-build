@@ -12,7 +12,7 @@ set -e
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
 install -D -m 0755 /hook-files/interfaces-convert "/usr/lib/${PRODUCT_ID}/interfaces-convert"
-install -D -m 0644 /hook-files/network-config-setup.service /etc/systemd/system/network-config-setup.service
+install -D -m 0644 /hook-files/network-config-setup.service /usr/lib/systemd/system/network-config-setup.service
 systemctl add-wants sysinit.target network-config-setup.service
 systemctl add-wants network.target systemd-networkd.service
 systemctl add-wants network.target systemd-resolved.service
