@@ -24,8 +24,10 @@
             "amixer",
             "aplay",
             "aplaymidi",
+            "aplaymidi2",
             "arecord",
             "arecordmidi",
+            "arecordmidi2",
             "aseqdump",
             "aseqnet",
             "aseqsend",
@@ -59,6 +61,7 @@
             "aa-enabled",
             "aa-exec",
             "aa-features-abi",
+            "aa-load",
             "aa-remove-unknown",
             "aa-status",
             "aa-teardown",
@@ -67,6 +70,14 @@
         ],
         "packages": [
             "apparmor"
+        ]
+    },
+    {
+        "commands": [
+            "appstreamcli"
+        ],
+        "packages": [
+            "appstream"
         ]
     },
     {
@@ -106,9 +117,7 @@
             "ar",
             "as",
             "c++filt",
-            "dwp",
             "elfedit",
-            "gold",
             "gp-archive",
             "gp-collect-app",
             "gp-display-html",
@@ -116,9 +125,14 @@
             "gp-display-text",
             "gprof",
             "gprofng",
+            "gprofng-archive",
+            "gprofng-collect-app",
+            "gprofng-display-html",
+            "gprofng-display-src",
+            "gprofng-display-text",
+            "gprofng-gmon",
             "ld",
             "ld.bfd",
-            "ld.gold",
             "nm",
             "objcopy",
             "objdump",
@@ -138,19 +152,10 @@
             "x86_64-linux-gnu-ar",
             "x86_64-linux-gnu-as",
             "x86_64-linux-gnu-c++filt",
-            "x86_64-linux-gnu-dwp",
             "x86_64-linux-gnu-elfedit",
-            "x86_64-linux-gnu-gold",
-            "x86_64-linux-gnu-gp-archive",
-            "x86_64-linux-gnu-gp-collect-app",
-            "x86_64-linux-gnu-gp-display-html",
-            "x86_64-linux-gnu-gp-display-src",
-            "x86_64-linux-gnu-gp-display-text",
             "x86_64-linux-gnu-gprof",
-            "x86_64-linux-gnu-gprofng",
             "x86_64-linux-gnu-ld",
             "x86_64-linux-gnu-ld.bfd",
-            "x86_64-linux-gnu-ld.gold",
             "x86_64-linux-gnu-nm",
             "x86_64-linux-gnu-objcopy",
             "x86_64-linux-gnu-objdump",
@@ -220,19 +225,18 @@
     },
     {
         "commands": [
-            "cpp-12",
-            "x86_64-linux-gnu-cpp-12"
-        ],
-        "packages": [
-            "cpp-12"
-        ]
-    },
-    {
-        "commands": [
             "cupsfilter"
         ],
         "packages": [
             "cups"
+        ]
+    },
+    {
+        "commands": [
+            "cups-browsed"
+        ],
+        "packages": [
+            "cups-browsed"
         ]
     },
     {
@@ -278,6 +282,18 @@
         ],
         "packages": [
             "cups-filters-core-drivers"
+        ]
+    },
+    {
+        "commands": [
+            "ippevepcl",
+            "ippeveprinter",
+            "ippeveps",
+            "ippfind",
+            "ipptool"
+        ],
+        "packages": [
+            "cups-ipp-utils"
         ]
     },
     {
@@ -377,6 +393,15 @@
         ],
         "packages": [
             "fakeroot"
+        ]
+    },
+    {
+        "commands": [
+            "firefox",
+            "firefox-esr"
+        ],
+        "packages": [
+            "firefox-esr"
         ]
     },
     {
@@ -487,8 +512,7 @@
         "commands": [
             "addgnupghome",
             "applygnupgdefaults",
-            "gpg-zip",
-            "gpgcompose",
+            "gpg-mail-tube",
             "gpgparsemail",
             "gpgsplit",
             "gpgtar",
@@ -503,6 +527,14 @@
     },
     {
         "commands": [
+            "gpg-wks-client"
+        ],
+        "packages": [
+            "gpg-wks-client"
+        ]
+    },
+    {
+        "commands": [
             "gpg-wks-server"
         ],
         "packages": [
@@ -511,10 +543,28 @@
     },
     {
         "commands": [
+            "gpgv"
+        ],
+        "packages": [
+            "gpgv"
+        ]
+    },
+    {
+        "commands": [
+            "grub-bios-setup",
+            "grub-ntldr-img"
+        ],
+        "packages": [
+            "grub-pc"
+        ]
+    },
+    {
+        "commands": [
             "grub-editenv",
             "grub-file",
             "grub-fstest",
             "grub-glue-efi",
+            "grub-install",
             "grub-kbdcomp",
             "grub-macbless",
             "grub-menulst2cfg",
@@ -530,29 +580,11 @@
             "grub-mkstandalone",
             "grub-mount",
             "grub-probe",
+            "grub-reboot",
             "grub-render-label",
             "grub-script-check",
-            "grub-syslinux2cfg"
-        ],
-        "packages": [
-            "grub-common"
-        ]
-    },
-    {
-        "commands": [
-            "grub-bios-setup",
-            "grub-ntldr-img",
-            "upgrade-from-grub-legacy"
-        ],
-        "packages": [
-            "grub-pc"
-        ]
-    },
-    {
-        "commands": [
-            "grub-install",
-            "grub-reboot",
             "grub-set-default",
+            "grub-syslinux2cfg",
             "update-grub",
             "update-grub2"
         ],
@@ -590,11 +622,10 @@
     },
     {
         "commands": [
-            "dhclient",
-            "dhclient-script"
+            "ipp-usb"
         ],
         "packages": [
-            "isc-dhcp-client"
+            "ipp-usb"
         ]
     },
     {
@@ -611,6 +642,14 @@
         ],
         "packages": [
             "ispell"
+        ]
+    },
+    {
+        "commands": [
+            "jq"
+        ],
+        "packages": [
+            "jq"
         ]
     },
     {
@@ -641,8 +680,7 @@
     {
         "commands": [
             "gdk-pixbuf-csource",
-            "gdk-pixbuf-pixdata",
-            "gdk-pixbuf-thumbnailer"
+            "gdk-pixbuf-pixdata"
         ],
         "packages": [
             "libgdk-pixbuf2.0-bin"
@@ -693,11 +731,47 @@
     },
     {
         "commands": [
+            "file2brl"
+        ],
+        "packages": [
+            "liblouisutdml-bin"
+        ]
+    },
+    {
+        "commands": [
+            "mbim-network",
+            "mbimcli"
+        ],
+        "packages": [
+            "libmbim-utils"
+        ]
+    },
+    {
+        "commands": [
+            "paper",
             "paperconf",
             "paperconfig"
         ],
         "packages": [
             "libpaper-utils"
+        ]
+    },
+    {
+        "commands": [
+            "qmi-firmware-update",
+            "qmi-network",
+            "qmicli"
+        ],
+        "packages": [
+            "libqmi-utils"
+        ]
+    },
+    {
+        "commands": [
+            "localc"
+        ],
+        "packages": [
+            "libreoffice-calc"
         ]
     },
     {
@@ -710,6 +784,39 @@
         ],
         "packages": [
             "libreoffice-common"
+        ]
+    },
+    {
+        "commands": [
+            "lodraw"
+        ],
+        "packages": [
+            "libreoffice-draw"
+        ]
+    },
+    {
+        "commands": [
+            "loimpress"
+        ],
+        "packages": [
+            "libreoffice-impress"
+        ]
+    },
+    {
+        "commands": [
+            "lomath"
+        ],
+        "packages": [
+            "libreoffice-math"
+        ]
+    },
+    {
+        "commands": [
+            "loweb",
+            "lowriter"
+        ],
+        "packages": [
+            "libreoffice-writer"
         ]
     },
     {
@@ -728,10 +835,10 @@
     },
     {
         "commands": [
-            "lp_solve"
+            "lynx"
         ],
         "packages": [
-            "lp-solve"
+            "lynx"
         ]
     },
     {
@@ -759,7 +866,8 @@
     },
     {
         "commands": [
-            "mesa-overlay-control.py"
+            "mesa-overlay-control.py",
+            "mesa-screenshot-control.py"
         ],
         "packages": [
             "mesa-vulkan-drivers"
@@ -772,6 +880,14 @@
         ],
         "packages": [
             "modemmanager"
+        ]
+    },
+    {
+        "commands": [
+            "mokutil"
+        ],
+        "packages": [
+            "mokutil"
         ]
     },
     {
@@ -808,11 +924,10 @@
     },
     {
         "commands": [
-            "pkcon",
-            "pkmon"
+            "pkgcli"
         ],
         "packages": [
-            "packagekit-tools"
+            "packagekit"
         ]
     },
     {
@@ -839,6 +954,16 @@
         ],
         "packages": [
             "plymouth"
+        ]
+    },
+    {
+        "commands": [
+            "pkaction",
+            "pkcheck",
+            "pkttyagent"
+        ],
+        "packages": [
+            "polkitd"
         ]
     },
     {
@@ -897,6 +1022,14 @@
     },
     {
         "commands": [
+            "spd-conf"
+        ],
+        "packages": [
+            "python3-speechd"
+        ]
+    },
+    {
+        "commands": [
             "querybts",
             "reportbug"
         ],
@@ -906,10 +1039,10 @@
     },
     {
         "commands": [
-            "rsyslogd"
+            "rpcgen"
         ],
         "packages": [
-            "rsyslog"
+            "rpcsvc-proto"
         ]
     },
     {
@@ -951,10 +1084,36 @@
     },
     {
         "commands": [
+            "update-secureboot-policy"
+        ],
+        "packages": [
+            "shim-signed-common"
+        ]
+    },
+    {
+        "commands": [
+            "spd-say",
+            "spdsend",
+            "speech-dispatcher"
+        ],
+        "packages": [
+            "speech-dispatcher"
+        ]
+    },
+    {
+        "commands": [
             "make-ssl-cert"
         ],
         "packages": [
             "ssl-cert"
+        ]
+    },
+    {
+        "commands": [
+            "scp-dbus-service"
+        ],
+        "packages": [
+            "system-config-printer-common"
         ]
     },
     {
@@ -1123,6 +1282,22 @@
     },
     {
         "commands": [
+            "xbrlapi"
+        ],
+        "packages": [
+            "xbrlapi"
+        ]
+    },
+    {
+        "commands": [
+            "xdg-dbus-proxy"
+        ],
+        "packages": [
+            "xdg-dbus-proxy"
+        ]
+    },
+    {
+        "commands": [
             "xdg-user-dir",
             "xdg-user-dirs-update"
         ],
@@ -1205,14 +1380,6 @@
         ],
         "packages": [
             "xserver-xorg-video-intel"
-        ]
-    },
-    {
-        "commands": [
-            "vmwarectrl"
-        ],
-        "packages": [
-            "xserver-xorg-video-vmware"
         ]
     }
 ]
