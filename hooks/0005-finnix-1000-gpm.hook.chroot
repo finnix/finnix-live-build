@@ -11,5 +11,6 @@ set -e
 
 PRODUCT_ID="{{ PRODUCT_ID }}"
 
+install -D -m 0755 /hook-files/gpm-systemd "/usr/lib/${PRODUCT_ID}/gpm-systemd"
 install -D -m 0644 /hook-files/gpm.service "/usr/lib/systemd/system/gpm.service.d/10-${PRODUCT_ID}.conf"
 systemctl add-wants multi-user.target gpm.service

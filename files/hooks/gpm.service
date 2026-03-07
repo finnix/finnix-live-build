@@ -6,3 +6,11 @@
 
 [Unit]
 ConditionPathExists=/dev/input/mice
+
+[Service]
+# Convert from Type=forking to Type=exec, avoiding a 1 second
+# blocking sleep by the package's gpm-systemd-wrapper.sh
+Type=exec
+ExecStart=
+ExecStart=/usr/lib/{{ PRODUCT_ID }}/gpm-systemd
+PIDFile=

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# SPDX-PackageName: finnix-live-build
+# SPDX-PackageSupplier: Ryan Finnie <ryan@finnie.org>
+# SPDX-PackageDownloadLocation: https://github.com/rfinnie/finnix-live-build
+# SPDX-FileComment: gpm systemd exec wrapper
+# SPDX-FileCopyrightText: © 2026 Ryan Finnie <ryan@finnie.org>
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+/usr/share/gpm/gpm-systemd-wrapper.sh
+
+while [ ! -e /run/gpm.pid ]; do
+    sleep 1
+done
+
+exec waitpid "$(cat /run/gpm.pid)"
