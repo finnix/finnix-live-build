@@ -17,9 +17,9 @@ if [ -n "${SSH_AUTH_SOCK}" ]; then
     return
 fi
 
-if [ ! -e "${HOME}/.ssh/ssh-agent.sh" ]; then
-    mkdir -p "${HOME}/.ssh"
-    ssh-agent -s | grep ^SSH >"${HOME}/.ssh/ssh-agent.sh"
+if [ ! -e "${HOME}/.ssh/agent/agent.sh" ]; then
+    mkdir -p "${HOME}/.ssh/agent"
+    ssh-agent -s | grep ^SSH >"${HOME}/.ssh/agent/agent.sh"
 fi
 # shellcheck source=/dev/null
-. "${HOME}/.ssh/ssh-agent.sh"
+. "${HOME}/.ssh/agent/agent.sh"
