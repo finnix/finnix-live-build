@@ -8,9 +8,16 @@
 ConditionPathExists=/dev/input/mice
 
 [Service]
-# Convert from Type=forking to Type=exec, avoiding a 1 second
-# blocking sleep by the package's gpm-systemd-wrapper.sh
-Type=exec
+# Directly invoke gpm with exps2, bypassing gpm-systemd-wrapper.sh and
+# its 1 second blocking sleep. PIDFile is not tracked because systemd is
+# capable of figuring out the correct child.
+#
+# Note for future yak shaving: gpm(8) says -D doesn't fork and logs to
+# stdout/stderr directly, so why do we do so much to work around its
+# daemon mode? What the manpage doesn't mention is -D also outputs a
+# ton of debug logging (multiple lines whenever the mouse is moved), so
+# it's not suitable for general use.
+Type=forking
 ExecStart=
-ExecStart=/usr/lib/{{ PRODUCT_ID }}/gpm-systemd
+ExecStart=/usr/sbin/gpm -m /dev/input/mice -t exps2
 PIDFile=
