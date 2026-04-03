@@ -1,3 +1,15 @@
+# SPDX-PackageName: finnix-live-build
+# SPDX-PackageSupplier: Ryan Finnie <ryan@finnie.org>
+# SPDX-PackageDownloadLocation: https://github.com/rfinnie/finnix-live-build
+# SPDX-FileCopyrightText: © 2021 Ryan Finnie <ryan@finnie.org>
+# SPDX-License-Identifier: MPL-2.0
+#
+# This stub file is replaced with a full config once htop writes its
+# config and exits for the first time. Per the header written at the
+# top of the config file:
+#
+# Beware! This file is rewritten by htop when settings are changed in the interface.
+# The parser is also very primitive, and not human-friendly.
 config_reader_min_version=3
 column_meters_0=LeftCPUs4 MemorySwap Zram DiskIO NetworkIO Battery
 column_meter_modes_0=1 1 1 1 1 1
