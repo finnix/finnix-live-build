@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# SPDX-PackageName: finnix-live-build
+# SPDX-PackageSupplier: Ryan Finnie <ryan@finnie.org>
+# SPDX-PackageDownloadLocation: https://github.com/rfinnie/finnix-live-build
+# SPDX-FileComment: ntp chroot hook
+# SPDX-FileCopyrightText: © 2026 Ryan Finnie <ryan@finnie.org>
+# SPDX-License-Identifier: MPL-2.0
+
+set -e
+
+PRODUCT_ID="{{ PRODUCT_ID }}"
+
+# Use finnix.pool.ntp.org, but only if Finnix specifically is being built
+if [ "${PRODUCT_ID}" = "finnix" ]; then
+    mkdir -p "/usr/lib/systemd/timesyncd.conf.d"
+    cat <<"EOM" >"/usr/lib/systemd/timesyncd.conf.d/${PRODUCT_ID}.conf"
+[Time]
+FallbackNTP=finnix.pool.ntp.org
+EOM
+
+    if [ -e /etc/default/ntpsec-ntpdate ]; then
+        sed -i -e 's/^\#* *NTPSERVERS=".*"/NTPSERVERS="finnix.pool.ntp.org"/g' /etc/default/ntpsec-ntpdate
+        grep -q '^NTPSERVERS="finnix.pool.ntp.org"' /etc/default/ntpsec-ntpdate # Verification
+    fi
+fi
