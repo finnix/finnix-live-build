@@ -28,7 +28,7 @@ fi
 
 # Build image
 sudo chown -R root:root .
-sudo env ARCH="${ARCH}" BUILD_TAGS="rrpcid ci ${BUILD_TAGS}" ./finnix-live-build
+sudo env ARCH="${ARCH}" BUILD_TAGS="env:rrpcid workflow:ci ${BUILD_TAGS}" ./finnix-live-build
 sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
 sudo chown -R "$(id -un):$(id -gn)" .
 

@@ -25,7 +25,7 @@ jobs:
       id-token: "write"
       attestations: "write"
     env:
-      BUILD_WORKFLOW_TAG: "schedule"
+      BUILD_WORKFLOW_TAG: "workflow:schedule"
     steps:
       - uses: "actions/checkout@v4"
         with:
@@ -75,7 +75,7 @@ jobs:
       packages: "write"
       attestations: "write"
     env:
-      BUILD_WORKFLOW_TAG: "schedule"
+      BUILD_WORKFLOW_TAG: "workflow:schedule"
     steps:
       - uses: "actions/checkout@v4"
         with:
@@ -93,7 +93,7 @@ jobs:
         run: |
           IMAGE_ID="ghcr.io/${IMAGE_NAME}:${IMAGE_TAG}"
           docker image build -t "${IMAGE_ID}" \
-              --build-arg BUILD_TAGS="docker ${BUILD_WORKFLOW_TAG}" \
+              --build-arg BUILD_TAGS="env:docker ${BUILD_WORKFLOW_TAG}" \
               --build-arg GITHUB_SERVER_URL \
               --build-arg GITHUB_REPOSITORY \
               --build-arg GITHUB_RUN_ID \
