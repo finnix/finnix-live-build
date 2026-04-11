@@ -25,7 +25,7 @@ jobs:
       id-token: "write"
       attestations: "write"
     env:
-      BUILD_WORKFLOW_TAG: "workflow:schedule"
+      BUILD_WORKFLOW_TAG: "schedule"
     steps:
       - uses: "actions/checkout@v4"
         with:
@@ -41,7 +41,7 @@ jobs:
         run: |
           env | grep ^GITHUB_ | sudo tee -a /etc/environment >/dev/null
           sudo chown -R root:root .
-          sudo env BUILD_TAGS="${BUILD_WORKFLOW_TAG}" ./finnix-live-build
+          sudo env BUILD_TAGS="workflow:${BUILD_WORKFLOW_TAG}" ./finnix-live-build
           sudo rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
           sudo chown -R "$(id -un):$(id -gn)" .
       - name: "Attest"
@@ -75,7 +75,7 @@ jobs:
       packages: "write"
       attestations: "write"
     env:
-      BUILD_WORKFLOW_TAG: "workflow:schedule"
+      BUILD_WORKFLOW_TAG: "schedule"
     steps:
       - uses: "actions/checkout@v4"
         with:
@@ -93,7 +93,7 @@ jobs:
         run: |
           IMAGE_ID="ghcr.io/${IMAGE_NAME}:${IMAGE_TAG}"
           docker image build -t "${IMAGE_ID}" \
-              --build-arg BUILD_TAGS="env:docker ${BUILD_WORKFLOW_TAG}" \
+              --build-arg BUILD_TAGS="env:docker workflow:${BUILD_WORKFLOW_TAG}" \
               --build-arg GITHUB_SERVER_URL \
               --build-arg GITHUB_REPOSITORY \
               --build-arg GITHUB_RUN_ID \

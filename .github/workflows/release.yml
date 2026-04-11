@@ -23,7 +23,7 @@ jobs:
       id-token: "write"
       attestations: "write"
     env:
-      BUILD_WORKFLOW_TAG: "workflow:release"
+      BUILD_WORKFLOW_TAG: "release"
     steps:
       - uses: "actions/checkout@v4"
         with:
@@ -42,7 +42,7 @@ jobs:
           sudo chown -R root:root .
 
           # Main ISO image
-          sudo env BUILD_TAGS="${BUILD_WORKFLOW_TAG}" ./finnix-live-build
+          sudo env BUILD_TAGS="workflow:${BUILD_WORKFLOW_TAG}" ./finnix-live-build
 
           # Source ISO
           TEMP_BUILD_DIR="$(sudo mktemp -d -p "$(pwd)/build")"
@@ -85,7 +85,7 @@ jobs:
       packages: "write"
       attestations: "write"
     env:
-      BUILD_WORKFLOW_TAG: "workflow:release"
+      BUILD_WORKFLOW_TAG: "release"
     steps:
       - uses: "actions/checkout@v4"
         with:
@@ -103,7 +103,7 @@ jobs:
         run: |
           IMAGE_ID="ghcr.io/${IMAGE_NAME}:${IMAGE_TAG}"
           docker image build -t "${IMAGE_ID}" \
-              --build-arg BUILD_TAGS="env:docker ${BUILD_WORKFLOW_TAG}" \
+              --build-arg BUILD_TAGS="env:docker workflow:${BUILD_WORKFLOW_TAG}" \
               --build-arg GITHUB_SERVER_URL \
               --build-arg GITHUB_REPOSITORY \
               --build-arg GITHUB_RUN_ID \
