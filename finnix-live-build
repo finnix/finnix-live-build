@@ -151,7 +151,7 @@ GIT_DESC="$(git -C "${BASE_DIR}" describe --always --dirty 2>/dev/null || true)"
 if [ -n "${GIT_DESC}" ]; then
     if ! git -C "${BASE_DIR}" diff --quiet 2>/dev/null; then
         is_dirty=true
-        BUILD_TAGS="${BUILD_TAGS} dirty"
+        BUILD_TAGS="${BUILD_TAGS} git:dirty"
     fi
 fi
 LIVE_BUILD_GIT_COMMIT=""
@@ -174,25 +174,28 @@ if [ -n "${LIVE_BUILD}" ]; then
     LIVE_BUILD_GIT_DESC="$(git -C "${LIVE_BUILD}" describe --always --dirty 2>/dev/null || true)"
 fi
 
-BUILD_TAGS="${BUILD_TAGS} ${ARCH}"
+BUILD_TAGS="${BUILD_TAGS} arch:${ARCH}"
 if [ -t 0 ]; then
-    BUILD_TAGS="${BUILD_TAGS} terminal"
+    BUILD_TAGS="${BUILD_TAGS} env:terminal"
 fi
 if [ -n "${SCHROOT_SESSION_ID}" ]; then
-    BUILD_TAGS="${BUILD_TAGS} schroot"
+    BUILD_TAGS="${BUILD_TAGS} env:schroot"
 fi
 if [ -e "/.dockerenv" ]; then
-    BUILD_TAGS="${BUILD_TAGS} docker"
+    BUILD_TAGS="${BUILD_TAGS} env:docker"
 fi
 # (SC2154) Lowercase variable is conditionally set by systemd-nspawn,
 # nothing we can do
 # shellcheck disable=SC2154
 if [ "${container}" = "systemd-nspawn" ]; then
-    BUILD_TAGS="${BUILD_TAGS} systemd-nspawn"
+    BUILD_TAGS="${BUILD_TAGS} env:systemd-nspawn"
 fi
 # shellcheck disable=SC2154
 if [ "${container}" = "podman" ]; then
-    BUILD_TAGS="${BUILD_TAGS} podman"
+    BUILD_TAGS="${BUILD_TAGS} env:podman"
+fi
+if [ -e "/run/WSL" ]; then
+    BUILD_TAGS="${BUILD_TAGS} env:wsl"
 fi
 
 if [ -e /etc/os-release ]; then
@@ -213,26 +216,26 @@ EOM
     else
         build_os_ver="${BUILD_OS_VERSION_ID}"
     fi
-    BUILD_TAGS="${BUILD_TAGS} ${BUILD_OS_ID} ${build_os_ver}"
+    BUILD_TAGS="${BUILD_TAGS} os_id:${BUILD_OS_ID} os_ver:${build_os_ver}"
 fi
 
 if [ -e /sys/class/dmi/id/chassis_asset_tag ]; then
     if [ "$(cat /sys/class/dmi/id/chassis_asset_tag)" = "OracleCloud.com" ]; then
-        BUILD_TAGS="${BUILD_TAGS} oci"
+        BUILD_TAGS="${BUILD_TAGS} env:oci"
     elif [ "$(cat /sys/class/dmi/id/chassis_asset_tag)" = "Amazon EC2" ]; then
-        BUILD_TAGS="${BUILD_TAGS} aws"
+        BUILD_TAGS="${BUILD_TAGS} env:aws"
     fi
 elif [ -e /sys/class/dmi/id/board_name ]; then
     if [ "$(cat /sys/class/dmi/id/board_name)" = "Google Compute Engine" ]; then
-        BUILD_TAGS="${BUILD_TAGS} gce"
+        BUILD_TAGS="${BUILD_TAGS} env:gce"
     fi
 elif grep -q DataSourceAzure /run/cloud-init/status.json 2>/dev/null; then
     # This relies on cloud-init, but there doesn't appear to be any
     # hardware/etc way to determine if running on Azure.
-    BUILD_TAGS="${BUILD_TAGS} azure"
+    BUILD_TAGS="${BUILD_TAGS} env:azure"
 fi
 if [ -n "${GITHUB_RUN_ID}" ]; then
-    BUILD_TAGS="${BUILD_TAGS} gha"
+    BUILD_TAGS="${BUILD_TAGS} env:gha"
 fi
 
 BUILD_TAGS="$(for i in ${BUILD_TAGS}; do echo "${i}"; done | sort | uniq | xargs)"
