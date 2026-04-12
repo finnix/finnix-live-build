@@ -399,9 +399,19 @@ if [ "${is_dirty}" = "true" ]; then
 fi
 
 render_files "${LB_DIR}/config/bootloaders/syslinux_common" "${FILES_DIR}/syslinux"/*.cfg
-render <"${FILES_DIR}/syslinux/splash.svg" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/syslinux_common/splash.png"
+if [ -e "${FILES_DIR}/syslinux/splash.${PRODUCT_ID}.svg" ]; then
+    syslinux_splash_fn="${FILES_DIR}/syslinux/splash.${PRODUCT_ID}.svg"
+else
+    syslinux_splash_fn="${FILES_DIR}/syslinux/splash.svg"
+fi
+render <"${syslinux_splash_fn}" | rsvg-convert --format png --width 640 --height 480 >"${LB_DIR}/config/bootloaders/syslinux_common/splash.png"
 render_files "${LB_DIR}/config/bootloaders/grub-pc" "${FILES_DIR}/grub"/*.cfg
-render <"${FILES_DIR}/grub/splash.svg" | rsvg-convert --format png --width 1920 --height 1080 >"${LB_DIR}/config/bootloaders/grub-pc/splash.png"
+if [ -e "${FILES_DIR}/grub/splash.${PRODUCT_ID}.svg" ]; then
+    grub_splash_fn="${FILES_DIR}/grub/splash.${PRODUCT_ID}.svg"
+else
+    grub_splash_fn="${FILES_DIR}/grub/splash.svg"
+fi
+render <"${grub_splash_fn}" | rsvg-convert --format png --width 1920 --height 1080 >"${LB_DIR}/config/bootloaders/grub-pc/splash.png"
 render_files "${LB_DIR}/config/bootloaders/grub-pc/live-theme" "${FILES_DIR}/grub/theme.txt"
 
 if [ -z "${SQUASHFS_SORT_FILE}" ]; then
