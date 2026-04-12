@@ -12,3 +12,4 @@ live-build_*.deb
 live-build_*.build*
 live-build_*.changes
 squashfs.sort
+conf.d/99-*.sh
