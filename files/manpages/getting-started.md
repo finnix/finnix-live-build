@@ -24,7 +24,7 @@ For a text-mode web browser, "elinks" and "w3m" are available.
 
 By default, no attempt is made to modify the system clock. If you would like to
 sync against an NTP server (local NTP server if given by the DHCP server,
-otherwise Debian's pool), run:
+otherwise ntp.org's pool), run:
 
     timedatectl set-ntp true
 
