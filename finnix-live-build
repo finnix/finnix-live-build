@@ -8,6 +8,15 @@
 
 set -e
 
+# To set configuration options, you have several options:
+#
+# Add files to conf.d/. If it's meant to be committed to git (for example,
+# Finnix release branches, or forks), name them e.g. 50-release.sh. If
+# they're temporary, name them e.g. 99-local.sh (99-* is in .gitignore).
+#
+# Pass directly, e.g.:
+#     env BUILD_TAGS=ci ./finnix-live-build
+
 # Config overrides
 SCRIPT_DIR="${SCRIPT_DIR:-$(dirname "$(readlink -f "$0")")}"
 CONFIG_DIR="${CONFIG_DIR:-${SCRIPT_DIR}/conf.d}"
@@ -18,19 +27,47 @@ for fn in "${CONFIG_DIR}"/*.sh; do
     . "${fn}"
 done
 
-PRODUCT="${PRODUCT:-Finnix}"
-PRODUCT_ID="${PRODUCT_ID:-finnix}"
+# PRODUCT: Human-readable product name. Safe to contain spaces. Likely unsafe
+# to contain characters like quotes.
+PRODUCT="${PRODUCT:-Unbranded}"
+# PRODUCT_ID: Used in many places as a short ID. Should be alphanumeric, all
+# lowercase. Must not be the same as an existing userland program name.
+PRODUCT_ID="${PRODUCT_ID:-unbranded}"
+# VERSION: Version number. Should be alphanumeric and periods; anything more
+# fancy has not been tested. "dev" is treated special in many places.
 VERSION="${VERSION:-dev}"
-CODENAME="${CODENAME:-Fond du Lac}"
+# CODENAME: Mostly just used for os-release. Can contain anything usable
+# within double quotes.
+CODENAME="${CODENAME:-Unbranded Dev}"
+# ARCH: Debian's idea of architecture; e.g. "amd64", not "x86_64". Sub-arch
+# building (amd64 down to i386, arm64 down to armhf) is possible but not
+# regularly tested.
 ARCH="${ARCH:-$(dpkg --print-architecture)}"
+# SOURCE_ISO: Whether to also build the source ISO for releases. Since
+# deb-src is not enabled on the binary ISO, a source ISO build is actually
+# a full additional build after the binary ISO.
 SOURCE_ISO="${SOURCE_ISO:-false}"
+# CACHE_FROZEN: When true, the deb/debootstrap cache is not updated after a
+# build. At one point this was used to do subsequent RC builds after tests
+# to avoid upstream deb changes between tests, but CI RC builds make this
+# impossible now.
 CACHE_FROZEN="${CACHE_FROZEN:-false}"
+# SAVE_ISO: Whether to save the ISO in the build info directory.
 SAVE_ISO="${SAVE_ISO:-false}"
+# BUILD_TAGS: Runtime-specified tags to be added to auto-generated tags.
 BUILD_TAGS="${BUILD_TAGS:-}"
+# BUILD_URL: URL of the CI run which produced the build, if any.
 BUILD_URL="${BUILD_URL:-}"
+# PYTHON: Change to "python" on a host system without explicit "python3".
 PYTHON="${PYTHON:-python3}"
+# UNSTABLE_PIN: Add an unstable apt source with a lower priority pin. Needs
+# to be disabled on architectures which are still in ports status.
 UNSTABLE_PIN="${UNSTABLE_PIN:-true}"
+# BUILD_UUID: Per-build UUID.
 BUILD_UUID="${BUILD_UUID:-$(uuidgen -r)}"
+# DOCKER_BUILD: Whether to build a runtime environment for a Docker image.
+# (Note: NOT whether a normal ISO build is being built within a Docker
+# container instead of in a host/chroot. This is handled automatically.)
 DOCKER_BUILD="${DOCKER_BUILD:-false}"
 
 lock() {
