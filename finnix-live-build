@@ -64,7 +64,8 @@ PYTHON="${PYTHON:-python3}"
 # to be disabled on architectures which are still in ports status.
 UNSTABLE_PIN="${UNSTABLE_PIN:-true}"
 # BUILD_UUID: Per-build UUID.
-BUILD_UUID="${BUILD_UUID:-$(uuidgen -r)}"
+# Note: "python3 -muuid" will do the same thing in Python 3.12+
+BUILD_UUID="${BUILD_UUID:-$(${PYTHON} -c 'import uuid; print(str(uuid.uuid4()))')}"
 # DOCKER_BUILD: Whether to build a runtime environment for a Docker image.
 # (Note: NOT whether a normal ISO build is being built within a Docker
 # container instead of in a host/chroot. This is handled automatically.)
@@ -129,7 +130,6 @@ render_files() {
 # Required: librsvg2-bin (rsvg-convert): splash.png
 # Required: fonts-liberation2: splash.png
 # Required: pandoc: Manpage builds
-# Required: uuid-runtime (uuidgen): UUID generation
 # Optional: git (git): Build IDs
 # Optional: file (file): Post-build file info
 
@@ -538,6 +538,7 @@ if [ "${SOURCE_ISO}" = "true" ]; then
     source_build_size="$(stat -c "%s" "${LB_DIR}/${source_iso_filename}")"
 fi
 echo "Build: ${DATETIME} ${GIT_DESC} ${BUILD_TAGS}"
+echo "Build UUID: ${BUILD_UUID}"
 echo
 
 if [ -n "${GITHUB_STEP_SUMMARY}" ]; then
