@@ -510,6 +510,7 @@ if [ "${is_dirty}" = "true" ]; then
     cp "${LB_DIR}/config/includes.binary/.disk/build-dirty.patch" "${BUILD_INFO_DIR}/${build_id}/dirty.patch"
 fi
 echo "${build_size}" >"${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}.size"
+echo "Size: $((build_size / 1048576)) MiB (${build_size}), $((build_size * 100 / 681984000))% of 74 min CD, $((build_size * 100 / 737280000))% of 80 min CD"
 if [ "${SAVE_ISO}" = "true" ]; then
     cp -a "${LB_DIR}/${ISO_FILENAME}" "${BUILD_INFO_DIR}/${build_id}/${ISO_FILENAME}"
     if [ "${SOURCE_ISO}" = "true" ]; then
