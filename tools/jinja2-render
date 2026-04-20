@@ -13,6 +13,6 @@ import sys
 from jinja2 import Template
 
 if __name__ == "__main__":
-    tmpl = Template(sys.stdin.read())
+    tmpl = Template(sys.stdin.read(), keep_trailing_newline=True)
     vars = dict(os.environ)
-    print(tmpl.render(vars))
+    sys.stdout.write(tmpl.render(vars))
