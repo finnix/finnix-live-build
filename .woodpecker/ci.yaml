@@ -26,6 +26,7 @@ steps:
   - name: "CI build (${ARCH})"
     image: "debian"
     commands: |
+      set -x
       apt update
       apt -y install git python3
       tools/get-dependencies --only required -0 | xargs -0 apt -y install

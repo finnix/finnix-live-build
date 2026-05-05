@@ -20,6 +20,7 @@ steps:
   - name: "Docker CI build (${ARCH})"
     image: "debian"
     commands: |
+      set -x
       apt update
       apt -y install git docker-cli docker-buildx
 
