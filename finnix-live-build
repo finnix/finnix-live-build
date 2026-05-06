@@ -564,6 +564,11 @@ echo "Build UUID: ${BUILD_UUID}"
 echo
 
 if [ -n "${GITHUB_STEP_SUMMARY}" ]; then
+    summary_file="${GITHUB_STEP_SUMMARY}"
+elif [ -e "${CI_WORKSPACE}" ]; then
+    summary_file="${CI_WORKSPACE}/.ci-pipeline-summary"
+fi
+if [ -n "${summary_file}" ]; then
     if [ "${SOURCE_ISO}" = "true" ]; then
         {
             echo "### Source build information"
@@ -574,7 +579,8 @@ if [ -n "${GITHUB_STEP_SUMMARY}" ]; then
             if [ -n "${source_fileoutput}" ]; then
                 echo "- File: ${source_fileoutput}"
             fi
-        } >>"${GITHUB_STEP_SUMMARY}"
+            echo ""
+        } >>"${summary_file}"
     else
         {
             echo "### Build information"
@@ -586,7 +592,8 @@ if [ -n "${GITHUB_STEP_SUMMARY}" ]; then
                 echo "- File: ${fileoutput}"
             fi
             echo "- Packages: $(wc -l "${LB_DIR}/chroot.packages.live" | cut -f1 -d" ")"
-        } >>"${GITHUB_STEP_SUMMARY}"
+            echo ""
+        } >>"${summary_file}"
     fi
 fi
 

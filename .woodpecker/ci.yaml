@@ -52,6 +52,13 @@ steps:
         build/lb/finnix-* \
         build/lb/chroot.files \
         build/lb/chroot.packages.*
+      {
+          echo "### Artifacts"
+          echo ""
+          echo "- s3://ci-artifacts/$${artifact_fn}"
+          echo ""
+      } >>"$${CI_WORKSPACE}/.ci-pipeline-summary"
+
   - name: "Upload artifacts"
     image: "woodpeckerci/plugin-s3"
     settings:
@@ -80,3 +87,7 @@ steps:
 
         Pipeline: {{ CI_PIPELINE_URL }}
         Commit: {{ CI_PIPELINE_FORGE_URL }}
+  - name: "Pipeline summary"
+    image: "debian"
+    commands: |
+      if [ -e "$${CI_WORKSPACE}/.ci-pipeline-summary" ]; then cat "$${CI_WORKSPACE}/.ci-pipeline-summary"; fi
