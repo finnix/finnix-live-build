@@ -24,7 +24,7 @@ clone:
       tags: true
 steps:
   - name: "CI build (${ARCH})"
-    image: "debian"
+    image: "finnix/finnix:latest"
     commands: |
       set -x
       apt update
@@ -77,6 +77,6 @@ steps:
         Pipeline: {{ CI_PIPELINE_URL }}
         Commit: {{ CI_PIPELINE_FORGE_URL }}
   - name: "Pipeline summary"
-    image: "debian"
+    image: "finnix/finnix:latest"
     commands: |
       if [ -e "$${CI_WORKSPACE}/.ci-pipeline-summary" ]; then cat "$${CI_WORKSPACE}/.ci-pipeline-summary"; fi

@@ -18,7 +18,7 @@ labels:
   platform: "${PLATFORM}"
 steps:
   - name: "Docker CI build (${ARCH})"
-    image: "debian"
+    image: "finnix/finnix:latest"
     commands: |
       set -x
       apt update
