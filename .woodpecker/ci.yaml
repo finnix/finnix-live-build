@@ -28,7 +28,7 @@ steps:
     commands: |
       set -x
       apt update
-      apt -y install git python3
+      apt -y install git python3 curl
       tools/get-dependencies --only required -0 | xargs -0 apt -y install
       tools/get-dependencies --only optional | while IFS='' read -r pkg; do
         apt -y install "$${pkg}" || true
@@ -52,27 +52,16 @@ steps:
         build/lb/finnix-* \
         build/lb/chroot.files \
         build/lb/chroot.packages.*
+      curl -v --fail-with-body -T ".artifacts-dist/$${artifact_fn}" -H "Authorization: Basic $${ASSETS_AUTH}" "http://artifacts.snowman.lan/$${artifact_fn}"
       {
           echo "### Artifacts"
           echo ""
-          echo "- s3://ci-artifacts/$${artifact_fn}"
+          echo "- http://artifacts.snowman.lan/$${artifact_fn}"
           echo ""
       } >>"$${CI_WORKSPACE}/.ci-pipeline-summary"
-
-  - name: "Upload artifacts"
-    image: "woodpeckerci/plugin-s3"
-    settings:
-      endpoint: "http://nibbler.snowman.lan:3900"
-      path_style: true
-      region: "garage"
-      bucket: "ci-artifacts"
-      access_key:
-        from_secret: "garage_access_key"
-      secret_key:
-        from_secret: "garage_secret_key"
-      source: ".artifacts-dist/*"
-      strip_prefix: ".artifacts-dist/"
-      target: "/"
+    environment:
+      ASSETS_AUTH:
+        from_secret: "ASSETS_AUTH"
   - name: "Notify Mastodon if failure"
     when:
       - status: ["failure"]
