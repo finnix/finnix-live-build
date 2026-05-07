@@ -52,7 +52,7 @@ steps:
         build/lb/finnix-* \
         build/lb/chroot.files \
         build/lb/chroot.packages.*
-      curl -v --fail-with-body -T ".artifacts-dist/$${artifact_fn}" -H "Authorization: Basic $${ASSETS_AUTH}" "http://artifacts.snowman.lan/$${artifact_fn}"
+      curl --fail-with-body -T ".artifacts-dist/$${artifact_fn}" -H "Authorization: Basic $${ASSETS_AUTH}" "http://artifacts.snowman.lan/$${artifact_fn}"
       {
           echo "### Artifacts"
           echo ""
