@@ -21,6 +21,13 @@ steps:
     image: "debian"
     commands: |
       set -x
+
+      mkdir -p /etc/apt/apt.conf.d
+      cat <<"EOM" >/etc/apt/apt.conf.d/99proxy
+      Acquire::http::Proxy "http://deb-proxy.snowman.lan:8000";
+      Acquire::https::Proxy "http://deb-proxy.snowman.lan:8000";
+      EOM
+
       apt update
       apt -y install git docker-cli docker-buildx
 
