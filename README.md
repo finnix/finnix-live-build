@@ -9,7 +9,7 @@ Requirements:
 
 - Debian testing/sid, or Ubuntu 20.04 focal or later.
 - live-build, built from [live-build git
-  HEAD](https://codeberg.org/finnix/live-build).
+  HEAD](https://forge.colobox.com/finnix/live-build).
   - This is available as a git submodule in this repository.
   - While upstream HEAD is usually fine, the link above (and this repository's
     submodule) points to a Finnix-specific branch which is usually in sync with
@@ -29,7 +29,7 @@ The default build directory will be `build/lb/` from the script directory.
 ## Scheduled builds
 
 - Weekly AMD64 builds are made on the [GitHub finnix-live-build "schedule"
-  workflow](https://codeberg.org/finnix/finnix-live-build/actions?query=workflow%3Aschedule),
+  workflow](https://forge.colobox.com/finnix/finnix-live-build/actions?query=workflow%3Aschedule),
   with ISO build artifacts uploaded. The "ci" workflow is built on each push as
   an indication, but artifacts are not available.
 - Daily AMD64 builds are made on a [container in a colocated
@@ -74,7 +74,7 @@ Build failures are not a blocker.
 ## Issues and pull requests
 
 To open a Finnix issue, please use the main [Finnix issue
-tracker](https://codeberg.org/finnix/finnix/issues), not this repository's. Pull
+tracker](https://forge.colobox.com/finnix/finnix/issues), not this repository's. Pull
 requests will be considered here, but you probably also want to open an issue to
 track it.
 

@@ -2,7 +2,7 @@
 
 # SPDX-PackageName: finnix-live-build
 # SPDX-PackageSupplier: Ryan Finnie <ryan@finnie.org>
-# SPDX-PackageDownloadLocation: https://codeberg.org/finnix/finnix-live-build
+# SPDX-PackageDownloadLocation: https://forge.colobox.com/finnix/finnix-live-build
 # SPDX-FileComment: remove-packages chroot hook
 # SPDX-FileCopyrightText: © 2020 Ryan Finnie <ryan@finnie.org>
 # SPDX-License-Identifier: MPL-2.0

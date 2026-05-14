@@ -2,7 +2,7 @@
 
 # SPDX-PackageName: finnix-live-build
 # SPDX-PackageSupplier: Ryan Finnie <ryan@finnie.org>
-# SPDX-PackageDownloadLocation: https://codeberg.org/finnix/finnix-live-build
+# SPDX-PackageDownloadLocation: https://forge.colobox.com/finnix/finnix-live-build
 # SPDX-FileComment: strace-reorder
 # SPDX-FileCopyrightText: © 2011 Ryan Finnie <ryan@finnie.org>
 # SPDX-License-Identifier: MPL-2.0
@@ -32,7 +32,7 @@ def numfmt(
     limit: Stop after a specified number of rollovers
     prefixes: List of (decimal, binary) prefix strings, ascending
     """
-    # SPDX-SnippetComment: Originally from https://codeberg.org/rfinnie/rf-pymods
+    # SPDX-SnippetComment: Originally from https://forge.colobox.com/rfinnie/rf-pymods
     # SPDX-SnippetCopyrightText: Copyright (C) 2020-2025 Ryan Finnie
     # SPDX-LicenseInfoInSnippet: MIT
 
