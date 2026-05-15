@@ -15,6 +15,12 @@ import re
 import sys
 
 
+# SPDX-SnippetBegin
+# SPDX-SnippetName: numfmt from rf-pymods
+# SPDX-SnippetComment: Revision 2026-05-14
+# SPDX-SnippetComment: Originally from https://forge.colobox.com/rfinnie/rf-pymods
+# SPDX-SnippetCopyrightText: © 2020 Ryan Finnie <ryan@finnie.org>
+# SPDX-License-Identifier: MIT
 def numfmt(
     num,
     fmt="{num.real:0.02f} {num.prefix}",
@@ -32,9 +38,6 @@ def numfmt(
     limit: Stop after a specified number of rollovers
     prefixes: List of (decimal, binary) prefix strings, ascending
     """
-    # SPDX-SnippetComment: Originally from https://forge.colobox.com/rfinnie/rf-pymods
-    # SPDX-SnippetCopyrightText: Copyright (C) 2020-2025 Ryan Finnie
-    # SPDX-LicenseInfoInSnippet: MIT
 
     class NumberFormat(float):
         prefix = ""
@@ -61,6 +64,8 @@ def numfmt(
     if limit <= 0 or limit > len(prefixes):
         limit = len(prefixes)
 
+    is_negative = num < 0
+    num = abs(num)
     count = 0
     p = ""
     for prefix in prefixes:
@@ -71,10 +76,13 @@ def numfmt(
         count += 1
         num = num / float(divisor)
         p = prefix[1] if binary else prefix[0]
-    ret = NumberFormat(num)
+    ret = NumberFormat((0 - num) if is_negative else num)
     ret.fmt = fmt
     ret.prefix = p
     return ret
+
+
+# SPDX-SnippetEnd
 
 
 class StraceReorder:
