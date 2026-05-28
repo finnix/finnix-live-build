@@ -1,5 +1,8 @@
 # Finnix live-build tools
 
+[![Git forge repository](https://img.shields.io/badge/git-forge-orange?logo=forgejo)](https://forge.colobox.com/finnix/finnix-live-build)
+[![CI pipeline status](https://woodpecker.colobox.com/api/badges/37/status.svg)](https://woodpecker.colobox.com/repos/37)
+
 `finnix-live-build` is Finnix's image build system, and is a wrapper around
 Debian Live's `live-build` system.
 
