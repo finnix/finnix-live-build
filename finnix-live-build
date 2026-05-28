@@ -291,6 +291,9 @@ fi
 if [ -n "${GITHUB_RUN_ID}" ]; then
     BUILD_TAGS="${BUILD_TAGS} env:gha"
 fi
+if [ -n "${FORGEJO_RUN_ID}" ]; then
+    BUILD_TAGS="${BUILD_TAGS} env:forgejo_actions"
+fi
 if [ -n "${CI_SYSTEM_NAME}" ]; then
     # Woodpecker CI, etc
     BUILD_TAGS="${BUILD_TAGS} env:${CI_SYSTEM_NAME}"
@@ -306,6 +309,9 @@ if [ -z "${BUILD_URL}" ]; then
     if [ -n "${GITHUB_RUN_ID}" ]; then
         # GitHub
         BUILD_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+    elif [ -n "${FORGEJO_RUN_ID}" ]; then
+        # Forgejo Actions
+        BUILD_URL="${FORGEJO_SERVER_URL}/${FORGEJO_REPOSITORY}/actions/runs/${FORGEJO_RUN_ID}"
     elif [ -n "${CI_PIPELINE_URL}" ]; then
         # Woodpecker CI, GitLab, etc
         BUILD_URL="${CI_PIPELINE_URL}"
