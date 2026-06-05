@@ -11,7 +11,7 @@ labels:
   platform: "linux/amd64"
 steps:
   - name: "pre-commit"
-    image: "docker.io/library/python:11591407222400cafc1b2bd03fe09a90988f091fc9ddff4a901f80ceb02b78b3"  # python:3.14-trixie (2026-05-25)
+    image: "docker.io/library/python@sha256:11591407222400cafc1b2bd03fe09a90988f091fc9ddff4a901f80ceb02b78b3"  # python:3.14-trixie (2026-05-25)
     commands: |
       set -x
 
@@ -43,7 +43,7 @@ steps:
   - name: "Notify Mastodon if failure"
     when:
       - status: ["failure"]
-    image: "docker.io/woodpeckerci/plugin-mastodon-post:456597681cff794b6ddb7b085ce95c42a18301e512503898c4abdaa1080e7e4c"  # woodpeckerci/plugin-mastodon-post:latest (2026-04-19)
+    image: "docker.io/woodpeckerci/plugin-mastodon-post@sha256:456597681cff794b6ddb7b085ce95c42a18301e512503898c4abdaa1080e7e4c"  # woodpeckerci/plugin-mastodon-post:latest (2026-04-19)
     settings:
       server_url: "https://m29.us"
       access_token:

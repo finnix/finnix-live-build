@@ -19,7 +19,7 @@ labels:
   platform: "${PLATFORM}"
 steps:
   - name: "Docker CI build (${ARCH})"
-    image: "docker.io/library/debian:4ae67669760b807c19f23902a3fd7c121a6a70cf2ae709035674b23e712e4d62"  # debian:trixie (2026-05-19)
+    image: "docker.io/library/debian@sha256:4ae67669760b807c19f23902a3fd7c121a6a70cf2ae709035674b23e712e4d62"  # debian:trixie (2026-05-19)
     commands: |
       set -x
 
@@ -48,7 +48,7 @@ steps:
   - name: "Notify Mastodon if failure"
     when:
       - status: ["failure"]
-    image: "docker.io/woodpeckerci/plugin-mastodon-post:456597681cff794b6ddb7b085ce95c42a18301e512503898c4abdaa1080e7e4c"  # woodpeckerci/plugin-mastodon-post:latest (2026-04-19)
+    image: "docker.io/woodpeckerci/plugin-mastodon-post@sha256:456597681cff794b6ddb7b085ce95c42a18301e512503898c4abdaa1080e7e4c"  # woodpeckerci/plugin-mastodon-post:latest (2026-04-19)
     settings:
       server_url: "https://m29.us"
       access_token:

@@ -19,13 +19,13 @@ labels:
   platform: "${PLATFORM}"
 clone:
   git:
-    image: "docker.io/woodpeckerci/plugin-git:ebde4a4d07e0e24b630082484d192890dd4f6d442d90bf5466f0763860f83652"  # woodpeckerci/plugin-git:latest (2026-05-28)
+    image: "docker.io/woodpeckerci/plugin-git@sha256:ebde4a4d07e0e24b630082484d192890dd4f6d442d90bf5466f0763860f83652"  # woodpeckerci/plugin-git:latest (2026-05-28)
     settings:
       # finnix-live-build can use tags to make more descriptive dev IDs
       tags: true
 steps:
   - name: "CI build (${ARCH})"
-    image: "docker.io/library/debian:4ae67669760b807c19f23902a3fd7c121a6a70cf2ae709035674b23e712e4d62"  # debian:trixie (2026-05-19)
+    image: "docker.io/library/debian@sha256:4ae67669760b807c19f23902a3fd7c121a6a70cf2ae709035674b23e712e4d62"  # debian:trixie (2026-05-19)
     commands: |
       set -x
 
@@ -73,7 +73,7 @@ steps:
   - name: "Notify Mastodon if failure"
     when:
       - status: ["failure"]
-    image: "docker.io/woodpeckerci/plugin-mastodon-post:456597681cff794b6ddb7b085ce95c42a18301e512503898c4abdaa1080e7e4c"  # woodpeckerci/plugin-mastodon-post:latest (2026-04-19)
+    image: "docker.io/woodpeckerci/plugin-mastodon-post@sha256:456597681cff794b6ddb7b085ce95c42a18301e512503898c4abdaa1080e7e4c"  # woodpeckerci/plugin-mastodon-post:latest (2026-04-19)
     settings:
       server_url: "https://m29.us"
       access_token:
@@ -85,6 +85,6 @@ steps:
         Pipeline: {{ CI_PIPELINE_URL }}
         Commit: {{ CI_PIPELINE_FORGE_URL }}
   - name: "Pipeline summary"
-    image: "docker.io/library/debian:4ae67669760b807c19f23902a3fd7c121a6a70cf2ae709035674b23e712e4d62"  # debian:trixie (2026-05-19)
+    image: "docker.io/library/debian@sha256:4ae67669760b807c19f23902a3fd7c121a6a70cf2ae709035674b23e712e4d62"  # debian:trixie (2026-05-19)
     commands: |
       if [ -e "$${CI_WORKSPACE}/.ci-pipeline-summary" ]; then cat "$${CI_WORKSPACE}/.ci-pipeline-summary"; fi
