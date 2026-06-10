@@ -14,7 +14,7 @@
 #
 # "sshd_password" is accepted as a legacy equivalent to "passwd"
 
-import os
+import pathlib
 import re
 import shlex
 import subprocess
@@ -35,10 +35,11 @@ def parse_cmdline(cmdline_text):
 
 
 def main():
-    if not os.path.exists("/proc/cmdline"):
+    cmdline_fn = pathlib.Path("/proc/cmdline")
+    if not cmdline_fn.exists():
         return
 
-    with open("/proc/cmdline") as f:
+    with cmdline_fn.open() as f:
         cmdline = parse_cmdline(f.read())
 
     userpasses = []

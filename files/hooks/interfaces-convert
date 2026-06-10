@@ -18,7 +18,7 @@
 import configparser
 import io
 import ipaddress
-import os
+import pathlib
 import shlex
 import sys
 
@@ -45,8 +45,9 @@ class InterfacesConvert:
     def get_udev_properties(self, interface_name):
         if self.udev_context is None:
             return
+        class_fn = pathlib.Path("/sys/class/net", interface_name)
         try:
-            device = pyudev.Devices.from_path(self.udev_context, "/sys/class/net/{}".format(interface_name))
+            device = pyudev.Devices.from_path(self.udev_context, str(class_fn))
         except pyudev.DeviceNotFoundAtPathError:
             return
         if "ID_PATH" not in device.properties or "ID_PATH_TAG" not in device.properties:
@@ -58,14 +59,14 @@ class InterfacesConvert:
         config.optionxform = str
         return config
 
-    def generate_systemd_conf(self, config, filename, device_properties=None):
+    def generate_systemd_conf(self, config, fn, device_properties=None):
         with io.StringIO() as f:
             if device_properties is not None:
                 for k, v in device_properties.items():
                     print("# {}={}".format(k, shlex.quote(v)), file=f)
                 print(file=f)
             config.write(f, space_around_delimiters=False)
-            self.files[filename] = f.getvalue()
+            self.files[fn] = f.getvalue()
 
     def process_section(self, section):
         if "iface" not in section:
@@ -73,7 +74,7 @@ class InterfacesConvert:
         interface_name = section["iface"][0]
         if section["iface"][2] == "loopback":
             return
-        elif not os.path.exists("/sys/class/net/{}".format(interface_name)):
+        elif not pathlib.Path("/sys/class/net", interface_name).exists():
             return
 
         device_properties = self.get_udev_properties(interface_name)
@@ -84,7 +85,7 @@ class InterfacesConvert:
             id_path = device_properties["ID_PATH"]
             interface_fn_id = device_properties["ID_PATH_TAG"]
 
-        filename = "/run/systemd/network/10-{}.network".format(interface_fn_id)
+        net_fn = pathlib.Path("/run/systemd/network/10-{}.network".format(interface_fn_id))
         if (section["iface"][1] != "inet") or (section["iface"][2] not in ("dhcp", "static")):
             output = self.systemd_config()
             if id_path is None:
@@ -92,7 +93,7 @@ class InterfacesConvert:
             else:
                 output["Match"] = {"Path": id_path}
             output["Link"] = {"Unmanaged": "yes"}
-            self.generate_systemd_conf(output, filename)
+            self.generate_systemd_conf(output, net_fn)
             return
 
         output = self.systemd_config()
@@ -112,18 +113,19 @@ class InterfacesConvert:
             output["Network"]["DHCP"] = "yes"
         if "allow-hotplug" in section:
             output["Link"]["RequiredForOnline"] = "no"
-        self.generate_systemd_conf(output, filename, device_properties)
-        return (interface_name, filename)
+        self.generate_systemd_conf(output, net_fn, device_properties)
+        return (interface_name, net_fn)
 
     def convert_interfaces(self):
-        if not os.path.exists("/etc/network/interfaces"):
+        eni_fn = pathlib.Path("/etc/network/interfaces")
+        if not eni_fn.exists():
             return
 
         rewritten_interfaces = ""
         section = {}
         section_text = ""
         section_text_commented = ""
-        with open("/etc/network/interfaces") as f:
+        with eni_fn.open() as f:
             for raw_line in f:
                 line = raw_line.strip()
                 if line == "" and section:
@@ -151,16 +153,18 @@ class InterfacesConvert:
             else:
                 rewritten_interfaces += section_text + "\n"
 
-        self.files["/etc/network/interfaces"] = rewritten_interfaces
+        self.files[eni_fn] = rewritten_interfaces
 
     def convert_resolv(self):
-        if not os.path.exists("/etc/resolv.conf"):
+        resolv_fn = pathlib.Path("/etc/resolv.conf")
+        systemd_resolv_fn = pathlib.Path("/run/systemd/resolved.conf.d/10-{}.conf".format(PRODUCT_ID))
+        if not resolv_fn.exists():
             self.replace_resolvconf = True
             return
 
         nameservers = []
         domains = []
-        with open("/etc/resolv.conf") as f:
+        with resolv_fn.open() as f:
             for line in f:
                 line = line.strip()
                 ls = line.split(" ")
@@ -181,24 +185,24 @@ class InterfacesConvert:
                 resolved["Resolve"]["DNS"] = " ".join(nameservers)
             if domains:
                 resolved["Resolve"]["Domains"] = " ".join(domains)
-            self.generate_systemd_conf(resolved, "/run/systemd/resolved.conf.d/10-{}.conf".format(PRODUCT_ID))
+            self.generate_systemd_conf(resolved, systemd_resolv_fn)
 
         self.replace_resolvconf = True
 
     def write_files(self):
         for fn in self.files:
-            fn_dir = os.path.dirname(fn)
-            if not os.path.exists(fn_dir):
-                os.makedirs(fn_dir)
-            with open(fn, "w") as f:
+            fn.parent.mkdir(parents=True, exist_ok=True)
+            with fn.open("w") as f:
                 f.write(self.files[fn])
 
         if self.replace_resolvconf:
+            resolv_fn = pathlib.Path("/etc/resolv.conf")
+            stub_fn = pathlib.Path("/run/systemd/resolve/stub-resolv.conf")
             try:
-                os.remove("/etc/resolv.conf")
+                resolv_fn.unlink()
             except FileNotFoundError:
                 pass
-            os.symlink("/run/systemd/resolve/stub-resolv.conf", "/etc/resolv.conf")
+            resolv_fn.symlink_to(stub_fn)
 
     def main(self):
         self.convert_interfaces()

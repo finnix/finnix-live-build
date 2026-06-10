@@ -65,6 +65,7 @@ def main():
 
 
 if __name__ == "__main__":
-    if os.path.exists("/usr/lib/command-not-found.distrib"):
-        os.execv("/usr/lib/command-not-found.distrib", sys.argv)
+    distrib_fn = pathlib.Path("/usr/lib/command-not-found.distrib")
+    if distrib_fn.exists():
+        os.execv(distrib_fn, sys.argv)
     sys.exit(main())
