@@ -207,7 +207,8 @@ sudo
 systemd-timesyncd
 systemd-zram-generator
 tcpdump
-testdisk
+# testdisk 7.2-0.2 now requires full X environment, unfortunately
+#testdisk
 tftp-hpa
 time
 tmux
