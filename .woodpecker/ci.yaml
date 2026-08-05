@@ -17,23 +17,25 @@ matrix:
       PLATFORM: "linux/arm64"
 labels:
   platform: "${PLATFORM}"
-clone:
-  git:
-    image: "docker.io/woodpeckerci/plugin-git:latest@sha256:ebde4a4d07e0e24b630082484d192890dd4f6d442d90bf5466f0763860f83652"  # 2026-05-28
-    settings:
-      # finnix-live-build can use tags to make more descriptive dev IDs
-      tags: true
+  pool: "finnix-ci"  # local
+skip_clone: true
 steps:
+  - name: "git"
+    image: "sh"
+    commands: |
+      git init --object-format sha1 -b "$${CI_COMMIT_BRANCH}"
+      git config --global --replace-all safe.directory "$${CI_WORKSPACE}"
+      git remote add origin "$${CI_REPO_CLONE_URL}"
+      # finnix-live-build can use tags to make more descriptive dev IDs
+      git fetch --tags origin "+$${CI_COMMIT_SHA}:"
+      git reset --hard -q "$${CI_COMMIT_SHA}"
+      git submodule update --init --recursive --depth=1 --recommend-shallow
+      git lfs fetch
+      git lfs checkout
   - name: "CI build (${ARCH})"
-    image: "docker.io/library/debian:trixie@sha256:4ae67669760b807c19f23902a3fd7c121a6a70cf2ae709035674b23e712e4d62"  # 2026-05-19
+    image: "sh"
     commands: |
       set -x
-
-      mkdir -p /etc/apt/apt.conf.d
-      cat <<"EOM" >/etc/apt/apt.conf.d/99proxy
-      Acquire::http::Proxy "http://deb-proxy.snowman.lan:8000";
-      Acquire::https::Proxy "http://deb-proxy.snowman.lan:8000";
-      EOM
 
       apt update
       apt -y install git python3 curl
@@ -70,21 +72,8 @@ steps:
     environment:
       ASSETS_AUTH:
         from_secret: "ASSETS_AUTH"
-  - name: "Notify Mastodon if failure"
-    when:
-      - status: ["failure"]
-    image: "docker.io/woodpeckerci/plugin-mastodon-post:latest@sha256:456597681cff794b6ddb7b085ce95c42a18301e512503898c4abdaa1080e7e4c"  # 2026-04-19
-    settings:
-      server_url: "https://m29.us"
-      access_token:
-        from_secret: "m29_token"
-      status: |
-        🪿 🪿 🪿 FAILURE: {{ CI_REPO }} 🪿 🪿 🪿
-        Workflow: {{ CI_WORKFLOW_NAME }} ({{ CI_PIPELINE_EVENT }} on {{ CI_COMMIT_REF }})
 
-        Pipeline: {{ CI_PIPELINE_URL }}
-        Commit: {{ CI_PIPELINE_FORGE_URL }}
   - name: "Pipeline summary"
-    image: "docker.io/library/debian:trixie@sha256:4ae67669760b807c19f23902a3fd7c121a6a70cf2ae709035674b23e712e4d62"  # 2026-05-19
+    image: "sh"
     commands: |
       if [ -e "$${CI_WORKSPACE}/.ci-pipeline-summary" ]; then cat "$${CI_WORKSPACE}/.ci-pipeline-summary"; fi

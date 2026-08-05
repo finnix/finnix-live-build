@@ -9,6 +9,7 @@ when:
   - event: ["push", "pull_request", "manual"]
 labels:
   platform: "linux/amd64"
+  pool: "snowman"
 clone:
   git:
     image: "docker.io/woodpeckerci/plugin-git:latest@sha256:ebde4a4d07e0e24b630082484d192890dd4f6d442d90bf5466f0763860f83652"  # 2026-05-28
