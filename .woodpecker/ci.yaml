@@ -47,7 +47,7 @@ steps:
       rm -rf build/cache/lb/bootstrap build/cache/lb/contents.chroot build/cache/lb/indices.bootstrap
 
       # Source ISO
-      if [ "$${CI_SOURCE_ISO}" = "true" ]; then
+      if [ "$${CI_SOURCE_ISO}" = "true" ] || [ -e conf.d/90-release.sh ]; then
         temp_build_dir="$(mktemp -d -p "$(pwd)/build")"
         env SOURCE_ISO=true BUILD_DIR="$${temp_build_dir?}" ./finnix-live-build
         mv "$${temp_build_dir}/lb/finnix-source.iso" build/lb/
