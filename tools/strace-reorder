@@ -8,11 +8,13 @@
 # SPDX-License-Identifier: MPL-2.0
 
 import argparse
+import datetime
 import logging
 import pathlib
 import random
 import re
 import sys
+import time
 
 
 # SPDX-SnippetBegin
@@ -97,7 +99,7 @@ class StraceReorder:
 
         parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-        parser.add_argument("trace_file", nargs="?", type=argparse.FileType("r"), default=sys.stdin)
+        parser.add_argument("trace_file", nargs="?", type=pathlib.Path)
 
         parser.add_argument("--debug", action="store_true", help="Print debugging information")
         parser.add_argument(
@@ -132,9 +134,34 @@ class StraceReorder:
             format="%(asctime)s %(levelname)-8s %(message)s",
         )
 
+        print("# SPDX-PackageName: finnix-live-build")
+        print("# SPDX-PackageSupplier: Ryan Finnie <ryan@finnie.org>")
+        print("# SPDX-PackageDownloadLocation: https://forge.colobox.com/finnix/finnix-live-build")
+        print("# SPDX-FileCopyrightText: None")
+        print("# SPDX-License-Identifier: CC0-1.0")
+        print("#")
+
+        now = datetime.datetime.now(tz=datetime.UTC)
+        uptime = datetime.timedelta(seconds=time.clock_gettime(time.CLOCK_BOOTTIME))
+        print("# Date: {date}".format(date=now))
+        print("# Uptime: {uptime}".format(uptime=uptime))
+        cmdline_fn = pathlib.Path("/proc/cmdline")
+        if cmdline_fn.exists():
+            print("# Command line: {cmdline}".format(cmdline=cmdline_fn.read_text().strip()))
+        if self.args.trace_file is None:
+            fh = sys.stdin
+            print("# Trace file: <stdin>")
+        else:
+            fh = self.args.trace_file.open()
+            mtime = datetime.datetime.fromtimestamp(self.args.trace_file.stat().st_mtime, tz=datetime.UTC)
+            print("# Trace file: {fn}".format(fn=self.args.trace_file))
+            print("# Uptime at trace file mtime: {file_uptime}".format(file_uptime=(uptime - (now - mtime))))
+
+        print("#")
+
         seen = []
         seen_size = 0
-        for line in self.args.trace_file.readlines():
+        for line in fh.readlines():
             filename = self.get_filename(line.rstrip())
             if not filename:
                 continue
