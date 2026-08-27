@@ -11,7 +11,7 @@
 # Once booted, wait about 10 seconds before running `killall strace`.
 # Use the `tools/strace-reorder` program in finnix-live-build to
 # convert to a sort format usable by mksquashfs:
-#     tools/strace-reorder </var/log/strace-init.trace >squashfs.sort
+#     tools/strace-reorder /var/log/strace-init.trace >squashfs.sort
 
 set -e
 
