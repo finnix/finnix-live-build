@@ -123,6 +123,19 @@ class StraceReorder:
         return parser.parse_args(args=argv[1:])
 
     def get_filename(self, line):
+        # Example data production:
+        # exec strace \
+        #     --daemonize=session \
+        #     --no-abbrev \
+        #     --quiet=all \
+        #     --decode-fds=all \
+        #     --string-limit=65535 \
+        #     --follow-forks \
+        #     --successful-only \
+        #     --interruptible=anywhere \
+        #     --output=/var/log/strace-init.trace \
+        #     --trace=open,openat,execve \
+        #     /sbin/init "$@"
         for r in self.regexps:
             m = r.search(line)
             if m:
